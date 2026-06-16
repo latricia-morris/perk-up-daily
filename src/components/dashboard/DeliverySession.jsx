@@ -37,26 +37,30 @@ export default function DeliverySession({ libraryItems, userEntries, categories,
   }, [libraryItems, userEntries, categories, christianEnabled]);
 
   const session = useMemo(() => {
-    const pool = [
-      ...allContent.library.map(item => ({ ...item, source: 'library' })),
-      ...allContent.entries.map(item => ({ ...item, source: 'user_entry' })),
-    ];
+    const libraryPool = shuffleArray(allContent.library.map(item => ({ ...item, source: 'library' })));
+    const entryPool = shuffleArray(allContent.entries.map(item => ({ ...item, source: 'user_entry' })));
 
-    const shuffled = shuffleArray(pool);
+    // Interleave: alternate library and user entries so neither dominates
+    const interleaved = [];
+    const maxLen = Math.max(libraryPool.length, entryPool.length);
+    for (let i = 0; i < maxLen; i++) {
+      if (i < libraryPool.length) interleaved.push(libraryPool[i]);
+      if (i < entryPool.length) interleaved.push(entryPool[i]);
+    }
 
-    // Featured: prefer quotes, affirmations, scriptures
+    // Featured: prefer library quotes/affirmations/scriptures for the spotlight
     const featuredTypes = ['quote', 'affirmation', 'scripture'];
-    const featuredIdx = shuffled.findIndex(item =>
+    const featuredIdx = interleaved.findIndex(item =>
       featuredTypes.includes(item.content_type || item.entry_type)
     );
 
     let featured, supporting;
     if (featuredIdx >= 0) {
-      featured = shuffled[featuredIdx];
-      supporting = shuffled.filter((_, i) => i !== featuredIdx).slice(0, 4);
+      featured = interleaved[featuredIdx];
+      supporting = interleaved.filter((_, i) => i !== featuredIdx).slice(0, 4);
     } else {
-      featured = shuffled[0];
-      supporting = shuffled.slice(1, 5);
+      featured = interleaved[0];
+      supporting = interleaved.slice(1, 5);
     }
 
     return { featured, supporting };

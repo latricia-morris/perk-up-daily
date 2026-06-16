@@ -7,6 +7,7 @@ import { PlusCircle, Sun, CloudSun, Moon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getGreeting } from '@/lib/constants';
 import DeliverySession from '@/components/dashboard/DeliverySession';
+import EveningPrompt from '@/components/dashboard/EveningPrompt';
 
 const sessionIcons = {
   morning: Sun,
@@ -90,13 +91,17 @@ export default function Dashboard() {
           </p>
         </motion.div>
 
-        {/* Delivery */}
-        <DeliverySession
-          libraryItems={libraryItems}
-          userEntries={userEntries}
-          categories={selectedCategories}
-          christianEnabled={christianEnabled}
-        />
+        {/* Delivery or Evening Prompt */}
+        {greeting.session === 'evening' ? (
+          <EveningPrompt christianEnabled={christianEnabled} />
+        ) : (
+          <DeliverySession
+            libraryItems={libraryItems}
+            userEntries={userEntries}
+            categories={selectedCategories}
+            christianEnabled={christianEnabled}
+          />
+        )}
 
         {/* Quick add */}
         <div className="fixed bottom-24 right-6 md:bottom-8 md:right-8 z-40">

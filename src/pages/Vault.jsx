@@ -83,7 +83,7 @@ export default function Vault() {
         
         <div className="space-y-3">
           {filtered.map((entry, i) => (
-            <VaultEntryCard key={entry.id} entry={entry} index={i} />
+            <VaultEntryCard key={entry.id} entry={entry} index={i} christianEnabled={christianEnabled} />
           ))}
           {filtered.length === 0 && (
             <div className="text-center py-16 text-muted-foreground">

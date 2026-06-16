@@ -74,10 +74,10 @@ export default function Landing() {
       <section className="relative overflow-hidden">
         {/* Background gradient layers */}
         <div className="absolute inset-0 pointer-events-none" style={{
-          background: 'radial-gradient(ellipse 80% 60% at 60% 40%, rgba(253,232,192,0.55) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse 80% 60% at 60% 40%, rgba(255,248,230,0.85) 0%, rgba(253,232,192,0.4) 50%, transparent 75%)',
         }} />
         <div className="absolute inset-0 pointer-events-none" style={{
-          background: 'radial-gradient(ellipse 50% 40% at 15% 70%, rgba(204,228,212,0.35) 0%, transparent 65%)',
+          background: 'radial-gradient(ellipse 50% 40% at 15% 70%, rgba(230,245,234,0.6) 0%, rgba(204,228,212,0.2) 55%, transparent 75%)',
         }} />
 
         <div className="relative max-w-6xl mx-auto px-6 pt-20 pb-28 md:pt-32 md:pb-36">
@@ -159,7 +159,7 @@ export default function Landing() {
       {/* Features */}
       <section className="py-20 md:py-28 relative" style={{ background: '#fff8ee' }}>
         <div className="absolute inset-0 pointer-events-none" style={{
-          background: 'radial-gradient(ellipse 70% 50% at 80% 20%, rgba(204,228,212,0.3) 0%, transparent 60%)',
+          background: 'radial-gradient(ellipse 70% 50% at 80% 20%, rgba(230,245,234,0.55) 0%, rgba(204,228,212,0.15) 55%, transparent 75%)',
         }} />
         <div className="relative max-w-6xl mx-auto px-6">
           <h3 className="font-display text-2xl md:text-3xl font-semibold text-center mb-4" style={{ color: '#2c1e0f' }}>
@@ -229,7 +229,7 @@ export default function Landing() {
       {/* CTA — warm gradient with glow */}
       <section className="py-20 md:py-28 relative overflow-hidden" style={{ background: '#fff8ee' }}>
         <div className="absolute inset-0 pointer-events-none" style={{
-          background: 'radial-gradient(ellipse 60% 70% at 50% 50%, rgba(253,232,192,0.6) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse 60% 70% at 50% 50%, rgba(255,250,240,0.9) 0%, rgba(253,232,192,0.45) 45%, transparent 72%)',
         }} />
         <div className="relative max-w-2xl mx-auto px-6 text-center">
           <h3 className="font-display text-2xl md:text-3xl font-semibold mb-4" style={{ color: '#2c1e0f' }}>

@@ -17,14 +17,16 @@ export default function Onboarding() {
     );
   };
 
-  const visibleCategories = christianContent
+  // Show all non-christian categories first; add deep_faith if christianContent is true
+  const visibleCategories = christianContent === true
     ? CATEGORIES
     : CATEGORIES.filter(c => !c.requiresChristian);
 
   const handleFinish = () => {
+    const cats = christianContent === true ? selectedCategories : selectedCategories.filter(c => c !== 'deep_faith');
     localStorage.setItem('perkup-onboarding', JSON.stringify({
-      christianContent,
-      selectedCategories,
+      christianContent: christianContent || false,
+      selectedCategories: cats,
     }));
     navigate('/register');
   };
@@ -60,7 +62,7 @@ export default function Onboarding() {
                 This is your space to capture the good stuff.
               </p>
               <p className="text-muted-foreground leading-relaxed mb-8">
-                Log your wins, blessings, and bright moments. We will resurface them 
+                Log your wins, blessings, and bright moments. We will resurface them
                 throughout your day so the good things stay close.
               </p>
               <Button
@@ -81,14 +83,46 @@ export default function Onboarding() {
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
             >
-              <h2 className="font-display text-2xl font-semibold text-foreground mb-6">
-                Make it yours
+              <h2 className="font-display text-2xl font-semibold text-foreground mb-2">
+                Choose your areas
               </h2>
+              <p className="text-sm text-muted-foreground mb-6">
+                Select the areas you want encouragement in. Pick as many as you like.
+              </p>
 
-              {/* Christian content toggle */}
-              <div className="mb-8">
+              {/* Category selection */}
+              <div className="grid grid-cols-2 gap-3 mb-6">
+                {visibleCategories.map(cat => {
+                  const selected = selectedCategories.includes(cat.slug);
+                  return (
+                    <button
+                      key={cat.slug}
+                      onClick={() => toggleCategory(cat.slug)}
+                      className={`relative p-4 rounded-xl border text-left transition-all ${
+                        selected
+                          ? 'bg-primary/10 border-primary/40'
+                          : 'bg-card border-border hover:border-primary/30'
+                      }`}
+                    >
+                      {selected && (
+                        <div className="absolute top-2 right-2 w-5 h-5 bg-primary rounded-full flex items-center justify-center">
+                          <Check className="w-3 h-3 text-primary-foreground" />
+                        </div>
+                      )}
+                      <span className="text-lg mb-1 block">{cat.emoji}</span>
+                      <span className="text-sm font-medium text-foreground">{cat.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Christian content toggle — after categories */}
+              <div className="mb-8 p-4 rounded-xl bg-muted/40 border border-border">
                 <p className="text-sm font-medium text-foreground mb-3">
-                  Include Christian content?
+                  Would you like to include Christian content?
+                </p>
+                <p className="text-xs text-muted-foreground mb-3">
+                  This adds scriptures and faith-based encouragement to your deliveries.
                 </p>
                 <div className="flex gap-3">
                   {[
@@ -115,53 +149,14 @@ export default function Onboarding() {
                 </div>
               </div>
 
-              {/* Category selection */}
-              {christianContent !== null && (
-                <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-                  <p className="text-sm font-medium text-foreground mb-1">
-                    Choose up to 3 areas you want encouragement in
-                  </p>
-                  <p className="text-xs text-muted-foreground mb-4">Select at least 1</p>
-
-                  <div className="grid grid-cols-2 gap-3 mb-8">
-                    {visibleCategories.map(cat => {
-                      const selected = selectedCategories.includes(cat.slug);
-                      const disabled = !selected && selectedCategories.length >= 3;
-                      return (
-                        <button
-                          key={cat.slug}
-                          onClick={() => !disabled && toggleCategory(cat.slug)}
-                          disabled={disabled}
-                          className={`relative p-4 rounded-xl border text-left transition-all ${
-                            selected
-                              ? 'bg-primary/10 border-primary/40'
-                              : disabled
-                              ? 'opacity-40 cursor-not-allowed bg-card border-border'
-                              : 'bg-card border-border hover:border-primary/30'
-                          }`}
-                        >
-                          {selected && (
-                            <div className="absolute top-2 right-2 w-5 h-5 bg-primary rounded-full flex items-center justify-center">
-                              <Check className="w-3 h-3 text-primary-foreground" />
-                            </div>
-                          )}
-                          <span className="text-lg mb-1 block">{cat.emoji}</span>
-                          <span className="text-sm font-medium text-foreground">{cat.label}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  <Button
-                    onClick={() => setStep(3)}
-                    disabled={selectedCategories.length === 0}
-                    className="w-full bg-primary hover:bg-primary/90"
-                    size="lg"
-                  >
-                    Continue <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </motion.div>
-              )}
+              <Button
+                onClick={() => setStep(3)}
+                disabled={selectedCategories.length === 0 || christianContent === null}
+                className="w-full bg-primary hover:bg-primary/90"
+                size="lg"
+              >
+                Continue <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
             </motion.div>
           )}
 
@@ -176,9 +171,12 @@ export default function Onboarding() {
               <h2 className="font-display text-2xl font-semibold text-foreground mb-3">
                 You're almost in
               </h2>
+              <p className="text-muted-foreground leading-relaxed mb-3">
+                Create your account to start capturing the good stuff.
+              </p>
               <p className="text-muted-foreground leading-relaxed mb-8">
-                Create your account to start capturing the good stuff. 
-                Your preferences are saved and ready to go.
+                Once you're in, you'll add your first entry so there's something great
+                waiting for you tomorrow morning.
               </p>
               <Button
                 onClick={handleFinish}

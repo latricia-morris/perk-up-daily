@@ -13,6 +13,8 @@ import AIGuardDialog from '@/components/shared/AIGuardDialog';
 
 export default function AddEntry() {
   const navigate = useNavigate();
+  const urlParams = new URLSearchParams(window.location.search);
+  const isFirst = urlParams.get('first') === '1';
   const [user, setUser] = useState(null);
   const [form, setForm] = useState({
     entry_type: '',
@@ -35,8 +37,8 @@ export default function AddEntry() {
   const aiGuardEnabled = user?.ai_guard_enabled !== false;
   const entryTypes = getFilteredEntryTypes(christianEnabled);
   const categories = getFilteredCategories(christianEnabled);
-  const selectedType = ENTRY_TYPES.find(t => t.slug === form.entry_type);
-  const showPhoto = selectedType?.allowPhoto;
+  // Photo is available on all entry types
+  const showPhoto = true;
 
   const handlePhotoUpload = async (e) => {
     const file = e.target.files[0];
@@ -77,7 +79,11 @@ export default function AddEntry() {
       status,
     });
     setSaving(false);
-    navigate(-1);
+    if (isFirst) {
+      window.location.href = '/dashboard';
+    } else {
+      navigate(-1);
+    }
   };
 
   const handleGuardChoice = async (choice) => {
@@ -104,6 +110,12 @@ export default function AddEntry() {
         </button>
 
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+          {isFirst && (
+            <div className="mb-6 p-4 rounded-xl" style={{ background: 'linear-gradient(135deg, #fde8c0 0%, #fffdf8 60%)', border: '1px solid #f5d680' }}>
+              <p className="font-display text-base font-semibold" style={{ color: '#2c1e0f' }}>You're in. Add your first entry.</p>
+              <p className="text-sm mt-1" style={{ color: '#7a5c3a' }}>Log a win, a blessing, a memory — anything good. It'll be waiting for you tomorrow morning.</p>
+            </div>
+          )}
           <h1 className="font-display text-2xl font-semibold text-foreground mb-6">Add an entry</h1>
 
           <div className="space-y-5">
