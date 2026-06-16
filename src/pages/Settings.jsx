@@ -256,9 +256,21 @@ export default function Settings() {
             <p className="text-xs text-muted-foreground mt-2">Download your entries as a JSON file.</p>
           </section>
 
-          {/* Account */}
+          {/* Subscription & Account */}
           <section>
-            <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4">Account</h2>
+            <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4">Subscription & Account</h2>
+
+            {/* Subscription cancel info */}
+            <div className="bg-muted/50 border border-border rounded-xl p-4 mb-4 space-y-3">
+              <p className="text-sm font-medium text-foreground">Cancel your subscription</p>
+              <div className="text-xs text-muted-foreground space-y-2">
+                <p><strong>Purchased on the web:</strong> Use the "Manage" button in the Subscription section above to cancel anytime.</p>
+                <p><strong>Purchased on iOS App Store:</strong> Go to Settings → [Your Name] → Subscriptions → Perk Up Daily → Cancel Subscription.</p>
+                <p><strong>Purchased on Google Play:</strong> Open Google Play Store → Account → Subscriptions → Perk Up Daily → Cancel Subscription.</p>
+                <p className="italic">Deleting your account will not automatically cancel your subscription. Please cancel first if you don't wish to be charged.</p>
+              </div>
+            </div>
+
             <div className="bg-card border border-border rounded-xl p-4 space-y-2">
               <p className="text-sm"><span className="text-muted-foreground">Name:</span> {user?.full_name}</p>
               <p className="text-sm"><span className="text-muted-foreground">Email:</span> {user?.email}</p>
@@ -285,7 +297,7 @@ export default function Settings() {
                 <AlertDialogHeader>
                   <AlertDialogTitle>Delete account</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This action cannot be undone. Your account and all associated data will be permanently deleted.
+                    This action cannot be undone. Your account and all associated data will be permanently deleted. Make sure you've cancelled your subscription first to avoid being charged.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <div className="flex gap-3 justify-end">
