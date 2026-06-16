@@ -6,29 +6,21 @@ import { Button } from '@/components/ui/button';
 const features = [
   {
     icon: Sun,
-    color: 'text-amber-600',
-    bg: 'bg-amber-50 border-amber-200',
     title: 'Daily Deliveries',
     desc: 'Three moments each day filled with your best memories, affirmations, and encouragement.',
   },
   {
     icon: Sparkles,
-    color: 'text-rose-500',
-    bg: 'bg-rose-50 border-rose-200',
     title: 'Personal Vault',
     desc: 'Log blessings, accomplishments, milestones, and moments that matter most to you.',
   },
   {
     icon: Shield,
-    color: 'text-emerald-600',
-    bg: 'bg-emerald-50 border-emerald-200',
     title: 'Content You Control',
     desc: 'Choose your categories, toggle Christian content, and curate what surfaces in your day.',
   },
   {
     icon: Heart,
-    color: 'text-sky-600',
-    bg: 'bg-sky-50 border-sky-200',
     title: 'Built for Good Days',
     desc: 'No venting. No negativity. Just the good stuff, ready when you need it.',
   },
@@ -184,12 +176,14 @@ export default function Landing() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className={`rounded-2xl p-6 border ${f.bg}`}
-                style={{ boxShadow: '0 1px 4px rgba(44,30,15,0.06)' }}
+                className="rounded-2xl p-6"
+                style={{
+                  background: '#fffdf8',
+                  border: '1px solid rgba(44,30,15,0.08)',
+                  boxShadow: '0 1px 4px rgba(44,30,15,0.06)',
+                }}
               >
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 bg-white/70">
-                  <f.icon className={`w-5 h-5 ${f.color}`} />
-                </div>
+                <f.icon className="w-5 h-5 mb-4" style={{ color: '#d4830a' }} />
                 <h4 className="font-display text-lg font-semibold mb-2" style={{ color: '#2c1e0f' }}>{f.title}</h4>
                 <p className="text-sm leading-relaxed" style={{ color: '#7a5c3a' }}>{f.desc}</p>
               </motion.div>
