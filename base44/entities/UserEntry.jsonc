@@ -47,6 +47,10 @@
       "format": "date",
       "description": "Optional date for anniversary surfacing"
     },
+    "location": {
+      "type": "string",
+      "description": "Optional location for memory entries (free text)"
+    },
     "photo_url": {
       "type": "string",
       "description": "Optional photo URL"

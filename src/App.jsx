@@ -27,6 +27,7 @@ import Blessings from '@/pages/Blessings';
 import Quotes from '@/pages/Quotes';
 import Notes from '@/pages/Notes';
 import IdentityUpgrades from '@/pages/IdentityUpgrades';
+import Search from '@/pages/Search';
 import Settings from '@/pages/Settings';
 import Admin from '@/pages/Admin';
 import AppLayout from '@/components/layout/AppLayout';
@@ -74,6 +75,7 @@ const AuthenticatedApp = () => {
           <Route path="/quotes" element={<Quotes />} />
           <Route path="/notes" element={<Notes />} />
           <Route path="/identity-upgrades" element={<IdentityUpgrades />} />
+          <Route path="/search" element={<Search />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/admin" element={<Admin />} />
         </Route>

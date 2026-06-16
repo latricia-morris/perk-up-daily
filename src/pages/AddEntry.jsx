@@ -53,6 +53,7 @@ export default function AddEntry() {
     old_belief: '',
     category: '',
     entry_date: '',
+    location: '',
     photo_url: '',
   });
   const [saving, setSaving] = useState(false);
@@ -299,6 +300,12 @@ export default function AddEntry() {
                           className="min-h-[120px]"
                         />
                       </div>
+                      {form.entry_type === 'experience' && (
+                        <div>
+                          <Label className="text-sm font-medium mb-1.5 block">Location <span className="text-muted-foreground">(optional)</span></Label>
+                          <Input value={form.location} onChange={e => setForm(prev => ({ ...prev, location: e.target.value }))} placeholder="e.g. Yosemite, our kitchen, the backyard" />
+                        </div>
+                      )}
                       <div>
                         <Label className="text-sm font-medium mb-1.5 block">Date <span className="text-muted-foreground">(optional)</span></Label>
                         <Input type="date" value={form.entry_date} onChange={e => setForm(prev => ({ ...prev, entry_date: e.target.value }))} />

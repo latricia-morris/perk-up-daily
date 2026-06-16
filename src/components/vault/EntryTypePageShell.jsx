@@ -98,6 +98,9 @@ function EntryCard({ entry, index, queryKey }) {
             )}
             <div className="flex items-center gap-2 mt-3 flex-wrap">
               <CategoryBadge category={entry.category} />
+              {entry.location && (
+                <span className="text-[10px] text-muted-foreground">📍 {entry.location}</span>
+              )}
               {entry.entry_date && (
                 <span className="text-[10px] text-muted-foreground">
                   {format(new Date(entry.entry_date), 'MMM d, yyyy')}

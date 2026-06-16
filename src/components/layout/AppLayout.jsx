@@ -3,7 +3,7 @@ import { Outlet, Link, useLocation } from 'react-router-dom';
 import {
   Home, PlusCircle, Sparkles, Trophy, Settings,
   ShieldCheck, Zap, BookOpen, Menu, X, LogOut,
-  Heart, Image, Quote, FileText, Star
+  Heart, Image, Quote, FileText, Star, Search
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
@@ -13,6 +13,7 @@ const mainNav = [
   { path: '/dashboard', icon: Home, label: 'Home' },
   { path: '/add-entry', icon: PlusCircle, label: 'Add Entry' },
   { path: '/vault', icon: Sparkles, label: 'Perk Ups' },
+  { path: '/search', icon: Search, label: 'Search' },
 ];
 
 const libraryNav = [
@@ -31,7 +32,7 @@ const bottomTabNav = [
   { path: '/dashboard', icon: Home, label: 'Home' },
   { path: '/vault', icon: Sparkles, label: 'Perk Ups' },
   { path: '/add-entry', icon: PlusCircle, label: 'Add' },
-  { path: '/milestones', icon: Trophy, label: 'Life Wins' },
+  { path: '/search', icon: Search, label: 'Search' },
   { path: '/settings', icon: Settings, label: 'Settings' },
 ];
 

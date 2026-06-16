@@ -5,12 +5,11 @@ import { Check, Sun, Sparkles } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 const perks = [
-  'Three daily uplift sessions (morning, midday, evening)',
+  'Daily rhythm set with reminders to keep life upbeat',
   'Unlimited personal entries in your vault',
   'Life Wins and milestone tracking',
   'Curated library of quotes and affirmations',
-  'AI-powered content guard',
-  'Christian content option',
+  'Faith-Based Content Option for Christian Subscribers (toggle on or off)',
 ];
 
 export default function Paywall() {
