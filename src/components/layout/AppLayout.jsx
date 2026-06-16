@@ -101,9 +101,32 @@ export default function AppLayout() {
   const location = useLocation();
   const [user, setUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const scrollPositionsRef = useState({})[0];
 
   useEffect(() => { base44.auth.me().then(setUser).catch(() => {}); }, []);
   useEffect(() => { setMenuOpen(false); }, [location.pathname]);
+
+  // Save scroll position before navigating away
+  useEffect(() => {
+    const handleScroll = () => {
+      const mainElement = document.querySelector('main');
+      if (mainElement) {
+        scrollPositionsRef[location.pathname] = mainElement.scrollTop;
+      }
+    };
+    const mainElement = document.querySelector('main');
+    mainElement?.addEventListener('scroll', handleScroll);
+    return () => mainElement?.removeEventListener('scroll', handleScroll);
+  }, [location.pathname, scrollPositionsRef]);
+
+  // Restore scroll position on route change
+  useEffect(() => {
+    const mainElement = document.querySelector('main');
+    if (mainElement) {
+      const savedPosition = scrollPositionsRef[location.pathname];
+      mainElement.scrollTop = savedPosition || 0;
+    }
+  }, [location.pathname, scrollPositionsRef]);
 
   return (
     <div className="min-h-screen bg-background">

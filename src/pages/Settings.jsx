@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Check, Loader2, Trash2 } from 'lucide-react';
+import { Check, Loader2, Trash2, Download } from 'lucide-react';
 import { CATEGORIES } from '@/lib/constants';
 import { useTheme } from '@/lib/useTheme';
 import { motion } from 'framer-motion';
@@ -24,6 +24,7 @@ export default function Settings() {
   const [saved, setSaved] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [exporting, setExporting] = useState(false);
   const { theme, setTheme } = useTheme();
 
   const [prefs, setPrefs] = useState({
@@ -85,6 +86,26 @@ export default function Settings() {
     } catch (error) {
       setDeleting(false);
       setShowDeleteDialog(false);
+    }
+  };
+
+  const handleExportEntries = async () => {
+    setExporting(true);
+    try {
+      const response = await base44.functions.invoke('exportEntries', {});
+      const blob = new Blob([JSON.stringify(response.data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `perk-up-export-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Export failed:', error);
+    } finally {
+      setExporting(false);
     }
   };
 
@@ -217,6 +238,22 @@ export default function Settings() {
                 <Button variant="outline" size="sm">Manage</Button>
               </div>
             </div>
+          </section>
+
+          {/* Export */}
+          <section>
+            <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4">Data</h2>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleExportEntries}
+              disabled={exporting}
+              className="w-full justify-center"
+            >
+              {exporting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Download className="w-4 h-4 mr-2" />}
+              {exporting ? 'Exporting...' : 'Export all entries'}
+            </Button>
+            <p className="text-xs text-muted-foreground mt-2">Download your entries as a JSON file.</p>
           </section>
 
           {/* Account */}
