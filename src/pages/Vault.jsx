@@ -39,9 +39,9 @@ export default function Vault() {
   });
 
   return (
-    <div className="md:ml-64">
+    <div>
       <div className="max-w-3xl mx-auto px-6 py-8">
-        <h1 className="font-display text-2xl font-semibold text-foreground mb-6">Your Vault</h1>
+        <h1 className="font-display text-2xl font-semibold text-foreground mb-6">Perk Ups</h1>
 
         {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
@@ -87,7 +87,7 @@ export default function Vault() {
           ))}
           {filtered.length === 0 && (
             <div className="text-center py-16 text-muted-foreground">
-              <p className="text-sm">No entries found. Start adding some good stuff!</p>
+              <p className="text-sm">No perk ups yet. Start adding some good stuff!</p>
             </div>
           )}
         </div>

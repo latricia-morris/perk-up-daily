@@ -17,9 +17,7 @@ export default function AdminAddItem() {
     body: '',
     author: '',
     category: '',
-    tags: '',
     status: 'active',
-    scheduled_date: '',
   });
   const [saved, setSaved] = useState(false);
 
@@ -27,7 +25,7 @@ export default function AdminAddItem() {
     mutationFn: (data) => base44.entities.AppLibrary.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-library'] });
-      setForm({ content_type: '', body: '', author: '', category: '', tags: '', status: 'active', scheduled_date: '' });
+      setForm({ content_type: '', body: '', author: '', category: '', status: 'active' });
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     },
@@ -87,17 +85,6 @@ export default function AdminAddItem() {
           {form.content_type === 'scripture' && (
             <p className="text-xs text-muted-foreground mt-1">Use the Bible reference as the author (e.g. John 3:16 NIV)</p>
           )}
-        </div>
-
-        <div>
-          <Label className="text-sm font-medium mb-1.5 block">Tags <span className="text-muted-foreground">(optional)</span></Label>
-          <Input value={form.tags} onChange={e => setForm(prev => ({ ...prev, tags: e.target.value }))} placeholder="morning, strength, hope" />
-        </div>
-
-        <div>
-          <Label className="text-sm font-medium mb-1.5 block">Scheduled Date <span className="text-muted-foreground">(optional)</span></Label>
-          <Input type="date" value={form.scheduled_date} onChange={e => setForm(prev => ({ ...prev, scheduled_date: e.target.value }))} />
-          <p className="text-xs text-muted-foreground mt-1">If set, item goes active on this date.</p>
         </div>
 
         <div className="flex items-center justify-between">

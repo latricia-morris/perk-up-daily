@@ -73,7 +73,7 @@ export default function Dashboard() {
   })();
 
   return (
-    <div className="md:ml-64">
+    <div>
       <div className="max-w-2xl mx-auto px-6 py-8 md:py-12">
         {/* Greeting */}
         <motion.div

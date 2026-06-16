@@ -32,7 +32,7 @@ export default function Scriptures() {
   ];
 
   return (
-    <div className="md:ml-64">
+    <div>
       <div className="max-w-2xl mx-auto px-6 py-8">
         <h1 className="font-display text-2xl font-semibold text-foreground mb-6">Scriptures</h1>
 

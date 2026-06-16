@@ -71,7 +71,7 @@ export default function Settings() {
     : CATEGORIES.filter(c => !c.requiresChristian);
 
   return (
-    <div className="md:ml-64">
+    <div>
       <div className="max-w-lg mx-auto px-6 py-8">
         <h1 className="font-display text-2xl font-semibold text-foreground mb-8">Settings</h1>
 
@@ -190,7 +190,7 @@ export default function Settings() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-foreground capitalize">{user?.subscription_status || 'trial'}</p>
-                  <p className="text-xs text-muted-foreground">$3.99/month</p>
+                  <p className="text-xs text-muted-foreground">$4.99/month</p>
                 </div>
                 <Button variant="outline" size="sm">Manage</Button>
               </div>

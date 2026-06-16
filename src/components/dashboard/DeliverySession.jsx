@@ -12,74 +12,155 @@ function shuffleArray(arr) {
   return a;
 }
 
-// Deduplicate: keep only one item per category (regardless of content/entry type)
-function deduplicateByCategory(arr) {
-  const seen = new Set();
-  return arr.filter(item => {
-    const key = item.category;
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
+// Weighted random pick — items in preferred categories appear ~3x more often
+function weightedShuffle(arr, preferredCategories) {
+  if (!preferredCategories || preferredCategories.length === 0) return shuffleArray(arr);
+  const preferred = new Set(preferredCategories);
+  const weighted = arr.flatMap(item =>
+    preferred.has(item.category) ? [item, item, item] : [item]
+  );
+  return shuffleArray(weighted).filter((item, idx, self) =>
+    self.findIndex(x => x.id === item.id) === idx
+  );
+}
+
+// Check if an entry is an anniversary today (same month/day)
+function isAnniversaryToday(entry) {
+  if (!entry.entry_date) return false;
+  const today = new Date();
+  const d = new Date(entry.entry_date);
+  return d.getMonth() === today.getMonth() && d.getDate() === today.getDate();
+}
+
+// Get yesterday's seen IDs from localStorage to avoid same-day-in-a-row repeats
+function getYesterdaySeenIds() {
+  try {
+    const raw = localStorage.getItem('perkup-yesterday-delivery');
+    if (!raw) return new Set();
+    const { date, ids } = JSON.parse(raw);
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yStr = yesterday.toISOString().split('T')[0];
+    if (date === yStr) return new Set(ids);
+  } catch {}
+  return new Set();
+}
+
+function saveTodaySeenIds(ids) {
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    // Shift today → yesterday slot next load
+    localStorage.setItem('perkup-yesterday-delivery', JSON.stringify({ date: today, ids }));
+  } catch {}
 }
 
 export default function DeliverySession({ libraryItems, userEntries, categories, christianEnabled }) {
   const [shuffleKey, setShuffleKey] = useState(0);
 
-  const allContent = useMemo(() => {
-    const validCategories = new Set(categories);
-
-    const filteredLibrary = libraryItems.filter(item => {
-      if (!christianEnabled && item.category === 'deep_faith') return false;
-      if (!christianEnabled && item.content_type === 'scripture') return false;
-      if (validCategories.size > 0 && !validCategories.has(item.category)) return false;
-      return item.status === 'active';
-    });
-
-    const filteredEntries = userEntries.filter(entry => {
-      if (!christianEnabled && entry.category === 'deep_faith') return false;
-      if (!christianEnabled && entry.entry_type === 'scripture') return false;
-      if (validCategories.size > 0 && !validCategories.has(entry.category)) return false;
-      return entry.status === 'active';
-    });
-
-    return {
-      library: shuffleArray(filteredLibrary),
-      entries: shuffleArray(filteredEntries),
-    };
-  }, [libraryItems, userEntries, categories, christianEnabled, shuffleKey]);
-
   const session = useMemo(() => {
-    const libraryPool = allContent.library.map(item => ({ ...item, source: 'library' }));
-    const entryPool = allContent.entries.map(item => ({ ...item, source: 'user_entry' }));
+    const today = new Date().toISOString().split('T')[0];
+    const preferredCats = categories && categories.length > 0 ? new Set(categories) : null;
+    const yesterdayIds = getYesterdaySeenIds();
 
-    // Interleave library and user entries, then deduplicate by category
-    const interleaved = [];
-    const maxLen = Math.max(libraryPool.length, entryPool.length);
-    for (let i = 0; i < maxLen; i++) {
-      if (i < libraryPool.length) interleaved.push(libraryPool[i]);
-      if (i < entryPool.length) interleaved.push(entryPool[i]);
+    // --- Filter both pools ---
+    const filterItem = (item, typeField) => {
+      if (!christianEnabled && item.category === 'deep_faith') return false;
+      if (!christianEnabled && item[typeField] === 'scripture') return false;
+      if (preferredCats && preferredCats.size > 0 && !preferredCats.has(item.category)) return false;
+      return true;
+    };
+
+    const libPool = libraryItems
+      .filter(item => item.status === 'active' && filterItem(item, 'content_type'))
+      .map(item => ({ ...item, source: 'library' }));
+
+    const entryPool = userEntries
+      .filter(entry => entry.status === 'active' && filterItem(entry, 'entry_type'))
+      .map(entry => ({ ...entry, source: 'user_entry' }));
+
+    // --- Anniversary entries surface first ---
+    const anniversaryEntries = entryPool.filter(isAnniversaryToday);
+    const regularEntries = entryPool.filter(e => !isAnniversaryToday(e));
+
+    // --- Ratio: more personal entries as vault grows ---
+    // 0 entries → 0% personal; 5+ entries → 40%; 15+ → 60%; 30+ → 80%
+    const totalPersonal = entryPool.length;
+    const targetPersonalCount = totalPersonal === 0 ? 0
+      : totalPersonal < 5 ? 1
+      : totalPersonal < 15 ? 2
+      : totalPersonal < 30 ? 3
+      : 4;
+
+    const SESSION_SIZE = 5; // 1 featured + 4 supporting
+
+    // Shuffle with category weighting
+    const shuffledEntries = weightedShuffle([...anniversaryEntries, ...regularEntries], categories);
+    const shuffledLib = weightedShuffle(libPool, categories);
+
+    // Deprioritize items seen yesterday
+    const sortFn = (a, b) => {
+      const aYest = yesterdayIds.has(a.id) ? 1 : 0;
+      const bYest = yesterdayIds.has(b.id) ? 1 : 0;
+      return aYest - bYest;
+    };
+    shuffledEntries.sort(sortFn);
+    shuffledLib.sort(sortFn);
+
+    // Pick personal entries up to target, fill rest from library, no duplicates
+    const picked = [];
+    const pickedIds = new Set();
+
+    const addItem = (item) => {
+      if (pickedIds.has(item.id)) return false;
+      picked.push(item);
+      pickedIds.add(item.id);
+      return true;
+    };
+
+    // Always include anniversary entries first
+    anniversaryEntries.forEach(addItem);
+
+    // Fill personal slots
+    let personalAdded = anniversaryEntries.length;
+    for (const e of shuffledEntries) {
+      if (personalAdded >= targetPersonalCount || picked.length >= SESSION_SIZE) break;
+      if (!anniversaryEntries.find(a => a.id === e.id)) {
+        if (addItem(e)) personalAdded++;
+      }
     }
 
-    // One card per category across the entire session
-    const deduped = deduplicateByCategory(interleaved);
+    // Fill remaining from library
+    for (const lib of shuffledLib) {
+      if (picked.length >= SESSION_SIZE) break;
+      addItem(lib);
+    }
 
-    const featuredTypes = ['quote', 'affirmation', 'scripture'];
-    const featuredIdx = deduped.findIndex(item =>
-      featuredTypes.includes(item.content_type || item.entry_type)
+    // If still short (tiny library + few entries), pull more personal entries
+    for (const e of shuffledEntries) {
+      if (picked.length >= SESSION_SIZE) break;
+      addItem(e);
+    }
+
+    // Save today's seen IDs for tomorrow's dedup
+    saveTodaySeenIds(picked.map(p => p.id));
+
+    // --- Pick featured: prefer quote/affirmation/scripture ---
+    const featuredTypes = new Set(['quote', 'affirmation', 'scripture']);
+    const featuredIdx = picked.findIndex(item =>
+      featuredTypes.has(item.content_type || item.entry_type)
     );
 
     let featured, supporting;
     if (featuredIdx >= 0) {
-      featured = deduped[featuredIdx];
-      supporting = deduped.filter((_, i) => i !== featuredIdx).slice(0, 4);
+      featured = picked[featuredIdx];
+      supporting = picked.filter((_, i) => i !== featuredIdx);
     } else {
-      featured = deduped[0];
-      supporting = deduped.slice(1, 5);
+      featured = picked[0];
+      supporting = picked.slice(1);
     }
 
     return { featured, supporting };
-  }, [allContent]);
+  }, [libraryItems, userEntries, categories, christianEnabled, shuffleKey]);
 
   if (!session.featured) {
     return (
@@ -95,7 +176,7 @@ export default function DeliverySession({ libraryItems, userEntries, categories,
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
         {session.supporting.map((item, i) => (
-          <UpliftCard key={`${shuffleKey}-${i}`} item={item} source={item.source} />
+          <UpliftCard key={`${shuffleKey}-${i}-${item.id}`} item={item} source={item.source} />
         ))}
       </div>
 

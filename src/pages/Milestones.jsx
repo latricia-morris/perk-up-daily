@@ -38,7 +38,7 @@ export default function Milestones() {
   });
 
   return (
-    <div className="md:ml-64">
+    <div>
       <div className="max-w-2xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between mb-6">
           <h1 className="font-display text-2xl font-semibold text-foreground">Life Wins</h1>

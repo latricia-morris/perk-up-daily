@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import {
-  Home, PlusCircle, Archive, Trophy, Settings,
+  Home, PlusCircle, Sparkles, Trophy, Settings,
   ShieldCheck, Zap, BookOpen, Menu, X
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
+const ADMIN_EMAIL = 'perkupdaily@gmail.com'; // Only show Admin nav for this account
+
 const mainNav = [
   { path: '/dashboard', icon: Home, label: 'Home' },
   { path: '/add-entry', icon: PlusCircle, label: 'Add Entry' },
-  { path: '/vault', icon: Archive, label: 'Vault' },
+  { path: '/vault', icon: Sparkles, label: 'Perk Ups' },
 ];
 
 const libraryNav = [
@@ -21,7 +23,7 @@ const scriptureNav = { path: '/scriptures', icon: BookOpen, label: 'Scriptures' 
 
 const bottomTabNav = [
   { path: '/dashboard', icon: Home, label: 'Home' },
-  { path: '/vault', icon: Archive, label: 'Vault' },
+  { path: '/vault', icon: Sparkles, label: 'Perk Ups' },
   { path: '/add-entry', icon: PlusCircle, label: 'Add' },
   { path: '/milestones', icon: Trophy, label: 'Life Wins' },
   { path: '/settings', icon: Settings, label: 'Settings' },
@@ -45,7 +47,7 @@ function NavLink({ path, icon: Icon, label, onClick }) {
 }
 
 function SidebarContent({ user, onNavClick }) {
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = user?.email === ADMIN_EMAIL;
   const christianEnabled = user?.christian_content;
 
   return (
@@ -117,9 +119,10 @@ export default function AppLayout() {
         </div>
       </header>
 
-      {/* Mobile slide-down menu */}
+      {/* Mobile slide-down menu overlay */}
       {menuOpen && (
-        <div className="md:hidden fixed top-[53px] left-0 right-0 bottom-0 z-40 bg-card/98 backdrop-blur-sm border-t border-border overflow-y-auto p-5">
+        <div className="md:hidden fixed top-[53px] left-0 right-0 bottom-0 z-40 overflow-y-auto p-5"
+          style={{ background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(16px)' }}>
           <SidebarContent user={user} onNavClick={() => setMenuOpen(false)} />
         </div>
       )}

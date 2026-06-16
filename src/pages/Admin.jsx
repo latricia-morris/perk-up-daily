@@ -27,7 +27,7 @@ export default function Admin() {
   }
 
   return (
-    <div className="md:ml-64">
+    <div>
       <div className="max-w-5xl mx-auto px-6 py-8">
         <h1 className="font-display text-2xl font-semibold text-foreground mb-2">Admin Panel</h1>
         <p className="text-sm text-muted-foreground mb-8">Manage the App Library content that all users see.</p>

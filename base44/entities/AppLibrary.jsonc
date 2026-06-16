@@ -32,10 +32,6 @@
       ],
       "description": "Life area category"
     },
-    "tags": {
-      "type": "string",
-      "description": "Comma-separated tags"
-    },
     "status": {
       "type": "string",
       "enum": [
@@ -44,11 +40,6 @@
       ],
       "default": "active",
       "description": "Whether this item is in rotation"
-    },
-    "scheduled_date": {
-      "type": "string",
-      "format": "date",
-      "description": "Optional date when item goes active"
     }
   },
   "required": [
