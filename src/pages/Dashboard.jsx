@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { PlusCircle, Sun, CloudSun, Moon } from 'lucide-react';
@@ -9,6 +9,7 @@ import { getGreeting } from '@/lib/constants';
 import DeliverySession from '@/components/dashboard/DeliverySession';
 import EveningPrompt from '@/components/dashboard/EveningPrompt';
 import StreakCounter from '@/components/dashboard/StreakCounter';
+import PullToRefresh from '@/components/PullToRefresh';
 
 const sessionIcons = {
   morning: Sun,
@@ -18,6 +19,7 @@ const sessionIcons = {
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -72,8 +74,15 @@ export default function Dashboard() {
     try { return JSON.parse(user.selected_categories); } catch { return []; }
   })();
 
+  const handleDashboardRefresh = () => {
+    return Promise.all([
+      queryClient.invalidateQueries({ queryKey: ['library'] }),
+      queryClient.invalidateQueries({ queryKey: ['user-entries'] }),
+    ]);
+  };
+
   return (
-    <div>
+    <PullToRefresh onRefresh={handleDashboardRefresh}>
       <div className="max-w-2xl mx-auto px-6 py-8 md:py-12">
         {/* Greeting */}
         <motion.div
@@ -125,6 +134,6 @@ export default function Dashboard() {
           </Link>
         </div>
       </div>
-    </div>
+    </PullToRefresh>
   );
 }

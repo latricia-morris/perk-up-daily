@@ -4,15 +4,26 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Check, Loader2 } from 'lucide-react';
+import { Check, Loader2, Trash2 } from 'lucide-react';
 import { CATEGORIES } from '@/lib/constants';
 import { useTheme } from '@/lib/useTheme';
 import { motion } from 'framer-motion';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 export default function Settings() {
   const [user, setUser] = useState(null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const { theme, setTheme } = useTheme();
 
   const [prefs, setPrefs] = useState({
@@ -64,6 +75,17 @@ export default function Settings() {
     setSaving(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
+  };
+
+  const handleDeleteAccount = async () => {
+    setDeleting(true);
+    try {
+      await base44.auth.deleteAccount();
+      window.location.href = '/';
+    } catch (error) {
+      setDeleting(false);
+      setShowDeleteDialog(false);
+    }
   };
 
   const visibleCategories = prefs.christian_content
@@ -212,6 +234,36 @@ export default function Settings() {
             >
               Log out
             </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="mt-2 text-destructive hover:text-destructive"
+              onClick={() => setShowDeleteDialog(true)}
+            >
+              <Trash2 className="w-4 h-4 mr-2" /> Delete account
+            </Button>
+
+            <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Delete account</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. Your account and all associated data will be permanently deleted.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <div className="flex gap-3 justify-end">
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleDeleteAccount}
+                    disabled={deleting}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    {deleting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                    Delete permanently
+                  </AlertDialogAction>
+                </div>
+              </AlertDialogContent>
+            </AlertDialog>
           </section>
 
           {/* Save */}

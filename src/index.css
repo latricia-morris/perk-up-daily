@@ -92,12 +92,21 @@
     @apply border-border outline-ring/50;
   }
 
+  html {
+    overscroll-behavior: none;
+  }
+
   body {
     @apply bg-background text-foreground font-body;
+    overscroll-behavior: none;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
+  }
+
+  button, a, [role="button"], nav, [role="navigation"] {
+    @apply select-none;
   }
 }
 

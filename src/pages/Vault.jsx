@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { Search, Filter } from 'lucide-react';
@@ -8,8 +8,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { getFilteredEntryTypes, getFilteredCategories, getEntryTypeLabel } from '@/lib/constants';
 import CategoryBadge from '@/components/shared/CategoryBadge';
 import VaultEntryCard from '@/components/vault/VaultEntryCard';
+import PullToRefresh from '@/components/PullToRefresh';
 
 export default function Vault() {
+  const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
@@ -38,8 +40,12 @@ export default function Vault() {
     return true;
   });
 
+  const handleVaultRefresh = () => {
+    return queryClient.invalidateQueries({ queryKey: ['vault-entries'] });
+  };
+
   return (
-    <div>
+    <PullToRefresh onRefresh={handleVaultRefresh}>
       <div className="max-w-3xl mx-auto px-6 py-8">
         <h1 className="font-display text-2xl font-semibold text-foreground mb-6">Perk Ups</h1>
 
@@ -92,6 +98,6 @@ export default function Vault() {
           )}
         </div>
       </div>
-    </div>
+    </PullToRefresh>
   );
 }
