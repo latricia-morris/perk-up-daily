@@ -378,7 +378,7 @@ export default function Landing() {
             <div className="space-y-4 text-sm leading-relaxed" style={{ color: '#4a3520' }}>
               <p>Your brain is not fixed. Science has proven that it is constantly rewiring itself based on what you repeatedly put in front of it. Every time you bring something good into focus, your brain forms a new connection around it. Every time you come back to it, that connection gets stronger. Do that enough times and your brain stops having to work to find the good. It just starts going there on its own.</p>
               <p>Gratitude practices, positive reflection, and daily reinforcement of good experiences are among the most studied and evidence-supported tools for shifting how the brain operates. New neural pathways can begin forming within days of consistent practice and keep strengthening the more you repeat them.</p>
-              <p>That is exactly what Perk Up Daily was built to do. Every entry you log and every delivery you receive is adding another rep. And the reps add up.</p>
+              <p>That is exactly what Perk Up Daily was built to do. Every entry you log and every delivery you receive is adding another rep, and <strong>every rep counts</strong>.</p>
             </div>
             <div className="flex justify-center">
               <img src={BRAIN_IMAGE} alt="Neural pathways illustration" className="w-full max-w-lg object-contain" />
