@@ -376,21 +376,21 @@ export default function Landing() {
 
       {/* ── SECTION 5: THE SCIENCE ────────────────────────────────────── */}
       <section className="py-12 md:py-16">
-        <div className="max-w-3xl mx-auto px-6">
+        <div className="max-w-5xl mx-auto px-6">
           <h3 className="font-display text-2xl md:text-3xl font-semibold mb-2" style={{ color: '#2c1e0f' }}>
             What if your brain could be rewired for joy?
           </h3>
           <p className="font-semibold text-base mb-6" style={{ color: '#E8A838' }}>Science says it can.</p>
 
           {/* Brain image & text layout */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 items-start">
-            <div className="md:col-span-2 space-y-4 text-sm leading-relaxed" style={{ color: '#4a3520' }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-8 items-start">
+            <div className="space-y-4 text-sm leading-relaxed" style={{ color: '#4a3520' }}>
               <p>Your brain is not fixed. Science has proven that it is constantly rewiring itself based on what you repeatedly put in front of it. Every time you bring something good into focus, your brain forms a new connection around it. Every time you come back to it, that connection gets stronger. Do that enough times and your brain stops having to work to find the good. It just starts going there on its own.</p>
               <p>Gratitude practices, positive reflection, and daily reinforcement of good experiences are among the most studied and evidence-supported tools for shifting how the brain operates. New neural pathways can begin forming within days of consistent practice and keep strengthening the more you repeat them.</p>
               <p>That is exactly what Perk Up Daily was built to do. Every entry you log and every delivery you receive is adding another rep. And the reps add up.</p>
             </div>
             <div className="flex justify-center">
-              <img src={BRAIN_IMAGE} alt="Neural pathways illustration" className="w-full max-w-xs object-contain" />
+              <img src={BRAIN_IMAGE} alt="Neural pathways illustration" className="w-full max-w-lg object-contain" />
             </div>
           </div>
 
