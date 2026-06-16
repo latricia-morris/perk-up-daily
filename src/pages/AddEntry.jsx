@@ -136,6 +136,14 @@ export default function AddEntry() {
     setUploading(false);
   };
 
+  const getDefaultDateForType = (entryType) => {
+    if (['experience', 'life_win', 'milestone', 'accomplishment', 'blessing'].includes(entryType)) {
+      const today = new Date();
+      return today.toISOString().split('T')[0];
+    }
+    return '';
+  };
+
   // For identity swap, body = new truth, old_belief = old lie
   const canSave = form.entry_type && form.category &&
     (isIdentitySwap ? (form.body && form.old_belief) : form.body);
@@ -229,7 +237,7 @@ export default function AddEntry() {
                   body: '',
                   old_belief: '',
                   category: '',
-                  entry_date: '',
+                  entry_date: getDefaultDateForType(v),
                   photo_url: '',
                 }))}
               />
