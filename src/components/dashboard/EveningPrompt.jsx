@@ -25,7 +25,7 @@ export default function EveningPrompt({ christianEnabled }) {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const categories = getFilteredCategories(christianEnabled);
-  const entryTypes = getFilteredEntryTypes(christianEnabled).filter(t => ['blessing', 'life_win'].includes(t.slug));
+  const entryTypes = getFilteredEntryTypes(christianEnabled);
 
   // Pick a stable prompt for the session
   const prompt = PROMPTS[new Date().getDate() % PROMPTS.length];
