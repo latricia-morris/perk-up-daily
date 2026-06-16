@@ -72,11 +72,11 @@ export default function StreakCounter({ entries }) {
       className="mb-8"
     >
       <div
-        className="rounded-2xl px-5 py-4 flex items-center gap-4 bg-card"
+        className="rounded-2xl px-5 py-4 flex items-center gap-4"
         style={{
-          background: 'linear-gradient(135deg, rgba(232,168,56,0.14) 0%, hsl(var(--card)) 65%)',
-          border: '1px solid hsl(var(--border))',
-          boxShadow: '0 1px 6px rgba(232,168,56,0.08)',
+          background: 'linear-gradient(135deg, #fde8c0 0%, #fffdf8 65%)',
+          border: '1px solid rgba(212,131,10,0.18)',
+          boxShadow: '0 1px 6px rgba(212,131,10,0.08)',
         }}
       >
         <div className="flex flex-col items-center min-w-[48px]">

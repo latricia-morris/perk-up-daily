@@ -31,11 +31,11 @@ export default function UpliftCard({ item, featured = false, source = 'library' 
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="relative overflow-hidden rounded-2xl p-6 md:p-8 bg-card"
+        className="relative overflow-hidden rounded-2xl p-6 md:p-8"
         style={{
-          background: `linear-gradient(135deg, rgba(232,168,56,0.14) 0%, hsl(var(--card)) 60%)`,
-          border: '1px solid hsl(var(--border))',
-          boxShadow: '0 4px 24px rgba(232,168,56,0.10)',
+          background: `linear-gradient(135deg, rgba(212,131,10,0.14) 0%, #fffdf8 60%)`,
+          border: '1px solid rgba(212,131,10,0.2)',
+          boxShadow: '0 4px 24px rgba(212,131,10,0.10)',
         }}
       >
         <div
@@ -77,9 +77,10 @@ export default function UpliftCard({ item, featured = false, source = 'library' 
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="rounded-xl p-4 transition-shadow hover:shadow-md bg-card"
+      className="rounded-xl p-4 transition-shadow hover:shadow-md"
       style={{
-        border: '1px solid hsl(var(--border))',
+        background: '#fffdf8',
+        border: '1px solid rgba(44,30,15,0.07)',
         boxShadow: '0 1px 4px rgba(44,30,15,0.06)',
       }}
     >

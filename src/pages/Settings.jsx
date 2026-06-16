@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Check, Loader2, Trash2, Download } from 'lucide-react';
+import { Check, Loader2, Trash2 } from 'lucide-react';
 import { CATEGORIES } from '@/lib/constants';
 import { useTheme } from '@/lib/useTheme';
 import { motion } from 'framer-motion';
@@ -23,7 +23,6 @@ export default function Settings() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const [exporting, setExporting] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const { theme, setTheme } = useTheme();
 
@@ -76,22 +75,6 @@ export default function Settings() {
     setSaving(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
-  };
-
-  const handleExportEntries = async () => {
-    setExporting(true);
-    try {
-      const response = await base44.functions.invoke('exportEntries', {});
-      const blob = new Blob([response.data], { type: 'text/csv;charset=utf-8;' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = `perk-up-entries-${new Date().toISOString().split('T')[0]}.csv`;
-      link.click();
-      setExporting(false);
-    } catch (error) {
-      console.error('Export failed:', error);
-      setExporting(false);
-    }
   };
 
   const handleDeleteAccount = async () => {
@@ -234,21 +217,6 @@ export default function Settings() {
                 <Button variant="outline" size="sm">Manage</Button>
               </div>
             </div>
-          </section>
-
-          {/* Data */}
-          <section>
-            <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4">Data</h2>
-            <Button
-              onClick={handleExportEntries}
-              disabled={exporting}
-              variant="outline"
-              size="sm"
-              className="w-full"
-            >
-              {exporting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Download className="w-4 h-4 mr-2" />}
-              Export entries as CSV
-            </Button>
           </section>
 
           {/* Account */}
