@@ -22,22 +22,28 @@ export default function Dashboard() {
 
   useEffect(() => {
     base44.auth.me().then(u => {
+      // Gate: cancelled or expired users must subscribe
+      if (u.subscription_status === 'cancelled' || u.subscription_status === 'expired') {
+        window.location.href = '/paywall';
+        return;
+      }
+
       setUser(u);
+
       // Apply onboarding prefs if not yet set
       if (!u.onboarding_completed) {
         const prefs = localStorage.getItem('perkup-onboarding');
-        if (prefs) {
-          const { christianContent, selectedCategories } = JSON.parse(prefs);
-          base44.auth.updateMe({
-            christian_content: christianContent || false,
-            selected_categories: JSON.stringify(selectedCategories || []),
-            onboarding_completed: true,
-            subscription_status: u.subscription_status || 'trial',
-            trial_start_date: u.trial_start_date || new Date().toISOString().split('T')[0],
-          }).then(updated => setUser(updated));
-          localStorage.removeItem('perkup-onboarding');
-        }
+        const { christianContent, selectedCategories } = prefs ? JSON.parse(prefs) : {};
+        base44.auth.updateMe({
+          christian_content: christianContent || false,
+          selected_categories: JSON.stringify(selectedCategories || []),
+          onboarding_completed: true,
+          subscription_status: u.subscription_status || 'trial',
+          trial_start_date: u.trial_start_date || new Date().toISOString().split('T')[0],
+        }).then(updated => setUser(updated));
+        if (prefs) localStorage.removeItem('perkup-onboarding');
       }
+
       // Apply theme
       if (u.theme === 'dark') {
         document.documentElement.classList.add('dark');

@@ -46,8 +46,8 @@ export default function Register() {
         base44.auth.setToken(result.access_token);
       }
       // Check if onboarding prefs exist — new user coming from onboarding
-      const hasOnboarding = localStorage.getItem('perkup-onboarding');
-      window.location.href = hasOnboarding ? "/add-entry?first=1" : "/paywall";
+      // All new users go to paywall first; onboarding prefs are applied after subscribe
+      window.location.href = "/paywall";
     } catch (err) {
       setError(err.message || "Invalid verification code");
     } finally {
@@ -69,8 +69,7 @@ export default function Register() {
   };
 
   const handleGoogle = () => {
-    const hasOnboarding = localStorage.getItem('perkup-onboarding');
-    base44.auth.loginWithProvider("google", hasOnboarding ? "/add-entry?first=1" : "/paywall");
+    base44.auth.loginWithProvider("google", "/paywall");
   };
 
   if (showOtp) {

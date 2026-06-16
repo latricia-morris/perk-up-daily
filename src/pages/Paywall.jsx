@@ -29,7 +29,7 @@ export default function Paywall() {
       const origin = window.location.origin;
       const response = await base44.functions.invoke('createCheckoutSession', {
         plan: selectedPlan,
-        successUrl: `${origin}/dashboard?subscribed=true`,
+        successUrl: `${origin}/add-entry?first=1`,
         cancelUrl: `${origin}/paywall`,
       });
 

@@ -20,6 +20,7 @@ export default function Login() {
     setLoading(true);
     try {
       await base44.auth.loginViaEmailPassword(email, password);
+      // Dashboard will handle paywall redirect for cancelled/expired users
       window.location.href = "/dashboard";
     } catch (err) {
       setError(err.message || "Invalid email or password");
@@ -29,6 +30,7 @@ export default function Login() {
   };
 
   const handleGoogle = () => {
+    // Dashboard will handle paywall redirect for cancelled/expired users
     base44.auth.loginWithProvider("google", "/dashboard");
   };
 
