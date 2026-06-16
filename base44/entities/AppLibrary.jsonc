@@ -18,7 +18,7 @@
     },
     "author": {
       "type": "string",
-      "description": "Author or attribution for quotes and scriptures"
+      "description": "Author or attribution. Required for quotes. For scriptures, use the Bible reference (e.g. Jeremiah 29:11 NIV)."
     },
     "category": {
       "type": "string",

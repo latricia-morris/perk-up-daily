@@ -1,20 +1,19 @@
 export const CATEGORIES = [
   { slug: 'deep_faith', label: 'Deep Faith', emoji: '✝️', requiresChristian: true },
   { slug: 'rich_relationships', label: 'Rich Relationships', emoji: '💛' },
-  { slug: 'strong_body', label: 'Strong Body', emoji: '💪' },
-  { slug: 'clear_mind', label: 'Clear Mind', emoji: '🧠' },
-  { slug: 'strong_business', label: 'Strong Business', emoji: '🚀' },
-  { slug: 'sound_money', label: 'Sound Money', emoji: '💰' },
+  { slug: 'strong_body', label: 'Healthy Body', emoji: '💪' },
+  { slug: 'clear_mind', label: 'Sound Mind', emoji: '🧠' },
+  { slug: 'strong_business', label: 'Legacy Business', emoji: '🚀' },
+  { slug: 'sound_money', label: 'Financial Freedom', emoji: '💰' },
 ];
 
 export const ENTRY_TYPES = [
-  { slug: 'experience', label: 'Experience / Memory', allowPhoto: true },
-  { slug: 'blessing', label: 'Blessing', allowPhoto: false },
-  { slug: 'accomplishment', label: 'Accomplishment', allowPhoto: false },
-  { slug: 'milestone', label: 'Milestone', allowPhoto: true },
+  { slug: 'experience', label: 'Memory', allowPhoto: true },
+  { slug: 'blessing', label: 'Blessing', allowPhoto: true },
+  { slug: 'life_win', label: 'Win', allowPhoto: true },
   { slug: 'affirmation', label: 'Affirmation', allowPhoto: false },
   { slug: 'quote', label: 'Quote', allowPhoto: false },
-  { slug: 'personal_note', label: 'Personal Note', allowPhoto: false },
+  { slug: 'personal_note', label: 'Note', allowPhoto: false },
   { slug: 'scripture', label: 'Scripture', requiresChristian: true, allowPhoto: false },
 ];
 
@@ -30,6 +29,8 @@ export function getCategoryLabel(slug) {
 }
 
 export function getEntryTypeLabel(slug) {
+  // Legacy slug support
+  if (slug === 'accomplishment' || slug === 'milestone') return 'Life Win';
   return ENTRY_TYPES.find(t => t.slug === slug)?.label || slug;
 }
 

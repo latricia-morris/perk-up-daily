@@ -6,6 +6,7 @@ import { base44 } from '@/api/base44Client';
 import { useQueryClient } from '@tanstack/react-query';
 import { getEntryTypeLabel, getFilteredCategories, getFilteredEntryTypes } from '@/lib/constants';
 import CategoryBadge from '@/components/shared/CategoryBadge';
+import ShareCard from '@/components/shared/ShareCard';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -164,6 +165,7 @@ export default function VaultEntryCard({ entry, index, christianEnabled }) {
             >
               <Pencil className="w-3.5 h-3.5" />
             </button>
+            <ShareCard item={entry} />
             <button
               onClick={handleDelete}
               className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"

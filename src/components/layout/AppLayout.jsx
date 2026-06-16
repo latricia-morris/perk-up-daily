@@ -7,7 +7,7 @@ const NAV_ITEMS = [
   { path: '/dashboard', icon: Home, label: 'Home' },
   { path: '/add-entry', icon: PlusCircle, label: 'Add' },
   { path: '/vault', icon: Archive, label: 'Vault' },
-  { path: '/milestones', icon: Trophy, label: 'Milestones' },
+  { path: '/milestones', icon: Trophy, label: 'Life Wins' },
   { path: '/settings', icon: Settings, label: 'Settings' },
 ];
 
@@ -69,12 +69,12 @@ export default function AppLayout() {
 
           <div className="pt-4 mt-4 border-t border-border space-y-1">
             <Link
-              to="/accomplishments"
+              to="/milestones"
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                location.pathname === '/accomplishments' ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                location.pathname === '/milestones' ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:text-foreground hover:bg-accent'
               }`}
             >
-              Accomplishments
+              Life Wins
             </Link>
             <Link
               to="/affirmations"

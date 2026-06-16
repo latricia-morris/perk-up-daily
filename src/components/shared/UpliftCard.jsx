@@ -1,17 +1,19 @@
 import { motion } from 'framer-motion';
 import { getCategoryLabel } from '@/lib/constants';
-import { Sparkles, BookOpen, Quote, Heart, Star, Award } from 'lucide-react';
+import { Sparkles, BookOpen, Quote, Heart, Star, Trophy } from 'lucide-react';
+import ShareCard from '@/components/shared/ShareCard';
 
 const typeConfig = {
-  quote:             { icon: Quote,    accent: '#2872a8', bg: 'rgba(40,114,168,0.08)',  label: 'Quote' },
-  affirmation:       { icon: Sparkles, accent: '#c2567a', bg: 'rgba(194,86,122,0.08)',  label: 'Affirmation' },
-  scripture:         { icon: BookOpen, accent: '#2872a8', bg: 'rgba(40,114,168,0.08)',  label: 'Scripture' },
-  encouragement_note:{ icon: Heart,    accent: '#d4830a', bg: 'rgba(212,131,10,0.08)',  label: 'Note' },
-  experience:        { icon: Star,     accent: '#d4830a', bg: 'rgba(212,131,10,0.08)',  label: 'Memory' },
-  blessing:          { icon: Heart,    accent: '#4a7c59', bg: 'rgba(74,124,89,0.08)',   label: 'Blessing' },
-  accomplishment:    { icon: Award,    accent: '#4a7c59', bg: 'rgba(74,124,89,0.08)',   label: 'Accomplishment' },
-  milestone:         { icon: Award,    accent: '#9b59b6', bg: 'rgba(155,89,182,0.08)',  label: 'Milestone' },
-  personal_note:     { icon: Quote,    accent: '#d4830a', bg: 'rgba(212,131,10,0.08)',  label: 'Note' },
+  quote:              { icon: Quote,    accent: '#2872a8', bg: 'rgba(40,114,168,0.08)',  label: 'Quote' },
+  affirmation:        { icon: Sparkles, accent: '#c2567a', bg: 'rgba(194,86,122,0.08)',  label: 'Affirmation' },
+  scripture:          { icon: BookOpen, accent: '#2872a8', bg: 'rgba(40,114,168,0.08)',  label: 'Scripture' },
+  encouragement_note: { icon: Heart,    accent: '#d4830a', bg: 'rgba(212,131,10,0.08)',  label: 'Note' },
+  experience:         { icon: Star,     accent: '#d4830a', bg: 'rgba(212,131,10,0.08)',  label: 'Memory' },
+  blessing:           { icon: Heart,    accent: '#c2567a', bg: 'rgba(194,86,122,0.08)', label: 'Blessing' },
+  life_win:           { icon: Trophy,   accent: '#4a7c59', bg: 'rgba(74,124,89,0.08)',   label: 'Life Win' },
+  accomplishment:     { icon: Trophy,   accent: '#4a7c59', bg: 'rgba(74,124,89,0.08)',   label: 'Life Win' },
+  milestone:          { icon: Trophy,   accent: '#9b59b6', bg: 'rgba(155,89,182,0.08)',  label: 'Life Win' },
+  personal_note:      { icon: Quote,    accent: '#d4830a', bg: 'rgba(212,131,10,0.08)',  label: 'Note' },
 };
 
 const fallback = { icon: Sparkles, accent: '#d4830a', bg: 'rgba(212,131,10,0.08)', label: 'Entry' };
@@ -36,7 +38,6 @@ export default function UpliftCard({ item, featured = false, source = 'library' 
           boxShadow: '0 4px 24px rgba(212,131,10,0.10)',
         }}
       >
-        {/* radial glow blob */}
         <div
           className="absolute pointer-events-none"
           style={{
@@ -49,10 +50,7 @@ export default function UpliftCard({ item, featured = false, source = 'library' 
         <div className="relative">
           <div className="flex items-center gap-2 mb-4">
             <Icon className="w-3.5 h-3.5" style={{ color: accent }} />
-            <span
-              className="text-[11px] font-bold uppercase tracking-widest"
-              style={{ color: accent }}
-            >
+            <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: accent }}>
               {label}
             </span>
           </div>
@@ -64,6 +62,9 @@ export default function UpliftCard({ item, featured = false, source = 'library' 
           ) : category ? (
             <p className="text-xs mt-3" style={{ color: '#c4a882' }}>{getCategoryLabel(category)}</p>
           ) : null}
+          <div className="absolute top-4 right-4">
+            <ShareCard item={item} />
+          </div>
         </div>
       </motion.div>
     );
@@ -83,28 +84,27 @@ export default function UpliftCard({ item, featured = false, source = 'library' 
     >
       <div className="flex items-center gap-1.5 mb-2.5">
         <Icon className="w-3 h-3" style={{ color: accent }} />
-        <span
-          className="text-[10px] font-bold uppercase tracking-wider"
-          style={{ color: accent }}
-        >
+        <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: accent }}>
           {label}
         </span>
       </div>
-      <p
-        className="font-display text-sm italic leading-relaxed line-clamp-3"
-        style={{ color: '#2c1e0f' }}
-      >
+      <p className="font-display text-sm italic leading-relaxed line-clamp-3" style={{ color: '#2c1e0f' }}>
         "{body}"
       </p>
-      {item.author ? (
-        <p className="text-[10px] mt-2 font-medium" style={{ color: '#7a5c3a' }}>— {item.author}</p>
-      ) : item.entry_date ? (
-        <p className="text-[10px] mt-2" style={{ color: '#c4a882' }}>
-          {new Date(item.entry_date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
-        </p>
-      ) : category ? (
-        <p className="text-[10px] mt-2" style={{ color: '#c4a882' }}>{getCategoryLabel(category)}</p>
-      ) : null}
+      <div className="flex items-end justify-between mt-2">
+        <div>
+          {item.author ? (
+            <p className="text-[10px] font-medium" style={{ color: '#7a5c3a' }}>— {item.author}</p>
+          ) : item.entry_date ? (
+            <p className="text-[10px]" style={{ color: '#c4a882' }}>
+              {new Date(item.entry_date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+            </p>
+          ) : category ? (
+            <p className="text-[10px]" style={{ color: '#c4a882' }}>{getCategoryLabel(category)}</p>
+          ) : null}
+        </div>
+        <ShareCard item={item} />
+      </div>
     </motion.div>
   );
 }

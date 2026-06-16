@@ -1,5 +1,4 @@
 import { useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
 import { Shuffle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import UpliftCard from '@/components/shared/UpliftCard';
@@ -13,12 +12,23 @@ function shuffleArray(arr) {
   return a;
 }
 
+// Deduplicate: keep only one item per category per content/entry type
+function deduplicateByCategory(arr) {
+  const seen = new Set();
+  return arr.filter(item => {
+    const key = `${item.content_type || item.entry_type}-${item.category}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 export default function DeliverySession({ libraryItems, userEntries, categories, christianEnabled }) {
   const [shuffleKey, setShuffleKey] = useState(0);
 
   const allContent = useMemo(() => {
     const validCategories = new Set(categories);
-    
+
     const filteredLibrary = libraryItems.filter(item => {
       if (!christianEnabled && item.category === 'deep_faith') return false;
       if (!christianEnabled && item.content_type === 'scripture') return false;
@@ -33,14 +43,17 @@ export default function DeliverySession({ libraryItems, userEntries, categories,
       return entry.status === 'active';
     });
 
-    return { library: filteredLibrary, entries: filteredEntries };
-  }, [libraryItems, userEntries, categories, christianEnabled]);
+    return {
+      library: deduplicateByCategory(shuffleArray(filteredLibrary)),
+      entries: deduplicateByCategory(shuffleArray(filteredEntries)),
+    };
+  }, [libraryItems, userEntries, categories, christianEnabled, shuffleKey]);
 
   const session = useMemo(() => {
-    const libraryPool = shuffleArray(allContent.library.map(item => ({ ...item, source: 'library' })));
-    const entryPool = shuffleArray(allContent.entries.map(item => ({ ...item, source: 'user_entry' })));
+    const libraryPool = allContent.library.map(item => ({ ...item, source: 'library' }));
+    const entryPool = allContent.entries.map(item => ({ ...item, source: 'user_entry' }));
 
-    // Interleave: alternate library and user entries so neither dominates
+    // Interleave
     const interleaved = [];
     const maxLen = Math.max(libraryPool.length, entryPool.length);
     for (let i = 0; i < maxLen; i++) {
@@ -48,7 +61,6 @@ export default function DeliverySession({ libraryItems, userEntries, categories,
       if (i < entryPool.length) interleaved.push(entryPool[i]);
     }
 
-    // Featured: prefer library quotes/affirmations/scriptures for the spotlight
     const featuredTypes = ['quote', 'affirmation', 'scripture'];
     const featuredIdx = interleaved.findIndex(item =>
       featuredTypes.includes(item.content_type || item.entry_type)
@@ -64,7 +76,7 @@ export default function DeliverySession({ libraryItems, userEntries, categories,
     }
 
     return { featured, supporting };
-  }, [allContent, shuffleKey]);
+  }, [allContent]);
 
   if (!session.featured) {
     return (

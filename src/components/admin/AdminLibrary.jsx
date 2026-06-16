@@ -110,6 +110,7 @@ export default function AdminLibrary() {
                   <Checkbox checked={selected.size === filtered.length && filtered.length > 0} onCheckedChange={toggleAll} />
                 </th>
                 <th className="p-3 text-left font-medium text-muted-foreground">Content</th>
+                <th className="p-3 text-left font-medium text-muted-foreground">Author</th>
                 <th className="p-3 text-left font-medium text-muted-foreground">Type</th>
                 <th className="p-3 text-left font-medium text-muted-foreground">Category</th>
                 <th className="p-3 text-left font-medium text-muted-foreground">Status</th>
@@ -131,6 +132,9 @@ export default function AdminLibrary() {
                   </td>
                   <td className="p-3 max-w-xs">
                     <p className="truncate text-foreground">{item.body}</p>
+                  </td>
+                  <td className="p-3 text-muted-foreground whitespace-nowrap text-xs">
+                    {item.author || '—'}
                   </td>
                   <td className="p-3 text-muted-foreground whitespace-nowrap">
                     {getContentTypeLabel(item.content_type)}

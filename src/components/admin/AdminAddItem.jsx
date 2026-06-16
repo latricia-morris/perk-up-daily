@@ -15,6 +15,7 @@ export default function AdminAddItem() {
   const [form, setForm] = useState({
     content_type: '',
     body: '',
+    author: '',
     category: '',
     tags: '',
     status: 'active',
@@ -26,7 +27,7 @@ export default function AdminAddItem() {
     mutationFn: (data) => base44.entities.AppLibrary.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-library'] });
-      setForm({ content_type: '', body: '', category: '', tags: '', status: 'active', scheduled_date: '' });
+      setForm({ content_type: '', body: '', author: '', category: '', tags: '', status: 'active', scheduled_date: '' });
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     },
@@ -70,6 +71,22 @@ export default function AdminAddItem() {
             placeholder="The content text..."
             className="min-h-[100px]"
           />
+        </div>
+
+        <div>
+          <Label className="text-sm font-medium mb-1.5 block">
+            Author / Attribution
+            {form.content_type === 'quote' && <span className="text-destructive ml-1">*</span>}
+            {form.content_type !== 'quote' && <span className="text-muted-foreground ml-1">(optional)</span>}
+          </Label>
+          <Input
+            value={form.author}
+            onChange={e => setForm(prev => ({ ...prev, author: e.target.value }))}
+            placeholder={form.content_type === 'scripture' ? 'e.g. Jeremiah 29:11 NIV' : 'Author name'}
+          />
+          {form.content_type === 'scripture' && (
+            <p className="text-xs text-muted-foreground mt-1">Use the Bible reference as the author (e.g. John 3:16 NIV)</p>
+          )}
         </div>
 
         <div>

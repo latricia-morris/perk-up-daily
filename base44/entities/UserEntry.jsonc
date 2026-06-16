@@ -7,12 +7,13 @@
       "enum": [
         "experience",
         "blessing",
-        "accomplishment",
-        "milestone",
+        "life_win",
         "affirmation",
         "quote",
         "personal_note",
-        "scripture"
+        "scripture",
+        "accomplishment",
+        "milestone"
       ],
       "description": "Type of user entry"
     },
@@ -47,7 +48,7 @@
     },
     "photo_url": {
       "type": "string",
-      "description": "Optional photo URL for experiences and milestones"
+      "description": "Optional photo URL"
     },
     "status": {
       "type": "string",

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Upload, Loader2, AlertCircle, Check } from 'lucide-react';
@@ -37,6 +37,7 @@ export default function AdminCSVUpload() {
               type: 'object',
               properties: {
                 content_type: { type: 'string' },
+                author: { type: 'string' },
                 body: { type: 'string' },
                 category: { type: 'string' },
                 tags: { type: 'string' },
@@ -65,6 +66,8 @@ export default function AdminCSVUpload() {
         rowErrors.push(`Row ${i + 1}: Invalid content type "${row.content_type}"`);
       if (!row.category || !VALID_CATS.includes(row.category))
         rowErrors.push(`Row ${i + 1}: Invalid category "${row.category}"`);
+      if (row.content_type === 'quote' && !row.author)
+        rowErrors.push(`Row ${i + 1}: Quotes require an author`);
     });
 
     setErrors(rowErrors);
@@ -77,6 +80,7 @@ export default function AdminCSVUpload() {
 
     const items = preview.map(row => ({
       content_type: row.content_type,
+      author: row.author || '',
       body: row.body,
       category: row.category,
       tags: row.tags || '',
@@ -94,8 +98,14 @@ export default function AdminCSVUpload() {
   return (
     <div>
       <h2 className="font-display text-lg font-semibold mb-2">CSV Bulk Upload</h2>
-      <p className="text-sm text-muted-foreground mb-6">
-        Upload a CSV with columns: content_type, body, category, tags, status, scheduled_date
+      <p className="text-sm text-muted-foreground mb-1">
+        Upload a CSV with columns:
+      </p>
+      <code className="text-xs bg-muted px-2 py-1 rounded block mb-6">
+        content_type | author | body | category | tags | status | scheduled_date
+      </code>
+      <p className="text-xs text-muted-foreground mb-6">
+        Author is required for quotes. For scriptures, use the Bible reference as author (e.g. John 3:16 NIV).
       </p>
 
       {!preview && !done && (
@@ -133,6 +143,7 @@ export default function AdminCSVUpload() {
                 <thead className="bg-muted sticky top-0">
                   <tr>
                     <th className="p-2 text-left font-medium">Type</th>
+                    <th className="p-2 text-left font-medium">Author</th>
                     <th className="p-2 text-left font-medium">Body</th>
                     <th className="p-2 text-left font-medium">Category</th>
                     <th className="p-2 text-left font-medium">Status</th>
@@ -142,6 +153,7 @@ export default function AdminCSVUpload() {
                   {preview.slice(0, 20).map((row, i) => (
                     <tr key={i} className="border-t border-border">
                       <td className="p-2 whitespace-nowrap">{getContentTypeLabel(row.content_type)}</td>
+                      <td className="p-2 whitespace-nowrap text-muted-foreground">{row.author || '—'}</td>
                       <td className="p-2 max-w-xs truncate">{row.body}</td>
                       <td className="p-2 whitespace-nowrap">{getCategoryLabel(row.category)}</td>
                       <td className="p-2">{row.status || 'active'}</td>

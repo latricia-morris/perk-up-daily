@@ -5,11 +5,39 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft, Upload, Loader2 } from 'lucide-react';
-import { getFilteredEntryTypes, getFilteredCategories, ENTRY_TYPES } from '@/lib/constants';
+import { getFilteredEntryTypes, getFilteredCategories } from '@/lib/constants';
 import { motion } from 'framer-motion';
 import AIGuardDialog from '@/components/shared/AIGuardDialog';
+
+function ChipGroup({ options, value, onChange }) {
+  return (
+    <div className="flex flex-wrap gap-2">
+      {options.map(opt => {
+        const selected = value === opt.slug;
+        return (
+          <button
+            key={opt.slug}
+            type="button"
+            onClick={() => onChange(selected ? '' : opt.slug)}
+            className="h-11 px-4 rounded-full text-sm font-medium transition-all border"
+            style={selected ? {
+              background: '#E8A838',
+              color: '#2c1e0f',
+              borderColor: '#E8A838',
+            } : {
+              background: '#FDF8F0',
+              color: '#7a5c3a',
+              borderColor: '#e2d5c0',
+            }}
+          >
+            {opt.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
 
 export default function AddEntry() {
   const navigate = useNavigate();
@@ -37,8 +65,6 @@ export default function AddEntry() {
   const aiGuardEnabled = user?.ai_guard_enabled !== false;
   const entryTypes = getFilteredEntryTypes(christianEnabled);
   const categories = getFilteredCategories(christianEnabled);
-  // Photo is available on all entry types
-  const showPhoto = true;
 
   const resizeImage = (file, maxPx = 1200) => {
     return new Promise((resolve) => {
@@ -95,10 +121,7 @@ export default function AddEntry() {
 
   const saveEntry = async (status = 'active') => {
     setSaving(true);
-    await base44.entities.UserEntry.create({
-      ...form,
-      status,
-    });
+    await base44.entities.UserEntry.create({ ...form, status });
     setSaving(false);
     if (isFirst) {
       window.location.href = '/dashboard';
@@ -139,29 +162,23 @@ export default function AddEntry() {
           )}
           <h1 className="font-display text-2xl font-semibold text-foreground mb-6">Add an entry</h1>
 
-          <div className="space-y-5">
+          <div className="space-y-6">
             <div>
-              <Label className="text-sm font-medium mb-1.5 block">Type</Label>
-              <Select value={form.entry_type} onValueChange={v => setForm(prev => ({ ...prev, entry_type: v }))}>
-                <SelectTrigger><SelectValue placeholder="Choose type" /></SelectTrigger>
-                <SelectContent>
-                  {entryTypes.map(t => (
-                    <SelectItem key={t.slug} value={t.slug}>{t.label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Label className="text-sm font-medium mb-3 block">Type</Label>
+              <ChipGroup
+                options={entryTypes}
+                value={form.entry_type}
+                onChange={v => setForm(prev => ({ ...prev, entry_type: v }))}
+              />
             </div>
 
             <div>
-              <Label className="text-sm font-medium mb-1.5 block">Category</Label>
-              <Select value={form.category} onValueChange={v => setForm(prev => ({ ...prev, category: v }))}>
-                <SelectTrigger><SelectValue placeholder="Choose category" /></SelectTrigger>
-                <SelectContent>
-                  {categories.map(c => (
-                    <SelectItem key={c.slug} value={c.slug}>{c.label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Label className="text-sm font-medium mb-3 block">Category</Label>
+              <ChipGroup
+                options={categories}
+                value={form.category}
+                onChange={v => setForm(prev => ({ ...prev, category: v }))}
+              />
             </div>
 
             <div>
@@ -182,7 +199,7 @@ export default function AddEntry() {
             <div>
               <Label className="text-sm font-medium mb-1.5 block">Date <span className="text-muted-foreground">(optional)</span></Label>
               <Input type="date" value={form.entry_date} onChange={e => setForm(prev => ({ ...prev, entry_date: e.target.value }))} />
-              <p className="text-xs text-muted-foreground mt-1">Add a date and this entry will also surface as an anniversary.</p>
+              <p className="text-xs text-muted-foreground mt-1">Add a date and this entry will surface as an anniversary.</p>
             </div>
 
             <div>
@@ -190,23 +207,21 @@ export default function AddEntry() {
               <Input value={form.tags} onChange={e => setForm(prev => ({ ...prev, tags: e.target.value }))} placeholder="family, career, health" />
             </div>
 
-            {showPhoto && (
-              <div>
-                <Label className="text-sm font-medium mb-1.5 block">Photo <span className="text-muted-foreground">(optional)</span></Label>
-                {form.photo_url ? (
-                  <div className="relative">
-                    <img src={form.photo_url} alt="" className="w-full h-48 object-cover rounded-lg" />
-                    <button onClick={() => setForm(prev => ({ ...prev, photo_url: '' }))} className="absolute top-2 right-2 bg-foreground/50 text-background rounded-full w-6 h-6 flex items-center justify-center text-xs">×</button>
-                  </div>
-                ) : (
-                  <label className="flex items-center justify-center gap-2 border-2 border-dashed border-border rounded-lg p-8 cursor-pointer hover:border-primary/40 transition-colors">
-                    {uploading ? <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /> : <Upload className="w-5 h-5 text-muted-foreground" />}
-                    <span className="text-sm text-muted-foreground">{uploading ? 'Uploading...' : 'Upload a photo'}</span>
-                    <input type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
-                  </label>
-                )}
-              </div>
-            )}
+            <div>
+              <Label className="text-sm font-medium mb-1.5 block">Photo <span className="text-muted-foreground">(optional)</span></Label>
+              {form.photo_url ? (
+                <div className="relative">
+                  <img src={form.photo_url} alt="" className="w-full h-48 object-cover rounded-lg" />
+                  <button onClick={() => setForm(prev => ({ ...prev, photo_url: '' }))} className="absolute top-2 right-2 bg-foreground/50 text-background rounded-full w-6 h-6 flex items-center justify-center text-xs">×</button>
+                </div>
+              ) : (
+                <label className="flex items-center justify-center gap-2 border-2 border-dashed border-border rounded-lg p-8 cursor-pointer hover:border-primary/40 transition-colors">
+                  {uploading ? <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /> : <Upload className="w-5 h-5 text-muted-foreground" />}
+                  <span className="text-sm text-muted-foreground">{uploading ? 'Uploading...' : 'Upload a photo'}</span>
+                  <input type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
+                </label>
+              )}
+            </div>
 
             <Button
               onClick={checkAndSave}

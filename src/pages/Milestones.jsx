@@ -15,8 +15,17 @@ export default function Milestones() {
   useEffect(() => { base44.auth.me().then(setUser); }, []);
 
   const { data: entries = [] } = useQuery({
-    queryKey: ['milestones'],
-    queryFn: () => base44.entities.UserEntry.filter({ entry_type: 'milestone' }, '-created_date'),
+    queryKey: ['life-wins'],
+    queryFn: async () => {
+      // Fetch all three legacy types plus new life_win
+      const [wins, accomplishments, milestones] = await Promise.all([
+        base44.entities.UserEntry.filter({ entry_type: 'life_win' }, '-created_date'),
+        base44.entities.UserEntry.filter({ entry_type: 'accomplishment' }, '-created_date'),
+        base44.entities.UserEntry.filter({ entry_type: 'milestone' }, '-created_date'),
+      ]);
+      return [...wins, ...accomplishments, ...milestones]
+        .sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
+    },
   });
 
   const christianEnabled = user?.christian_content || false;
@@ -32,7 +41,7 @@ export default function Milestones() {
     <div className="md:ml-64">
       <div className="max-w-2xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="font-display text-2xl font-semibold text-foreground">Milestones</h1>
+          <h1 className="font-display text-2xl font-semibold text-foreground">Life Wins</h1>
           <Select value={catFilter} onValueChange={setCatFilter}>
             <SelectTrigger className="w-44">
               <SelectValue placeholder="All categories" />
@@ -49,13 +58,11 @@ export default function Milestones() {
         {filtered.length === 0 ? (
           <div className="text-center py-16 text-muted-foreground">
             <Trophy className="w-8 h-8 mx-auto mb-3 text-text-faint" />
-            <p className="text-sm">No milestones yet. Add one to start tracking your progress!</p>
+            <p className="text-sm">No life wins yet. Log your first win to start your timeline.</p>
           </div>
         ) : (
           <div className="relative">
-            {/* Timeline line */}
             <div className="absolute left-4 top-0 bottom-0 w-px bg-border" />
-
             <div className="space-y-6">
               {filtered.map((entry, i) => (
                 <motion.div
@@ -65,16 +72,14 @@ export default function Milestones() {
                   transition={{ duration: 0.3, delay: i * 0.05 }}
                   className="relative pl-10"
                 >
-                  {/* Timeline dot */}
                   <div className="absolute left-2.5 top-4 w-3 h-3 rounded-full bg-primary border-2 border-background" />
-
                   <div className="bg-card border border-border rounded-xl p-4">
                     <div className="flex gap-3">
                       {entry.photo_url && (
                         <img src={entry.photo_url} alt="" className="w-16 h-16 rounded-lg object-cover shrink-0" />
                       )}
                       <div className="flex-1">
-                        <p className="font-semibold text-foreground">{entry.title || 'Milestone'}</p>
+                        <p className="font-semibold text-foreground">{entry.title || 'Life Win'}</p>
                         {entry.body && (
                           <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{entry.body}</p>
                         )}
