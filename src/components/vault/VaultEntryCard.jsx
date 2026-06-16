@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { Pencil, Trash2, X, Check, Upload, Loader2 } from 'lucide-react';
@@ -14,8 +15,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 export default function VaultEntryCard({ entry, index, christianEnabled }) {
   const queryClient = useQueryClient();
   const [editing, setEditing] = useState(false);
-  const [deleting, setDeleting] = useState(false);
-  const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [form, setForm] = useState({
     title: entry.title || '',
@@ -28,18 +27,46 @@ export default function VaultEntryCard({ entry, index, christianEnabled }) {
   const categories = getFilteredCategories(christianEnabled);
   const entryTypes = getFilteredEntryTypes(christianEnabled);
 
+  const updateMutation = useMutation({
+    mutationFn: (data) => base44.entities.UserEntry.update(entry.id, data),
+    onMutate: async (newData) => {
+      await queryClient.cancelQueries({ queryKey: ['vault-entries'] });
+      const old = queryClient.getQueryData(['vault-entries']);
+      queryClient.setQueryData(['vault-entries'], (prev) =>
+        prev.map(e => e.id === entry.id ? { ...e, ...newData } : e)
+      );
+      return old;
+    },
+    onSuccess: () => {
+      setEditing(false);
+      queryClient.invalidateQueries({ queryKey: ['vault-entries'] });
+    },
+    onError: (err, vars, context) => {
+      if (context) queryClient.setQueryData(['vault-entries'], context);
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: () => base44.entities.UserEntry.delete(entry.id),
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ['vault-entries'] });
+      const old = queryClient.getQueryData(['vault-entries']);
+      queryClient.setQueryData(['vault-entries'], (prev) =>
+        prev.filter(e => e.id !== entry.id)
+      );
+      return old;
+    },
+    onError: (err, vars, context) => {
+      if (context) queryClient.setQueryData(['vault-entries'], context);
+    },
+  });
+
   const handleSave = async () => {
-    setSaving(true);
-    await base44.entities.UserEntry.update(entry.id, form);
-    setSaving(false);
-    setEditing(false);
-    queryClient.invalidateQueries({ queryKey: ['vault-entries'] });
+    updateMutation.mutate(form);
   };
 
   const handleDelete = async () => {
-    setDeleting(true);
-    await base44.entities.UserEntry.delete(entry.id);
-    queryClient.invalidateQueries({ queryKey: ['vault-entries'] });
+    deleteMutation.mutate();
   };
 
   const handlePhotoUpload = async (e) => {
@@ -51,7 +78,7 @@ export default function VaultEntryCard({ entry, index, christianEnabled }) {
     setUploading(false);
   };
 
-  if (deleting) return null;
+  if (deleteMutation.isPending) return null;
 
   return (
     <motion.div
@@ -118,11 +145,11 @@ export default function VaultEntryCard({ entry, index, christianEnabled }) {
             </button>
             <button
               onClick={handleSave}
-              disabled={saving}
+              disabled={updateMutation.isPending}
               className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg text-primary-foreground transition-colors"
               style={{ background: '#d4830a' }}
             >
-              {saving ? <Loader2 className="w-3 h-3 animate-spin" /> : <Check className="w-3 h-3" />}
+              {updateMutation.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : <Check className="w-3 h-3" />}
               Save
             </button>
           </div>

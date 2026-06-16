@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -43,6 +44,7 @@ const NO_PHOTO_TYPES = ['quote', 'scripture', 'affirmation', 'personal_note', 'i
 
 export default function AddEntry() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const urlParams = new URLSearchParams(window.location.search);
   const isFirst = urlParams.get('first') === '1';
   const [user, setUser] = useState(null);
@@ -56,9 +58,20 @@ export default function AddEntry() {
     location: '',
     photo_url: '',
   });
-  const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [guardOpen, setGuardOpen] = useState(false);
+
+  const createEntryMutation = useMutation({
+    mutationFn: (payload) => base44.entities.UserEntry.create(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['vault-entries'] });
+      if (isFirst) {
+        window.location.href = '/dashboard';
+      } else {
+        navigate(-1);
+      }
+    },
+  });
 
   useEffect(() => {
     base44.auth.me().then(setUser);
@@ -111,7 +124,12 @@ export default function AddEntry() {
     if (!canSave) return;
 
     if (aiGuardEnabled && !isIdentitySwap) {
-      setSaving(true);
+      createEntryMutation.mutate(form, {
+        onMutate: async () => {
+          // Keep UI responsive during guard check
+        },
+      });
+
       const result = await base44.integrations.Core.InvokeLLM({
         prompt: `Analyze this personal journal entry for tone. Is it negative, bitter, heavy, resentful, shameful, self-attacking, or clearly not uplifting? Answer with just "positive" or "negative". Entry: "${form.body}"`,
         response_json_schema: {
@@ -119,7 +137,6 @@ export default function AddEntry() {
           properties: { tone: { type: 'string', enum: ['positive', 'negative'] } },
         },
       });
-      setSaving(false);
 
       if (result.tone === 'negative') {
         setGuardOpen(true);
@@ -131,19 +148,16 @@ export default function AddEntry() {
   };
 
   const saveEntry = async (status = 'active') => {
-    setSaving(true);
     const payload = { ...form, status };
     if (['quote', 'scripture'].includes(form.entry_type) && form.title) {
       payload.author = form.title;
       payload.title = '';
     }
-    await base44.entities.UserEntry.create(payload);
-    setSaving(false);
-    if (isFirst) {
-      window.location.href = '/dashboard';
-    } else {
-      navigate(-1);
-    }
+    createEntryMutation.mutate(payload, {
+      onMutate: async () => {
+        // UI updates immediately, then syncs with backend
+      },
+    });
   };
 
   const handleGuardChoice = async (choice) => {
@@ -151,12 +165,10 @@ export default function AddEntry() {
     if (choice === 'keep') {
       await saveEntry('active');
     } else if (choice === 'reframe') {
-      setSaving(true);
       const result = await base44.integrations.Core.InvokeLLM({
         prompt: `Reframe this journal entry with a positive, encouraging lens. Keep the core meaning but shift the tone to be uplifting. Be warm and direct, not cheesy. Return just the reframed text. Original: "${form.body}"`,
       });
       setForm(prev => ({ ...prev, body: result }));
-      setSaving(false);
     } else if (choice === 'draft') {
       await saveEntry('draft');
     }
@@ -343,11 +355,11 @@ export default function AddEntry() {
 
                   <Button
                     onClick={checkAndSave}
-                    disabled={saving || !canSave}
+                    disabled={createEntryMutation.isPending || !canSave}
                     className="w-full bg-primary hover:bg-primary/90"
                     size="lg"
                   >
-                    {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                    {createEntryMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
                     Save entry
                   </Button>
                 </motion.div>

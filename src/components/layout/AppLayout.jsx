@@ -109,7 +109,7 @@ export default function AppLayout() {
     <div className="min-h-screen bg-background">
 
       {/* Mobile/Tablet top header */}
-      <header className="md:hidden fixed top-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border">
+      <header className="md:hidden fixed top-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <div className="flex items-center justify-between px-4 py-3">
           <Link to="/dashboard" className="flex items-center gap-2">
             <svg width="26" height="26" viewBox="0 0 36 36" fill="none" aria-hidden="true">
@@ -151,10 +151,17 @@ export default function AppLayout() {
         <div className="flex items-center justify-around py-2 px-2 pb-[env(safe-area-inset-bottom,8px)]">
           {bottomTabNav.map(({ path, icon: Icon, label }) => {
             const active = location.pathname === path;
+            const handleTabClick = (e) => {
+              if (active) {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            };
             return (
               <Link
                 key={path}
                 to={path}
+                onClick={handleTabClick}
                 className={`flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-lg transition-colors ${
                   active ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
                 }`}
