@@ -48,12 +48,14 @@ export default function UpliftCard({ item, featured = false, source = 'library' 
           }}
         />
         <div className="relative">
-          <div className="flex items-center gap-2 mb-4">
-            <Icon className="w-3.5 h-3.5" style={{ color: accent }} />
-            <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: accent }}>
-              {label}
-            </span>
-          </div>
+          {contentType !== 'quote' && (
+            <div className="flex items-center gap-2 mb-4">
+              <Icon className="w-3.5 h-3.5" style={{ color: accent }} />
+              <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: accent }}>
+                {label}
+              </span>
+            </div>
+          )}
           <p className="font-display text-xl md:text-2xl italic leading-relaxed" style={{ color: '#2c1e0f' }}>
             "{body}"
           </p>
@@ -82,12 +84,14 @@ export default function UpliftCard({ item, featured = false, source = 'library' 
         boxShadow: '0 1px 4px rgba(44,30,15,0.06)',
       }}
     >
-      <div className="flex items-center gap-1.5 mb-2.5">
-        <Icon className="w-3 h-3" style={{ color: accent }} />
-        <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: accent }}>
-          {label}
-        </span>
-      </div>
+      {contentType !== 'quote' && (
+        <div className="flex items-center gap-1.5 mb-2.5">
+          <Icon className="w-3 h-3" style={{ color: accent }} />
+          <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: accent }}>
+            {label}
+          </span>
+        </div>
+      )}
       <p className="font-display text-sm italic leading-relaxed line-clamp-3" style={{ color: '#2c1e0f' }}>
         "{body}"
       </p>

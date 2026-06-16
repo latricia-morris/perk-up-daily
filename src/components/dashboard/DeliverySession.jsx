@@ -12,11 +12,11 @@ function shuffleArray(arr) {
   return a;
 }
 
-// Deduplicate: keep only one item per category per content/entry type
+// Deduplicate: keep only one item per category (regardless of content/entry type)
 function deduplicateByCategory(arr) {
   const seen = new Set();
   return arr.filter(item => {
-    const key = `${item.content_type || item.entry_type}-${item.category}`;
+    const key = item.category;
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
@@ -44,8 +44,8 @@ export default function DeliverySession({ libraryItems, userEntries, categories,
     });
 
     return {
-      library: deduplicateByCategory(shuffleArray(filteredLibrary)),
-      entries: deduplicateByCategory(shuffleArray(filteredEntries)),
+      library: shuffleArray(filteredLibrary),
+      entries: shuffleArray(filteredEntries),
     };
   }, [libraryItems, userEntries, categories, christianEnabled, shuffleKey]);
 
@@ -53,7 +53,7 @@ export default function DeliverySession({ libraryItems, userEntries, categories,
     const libraryPool = allContent.library.map(item => ({ ...item, source: 'library' }));
     const entryPool = allContent.entries.map(item => ({ ...item, source: 'user_entry' }));
 
-    // Interleave
+    // Interleave library and user entries, then deduplicate by category
     const interleaved = [];
     const maxLen = Math.max(libraryPool.length, entryPool.length);
     for (let i = 0; i < maxLen; i++) {
@@ -61,18 +61,21 @@ export default function DeliverySession({ libraryItems, userEntries, categories,
       if (i < entryPool.length) interleaved.push(entryPool[i]);
     }
 
+    // One card per category across the entire session
+    const deduped = deduplicateByCategory(interleaved);
+
     const featuredTypes = ['quote', 'affirmation', 'scripture'];
-    const featuredIdx = interleaved.findIndex(item =>
+    const featuredIdx = deduped.findIndex(item =>
       featuredTypes.includes(item.content_type || item.entry_type)
     );
 
     let featured, supporting;
     if (featuredIdx >= 0) {
-      featured = interleaved[featuredIdx];
-      supporting = interleaved.filter((_, i) => i !== featuredIdx).slice(0, 4);
+      featured = deduped[featuredIdx];
+      supporting = deduped.filter((_, i) => i !== featuredIdx).slice(0, 4);
     } else {
-      featured = interleaved[0];
-      supporting = interleaved.slice(1, 5);
+      featured = deduped[0];
+      supporting = deduped.slice(1, 5);
     }
 
     return { featured, supporting };
