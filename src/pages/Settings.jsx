@@ -5,6 +5,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Check, Loader2, Trash2, Download } from 'lucide-react';
+import { MobileSelect } from '@/components/ui/mobile-select';
 import { CATEGORIES } from '@/lib/constants';
 import { useTheme } from '@/lib/useTheme';
 import { motion } from 'framer-motion';

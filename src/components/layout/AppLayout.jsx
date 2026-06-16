@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Home, PlusCircle, Sparkles, Trophy, Settings,
   ShieldCheck, Zap, BookOpen, Menu, X, LogOut,
@@ -173,7 +174,7 @@ export default function AppLayout() {
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-sm border-t border-border z-50">
         <div className="flex items-center justify-around py-2 px-2 pb-[env(safe-area-inset-bottom,8px)]">
           {bottomTabNav.map(({ path, icon: Icon, label }) => {
-            const active = location.pathname === path;
+            const active = location.pathname === path || location.pathname.startsWith(path + '/');
             const handleTabClick = (e) => {
               if (active) {
                 e.preventDefault();
@@ -185,7 +186,7 @@ export default function AppLayout() {
                 key={path}
                 to={path}
                 onClick={handleTabClick}
-                className={`flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-lg transition-colors ${
+                className={`flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-lg transition-all active:scale-95 ${
                   active ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
@@ -197,9 +198,19 @@ export default function AppLayout() {
         </div>
       </nav>
 
-      {/* Main content */}
-      <main className="md:ml-64 pt-[53px] md:pt-0 pb-24 md:pb-6">
-        <Outlet />
+      {/* Main content with slide transitions */}
+      <main className="md:ml-64 pt-[53px] md:pt-0 pb-24 md:pb-6 overflow-hidden">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={location.pathname}
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -100 }}
+            transition={{ duration: 0.25, ease: 'easeInOut' }}
+          >
+            <Outlet />
+          </motion.div>
+        </AnimatePresence>
       </main>
     </div>
   );

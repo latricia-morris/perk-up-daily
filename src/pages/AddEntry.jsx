@@ -10,6 +10,8 @@ import { ArrowLeft, Upload, Loader2 } from 'lucide-react';
 import { getFilteredEntryTypes, getFilteredCategories } from '@/lib/constants';
 import { motion, AnimatePresence } from 'framer-motion';
 import AIGuardDialog from '@/components/shared/AIGuardDialog';
+import { SelectContent, SelectItem } from '@/components/ui/select';
+import { MobileSelect } from '@/components/ui/mobile-select';
 
 function ChipGroup({ options, value, onChange }) {
   return (
@@ -63,12 +65,30 @@ export default function AddEntry() {
 
   const createEntryMutation = useMutation({
     mutationFn: (payload) => base44.entities.UserEntry.create(payload),
+    onMutate: async (newEntry) => {
+      // Cancel ongoing queries
+      await queryClient.cancelQueries({ queryKey: ['vault-entries'] });
+      
+      // Get previous data
+      const previousEntries = queryClient.getQueryData(['vault-entries']) || [];
+      
+      // Optimistically update cache
+      queryClient.setQueryData(['vault-entries'], [...previousEntries, { ...newEntry, id: 'temp-' + Date.now() }]);
+      
+      return { previousEntries };
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['vault-entries'] });
       if (isFirst) {
         window.location.href = '/dashboard';
       } else {
         navigate(-1);
+      }
+    },
+    onError: (err, newEntry, context) => {
+      // Revert on error
+      if (context?.previousEntries) {
+        queryClient.setQueryData(['vault-entries'], context.previousEntries);
       }
     },
   });
@@ -181,7 +201,12 @@ export default function AddEntry() {
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
 
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          transition={{ duration: 0.3 }}
+        >
           {isFirst && (
             <div className="mb-6 p-4 rounded-xl" style={{ background: 'linear-gradient(135deg, #fde8c0 0%, #fffdf8 60%)', border: '1px solid #f5d680' }}>
               <p className="font-display text-base font-semibold" style={{ color: '#2c1e0f' }}>You're in. Add your first entry.</p>
@@ -346,11 +371,23 @@ export default function AddEntry() {
                   {/* Category — always last before save */}
                   <div>
                     <Label className="text-sm font-medium mb-3 block">Category</Label>
-                    <ChipGroup
-                      options={categories}
-                      value={form.category}
-                      onChange={v => setForm(prev => ({ ...prev, category: v }))}
-                    />
+                    <div className="hidden md:block">
+                      <ChipGroup
+                        options={categories}
+                        value={form.category}
+                        onChange={v => setForm(prev => ({ ...prev, category: v }))}
+                      />
+                    </div>
+                    <div className="md:hidden">
+                      <MobileSelect
+                        value={form.category}
+                        onValueChange={v => setForm(prev => ({ ...prev, category: v }))}
+                      >
+                        {categories.map(cat => (
+                          <SelectItem key={cat.slug} value={cat.slug}>{cat.label}</SelectItem>
+                        ))}
+                      </MobileSelect>
+                    </div>
                   </div>
 
                   <Button
