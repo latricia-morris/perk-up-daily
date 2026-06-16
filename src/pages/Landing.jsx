@@ -27,8 +27,8 @@ function HeroCards() {
           background: 'radial-gradient(circle, rgba(212,131,10,0.15) 0%, transparent 70%)'
         }} />
         <div className="flex items-center gap-1.5 mb-3">
-          <Zap className="w-3 h-3" style={{ color: '#d4830a' }} />
-          <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#d4830a' }}>Affirmation</span>
+          <Zap className="w-3 h-3" style={{ color: '#E8A838' }} />
+          <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#E8A838' }}>Affirmation</span>
         </div>
         <p className="font-display text-sm italic leading-relaxed" style={{ color: '#2c1e0f' }}>
           "I am building something that will outlast this moment. My work matters."
@@ -89,7 +89,7 @@ function HeroCards() {
         <button
           onClick={() => setChristianOn(v => !v)}
           className="relative w-11 h-6 rounded-full transition-colors duration-300 focus:outline-none"
-          style={{ background: christianOn ? '#d4830a' : '#d6c9b5' }}
+          style={{ background: christianOn ? '#E8A838' : '#d6c9b5' }}
           aria-label="Toggle Christian content"
         >
           <span
@@ -97,7 +97,7 @@ function HeroCards() {
             style={{ transform: christianOn ? 'translateX(20px)' : 'translateX(0px)' }}
           />
         </button>
-        <span className="text-xs" style={{ color: christianOn ? '#d4830a' : '#c4a882' }}>
+        <span className="text-xs" style={{ color: christianOn ? '#E8A838' : '#c4a882' }}>
           {christianOn ? 'On' : 'Off'}
         </span>
       </div>
@@ -176,7 +176,7 @@ function CtaBlock() {
   return (
     <div className="flex flex-col items-center gap-2">
       <Link to="/onboarding">
-        <Button size="lg" className="text-base px-8" style={{ background: '#d4830a', color: '#fef9f2' }}>
+        <Button size="lg" className="text-base px-8" style={{ background: '#E8A838', color: '#fef9f2' }}>
           Start your free 7-day trial <ArrowRight className="w-4 h-4 ml-2" />
         </Button>
       </Link>
@@ -198,13 +198,13 @@ export default function Landing() {
           <div className="flex items-center gap-2.5">
             <svg width="30" height="30" viewBox="0 0 36 36" fill="none" aria-hidden="true">
               <circle cx="18" cy="18" r="18" fill="oklch(0.92 0.12 70)"/>
-              <circle cx="18" cy="20" r="7" fill="#d4830a"/>
-              <line x1="18" y1="8" x2="18" y2="5" stroke="#d4830a" strokeWidth="2.5" strokeLinecap="round"/>
-              <line x1="25.5" y1="10.5" x2="27.6" y2="8.4" stroke="#d4830a" strokeWidth="2.5" strokeLinecap="round"/>
-              <line x1="10.5" y1="10.5" x2="8.4" y2="8.4" stroke="#d4830a" strokeWidth="2.5" strokeLinecap="round"/>
-              <line x1="28" y1="20" x2="31" y2="20" stroke="#d4830a" strokeWidth="2.5" strokeLinecap="round"/>
-              <line x1="8" y1="20" x2="5" y2="20" stroke="#d4830a" strokeWidth="2.5" strokeLinecap="round"/>
-              <line x1="6" y1="27" x2="30" y2="27" stroke="#d4830a" strokeWidth="2" strokeLinecap="round" opacity="0.4"/>
+              <circle cx="18" cy="20" r="7" fill="#E8A838"/>
+              <line x1="18" y1="8" x2="18" y2="5" stroke="#E8A838" strokeWidth="2.5" strokeLinecap="round"/>
+              <line x1="25.5" y1="10.5" x2="27.6" y2="8.4" stroke="#E8A838" strokeWidth="2.5" strokeLinecap="round"/>
+              <line x1="10.5" y1="10.5" x2="8.4" y2="8.4" stroke="#E8A838" strokeWidth="2.5" strokeLinecap="round"/>
+              <line x1="28" y1="20" x2="31" y2="20" stroke="#E8A838" strokeWidth="2.5" strokeLinecap="round"/>
+              <line x1="8" y1="20" x2="5" y2="20" stroke="#E8A838" strokeWidth="2.5" strokeLinecap="round"/>
+              <line x1="6" y1="27" x2="30" y2="27" stroke="#E8A838" strokeWidth="2" strokeLinecap="round" opacity="0.4"/>
             </svg>
             <h1 className="font-display text-lg font-semibold" style={{ color: '#2c1e0f' }}>Perk Up Daily</h1>
           </div>
@@ -213,7 +213,7 @@ export default function Landing() {
               <Button variant="ghost" size="sm" className="text-sm" style={{ color: '#7a5c3a' }}>Log in</Button>
             </Link>
             <Link to="/onboarding">
-              <Button size="sm" className="text-sm" style={{ background: '#d4830a', color: '#fef9f2' }}>Get Started</Button>
+              <Button size="sm" className="text-sm" style={{ background: '#E8A838', color: '#fef9f2' }}>Get Started</Button>
             </Link>
           </div>
         </div>
@@ -228,7 +228,7 @@ export default function Landing() {
             transition={{ duration: 0.7 }}
             className="flex-1 max-w-xl"
           >
-            <p className="font-semibold text-sm mb-4" style={{ color: '#d4830a' }}>Your daily dose of good</p>
+            <p className="font-semibold text-sm mb-4" style={{ color: '#E8A838' }}>Your daily dose of good</p>
             <h2 className="font-display text-4xl md:text-5xl font-semibold leading-tight" style={{ color: '#2c1e0f' }}>
               Capture the good stuff. Let it find you again.
             </h2>
@@ -237,7 +237,7 @@ export default function Landing() {
             </p>
             <div className="flex flex-col items-start gap-2 mt-7">
               <Link to="/onboarding">
-                <Button size="lg" className="text-base px-8" style={{ background: '#d4830a', color: '#fef9f2' }}>
+                <Button size="lg" className="text-base px-8" style={{ background: '#E8A838', color: '#fef9f2' }}>
                   Start your free 7-day trial <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </Link>
@@ -294,7 +294,7 @@ export default function Landing() {
       {/* ── SECTION 3: YOUR STORY ─────────────────────────────────────── */}
       <section className="py-12 md:py-16">
         <div className="max-w-3xl mx-auto px-6">
-          <p className="font-semibold text-sm mb-3" style={{ color: '#d4830a' }}>Why I built this</p>
+          <p className="font-semibold text-sm mb-3" style={{ color: '#E8A838' }}>Why I built this</p>
           <h3 className="font-display text-2xl md:text-3xl font-semibold mb-6" style={{ color: '#2c1e0f' }}>
             I spent decades in the dark. Then I learned the brain can change.
           </h3>
@@ -380,18 +380,21 @@ export default function Landing() {
           <h3 className="font-display text-2xl md:text-3xl font-semibold mb-2" style={{ color: '#2c1e0f' }}>
             What if your brain could be rewired for joy?
           </h3>
-          <p className="font-semibold text-base mb-6" style={{ color: '#d4830a' }}>Science says it can.</p>
+          <p className="font-semibold text-base mb-6" style={{ color: '#E8A838' }}>Science says it can.</p>
 
-          {/* Brain image */}
-          <div className="rounded-2xl overflow-hidden mb-8" style={{ border: '1px solid rgba(44,30,15,0.07)' }}>
-            <img src={BRAIN_IMAGE} alt="Neural pathways illustration" className="w-full object-cover" style={{ maxHeight: '320px', objectPosition: 'center' }} />
+          {/* Brain image & text layout */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 items-start">
+            <div className="md:col-span-2 space-y-4 text-sm leading-relaxed" style={{ color: '#4a3520' }}>
+              <p>Your brain is not fixed. Science has proven that it is constantly rewiring itself based on what you repeatedly put in front of it. Every time you bring something good into focus, your brain forms a new connection around it. Every time you come back to it, that connection gets stronger. Do that enough times and your brain stops having to work to find the good. It just starts going there on its own.</p>
+              <p>Gratitude practices, positive reflection, and daily reinforcement of good experiences are among the most studied and evidence-supported tools for shifting how the brain operates. New neural pathways can begin forming within days of consistent practice and keep strengthening the more you repeat them.</p>
+              <p>That is exactly what Perk Up Daily was built to do. Every entry you log and every delivery you receive is adding another rep. And the reps add up.</p>
+            </div>
+            <div className="flex justify-center">
+              <img src={BRAIN_IMAGE} alt="Neural pathways illustration" className="w-full max-w-xs object-contain" />
+            </div>
           </div>
 
-          <div className="space-y-4 text-sm leading-relaxed mb-8" style={{ color: '#4a3520' }}>
-            <p>Your brain is not fixed. Science has proven that it is constantly rewiring itself based on what you repeatedly put in front of it. Every time you bring something good into focus, your brain forms a new connection around it. Every time you come back to it, that connection gets stronger. Do that enough times and your brain stops having to work to find the good. It just starts going there on its own.</p>
-            <p>Gratitude practices, positive reflection, and daily reinforcement of good experiences are among the most studied and evidence-supported tools for shifting how the brain operates. New neural pathways can begin forming within days of consistent practice and keep strengthening the more you repeat them.</p>
-            <p>That is exactly what Perk Up Daily was built to do. Every entry you log and every delivery you receive is adding another rep. And the reps add up.</p>
-          </div>
+
 
           {/* Citation buttons */}
           <div className="flex flex-wrap gap-2 mb-10">
@@ -418,13 +421,13 @@ export default function Landing() {
             {timelineItems.map((item, i) => (
               <div key={i} className="flex gap-4 items-start">
                 <div className="flex flex-col items-center shrink-0">
-                  <div className="w-3 h-3 rounded-full mt-1" style={{ background: '#d4830a' }} />
+                  <div className="w-3 h-3 rounded-full mt-1" style={{ background: '#E8A838' }} />
                   {i < timelineItems.length - 1 && (
-                    <div className="w-0.5 flex-1 mt-1" style={{ background: 'rgba(212,131,10,0.25)', minHeight: '32px' }} />
+                    <div className="w-0.5 flex-1 mt-1" style={{ background: 'rgba(232,168,56,0.25)', minHeight: '32px' }} />
                   )}
                 </div>
                 <div>
-                  <p className="text-sm font-semibold mb-0.5" style={{ color: '#d4830a' }}>{item.time}</p>
+                  <p className="text-sm font-semibold mb-0.5" style={{ color: '#E8A838' }}>{item.time}</p>
                   <p className="text-sm leading-relaxed" style={{ color: '#4a3520' }}>{item.desc}</p>
                 </div>
               </div>
@@ -475,7 +478,7 @@ export default function Landing() {
           <h3 className="font-display text-2xl md:text-3xl font-semibold mb-3" style={{ color: '#2c1e0f' }}>
             Start your free trial and Perk Up today.
           </h3>
-          <p className="text-3xl font-display font-bold mb-4" style={{ color: '#d4830a' }}>$4.99 per month</p>
+          <p className="text-3xl font-display font-bold mb-4" style={{ color: '#E8A838' }}>$4.99 per month</p>
           <p className="text-sm leading-relaxed mb-8" style={{ color: '#7a5c3a' }}>
             Your free trial gives you 7 full days of access before you are charged anything. You get full access from day one, you can cancel with one tap at any time, and the app is available on iOS, Android, and desktop.
           </p>
