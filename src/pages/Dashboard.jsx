@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { getGreeting } from '@/lib/constants';
 import DeliverySession from '@/components/dashboard/DeliverySession';
 import EveningPrompt from '@/components/dashboard/EveningPrompt';
+import StreakCounter from '@/components/dashboard/StreakCounter';
 
 const sessionIcons = {
   morning: Sun,
@@ -90,6 +91,9 @@ export default function Dashboard() {
               : "Here's what's waiting for you today."}
           </p>
         </motion.div>
+
+        {/* Streak */}
+        <StreakCounter entries={userEntries} />
 
         {/* Delivery or Evening Prompt */}
         {greeting.session === 'evening' ? (
