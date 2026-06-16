@@ -17,7 +17,7 @@ const PROMPTS = [
   'What are you grateful for from today?',
 ];
 
-export default function EveningPrompt({ christianEnabled }) {
+export default function EveningPrompt({ christianEnabled, onSkip }) {
   const navigate = useNavigate();
   const [body, setBody] = useState('');
   const [entryType, setEntryType] = useState('blessing');
@@ -72,7 +72,7 @@ export default function EveningPrompt({ christianEnabled }) {
           <Button
             size="sm"
             style={{ background: '#d4830a', color: '#fef9f2' }}
-            onClick={() => navigate('/dashboard')}
+            onClick={onSkip}
           >
             Skip to encouragement <ArrowRight className="w-3 h-3 ml-1" />
           </Button>
@@ -146,10 +146,10 @@ export default function EveningPrompt({ christianEnabled }) {
            </Button>
            <Button
              variant="outline"
-             onClick={() => navigate('/dashboard')}
+             onClick={onSkip}
              className="flex-1"
            >
-             Skip
+             Skip to encouragement
            </Button>
          </div>
          </div>

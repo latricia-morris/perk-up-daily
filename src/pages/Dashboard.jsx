@@ -67,6 +67,7 @@ export default function Dashboard() {
 
   const greeting = getGreeting();
   const SessionIcon = sessionIcons[greeting.session];
+  const [skipToDelivery, setSkipToDelivery] = useState(false);
 
   const christianEnabled = user?.christian_content || false;
   const selectedCategories = (() => {
@@ -111,16 +112,19 @@ export default function Dashboard() {
         <StreakCounter entries={userEntries} />
 
         {/* Delivery or Evening Prompt */}
-        {greeting.session === 'evening' ? (
-          <EveningPrompt christianEnabled={christianEnabled} />
-        ) : (
-          <DeliverySession
-            libraryItems={libraryItems}
-            userEntries={userEntries}
-            categories={selectedCategories}
-            christianEnabled={christianEnabled}
-          />
-        )}
+         {greeting.session === 'evening' && !skipToDelivery ? (
+           <EveningPrompt 
+             christianEnabled={christianEnabled}
+             onSkip={() => setSkipToDelivery(true)}
+           />
+         ) : (
+           <DeliverySession
+             libraryItems={libraryItems}
+             userEntries={userEntries}
+             categories={selectedCategories}
+             christianEnabled={christianEnabled}
+           />
+         )}
 
         {/* Quick add */}
         <div className="fixed bottom-24 right-6 md:bottom-8 md:right-8 z-40">
