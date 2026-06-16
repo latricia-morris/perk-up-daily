@@ -40,11 +40,32 @@ export default function AddEntry() {
   // Photo is available on all entry types
   const showPhoto = true;
 
+  const resizeImage = (file, maxPx = 1200) => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        const { width, height } = img;
+        const scale = width > height ? maxPx / width : maxPx / height;
+        const w = scale < 1 ? Math.round(width * scale) : width;
+        const h = scale < 1 ? Math.round(height * scale) : height;
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        canvas.toBlob((blob) => resolve(new File([blob], file.name, { type: 'image/jpeg' })), 'image/jpeg', 0.82);
+      };
+      img.src = url;
+    });
+  };
+
   const handlePhotoUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
     setUploading(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    const resized = await resizeImage(file);
+    const { file_url } = await base44.integrations.Core.UploadFile({ file: resized });
     setForm(prev => ({ ...prev, photo_url: file_url }));
     setUploading(false);
   };
