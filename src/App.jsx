@@ -9,6 +9,7 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import ScrollToTop from './components/ScrollToTop';
 
 import Landing from '@/pages/Landing';
+import Disclaimer from '@/pages/Disclaimer';
 import Onboarding from '@/pages/Onboarding';
 import Paywall from '@/pages/Paywall';
 import Login from '@/pages/Login';
@@ -53,6 +54,7 @@ const AuthenticatedApp = () => {
     <Routes>
       {/* Public routes */}
       <Route path="/" element={<Landing />} />
+      <Route path="/disclaimer" element={<Disclaimer />} />
       <Route path="/onboarding" element={<Onboarding />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
