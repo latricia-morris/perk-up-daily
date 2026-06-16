@@ -260,7 +260,7 @@ export default function Landing() {
       <section className="py-12 md:py-16">
         <div className="max-w-6xl mx-auto px-6">
           <h3 className="font-display text-2xl md:text-3xl font-semibold text-center mb-2" style={{ color: '#2c1e0f' }}>
-            People are coming alive
+            People coming alive
           </h3>
           <p className="text-center mb-10 max-w-md mx-auto text-sm" style={{ color: '#7a5c3a' }}>
             Early reactions from people who got their hands on it first.
@@ -489,13 +489,43 @@ export default function Landing() {
       {/* ── SECTION 8: THE GUARANTEE ─────────────────────────────────── */}
       <section className="py-12 md:py-16">
         <div className="max-w-6xl mx-auto px-6">
-          <div className="rounded-3xl px-8 py-12 text-center" style={{ background: '#2c1e0f' }}>
-            <h3 className="font-display text-2xl md:text-3xl font-semibold mb-4" style={{ color: '#fde8c0' }}>
-              No risk. Just good mornings.
-            </h3>
-            <p className="text-sm leading-relaxed max-w-xl mx-auto" style={{ color: '#c4a882' }}>
-              Try Perk Up Daily free for 7 days. Open it in the morning. Log something good. Let it come back to you. If it does not change how you start your day, you can cancel with one tap and you will not be charged anything. No questions, no hassle, and no hard feelings. But it will change how you start your day.
-            </p>
+          <div className="rounded-3xl px-8 md:px-12 py-12 md:py-16" style={{ background: '#332D29' }}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+              {/* Left Column: Side Effects */}
+              <div>
+                <h3 className="font-display text-2xl md:text-3xl font-semibold mb-6" style={{ color: '#fde8c0' }}>
+                  Possible side effects may include
+                </h3>
+                <ul className="space-y-3 mb-6">
+                  {[
+                    'Feeling more energized when you wake up',
+                    'Remembering the good things you usually rush past',
+                    'Feeling more hopeful about your day',
+                    'Noticing your own progress more often',
+                    'Feeling encouraged to keep going',
+                    'Becoming more aware of the wins, blessings, and beauty already in your life'
+                  ].map((item, i) => (
+                    <li key={i} className="flex gap-3 text-sm" style={{ color: '#e8dcc8' }}>
+                      <span style={{ color: '#E8A838' }} className="shrink-0 font-semibold">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+                <p className="text-xs" style={{ color: '#b8a889' }}>
+                  Results may vary, but the future is bright. It is time to Perk Up.
+                </p>
+              </div>
+
+              {/* Right Column: No Risk */}
+              <div className="flex flex-col justify-start">
+                <h3 className="font-display text-2xl md:text-3xl font-semibold mb-4" style={{ color: '#E8A838' }}>
+                  No risk. All rewards.
+                </h3>
+                <p className="text-sm leading-relaxed" style={{ color: '#e8dcc8' }}>
+                  Try Perk Up Daily free for 7 days. If it does not make a meaningful difference in how you move through your day, cancel with one tap before the trial ends and you will not be charged. No hassle. No pressure. Just a chance to see what happens when the good starts finding you again.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
