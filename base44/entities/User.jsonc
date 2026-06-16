@@ -65,6 +65,14 @@
       "format": "date",
       "description": "When the 7-day trial started"
     },
+    "stripe_customer_id": {
+      "type": "string",
+      "description": "Stripe customer ID"
+    },
+    "stripe_subscription_id": {
+      "type": "string",
+      "description": "Stripe subscription ID"
+    },
     "onboarding_completed": {
       "type": "boolean",
       "default": false

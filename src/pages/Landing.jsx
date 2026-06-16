@@ -97,7 +97,7 @@ export default function Landing() {
                   Start your free trial <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </Link>
-              <p className="text-sm mt-2 sm:mt-3" style={{ color: '#c4a882' }}>7 days free, then $3.99/month</p>
+              <p className="text-sm mt-2 sm:mt-3" style={{ color: '#c4a882' }}>7 days free, then $4.99/month</p>
             </div>
           </motion.div>
 
