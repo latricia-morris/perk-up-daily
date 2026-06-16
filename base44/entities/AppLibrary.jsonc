@@ -32,6 +32,11 @@
       ],
       "description": "Life area category"
     },
+    "is_christian": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this content is Christian/faith-based"
+    },
     "status": {
       "type": "string",
       "enum": [

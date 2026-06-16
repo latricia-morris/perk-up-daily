@@ -13,6 +13,7 @@ export default function AdminLibrary() {
   const [typeFilter, setTypeFilter] = useState('all');
   const [catFilter, setCatFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [christianFilter, setChristianFilter] = useState('all');
   const [selected, setSelected] = useState(new Set());
 
   const { data: items = [], isLoading } = useQuery({
@@ -34,6 +35,8 @@ export default function AdminLibrary() {
     if (typeFilter !== 'all' && item.content_type !== typeFilter) return false;
     if (catFilter !== 'all' && item.category !== catFilter) return false;
     if (statusFilter !== 'all' && item.status !== statusFilter) return false;
+    if (christianFilter === 'christian' && !item.is_christian) return false;
+    if (christianFilter === 'general' && item.is_christian) return false;
     return true;
   });
 
@@ -72,6 +75,14 @@ export default function AdminLibrary() {
           <SelectContent>
             <SelectItem value="all">All categories</SelectItem>
             {CATEGORIES.map(c => <SelectItem key={c.slug} value={c.slug}>{c.label}</SelectItem>)}
+          </SelectContent>
+        </Select>
+        <Select value={christianFilter} onValueChange={setChristianFilter}>
+          <SelectTrigger className="w-40"><SelectValue placeholder="All content" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All content</SelectItem>
+            <SelectItem value="christian">Christian only</SelectItem>
+            <SelectItem value="general">General only</SelectItem>
           </SelectContent>
         </Select>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -113,6 +124,7 @@ export default function AdminLibrary() {
                 <th className="p-3 text-left font-medium text-muted-foreground">Author</th>
                 <th className="p-3 text-left font-medium text-muted-foreground">Type</th>
                 <th className="p-3 text-left font-medium text-muted-foreground">Category</th>
+                <th className="p-3 text-left font-medium text-muted-foreground">Christian</th>
                 <th className="p-3 text-left font-medium text-muted-foreground">Status</th>
                 <th className="p-3 text-left font-medium text-muted-foreground">Actions</th>
               </tr>
@@ -141,6 +153,13 @@ export default function AdminLibrary() {
                   </td>
                   <td className="p-3">
                     <CategoryBadge category={item.category} />
+                  </td>
+                  <td className="p-3">
+                    {item.is_christian ? (
+                      <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">Christian</span>
+                    ) : (
+                      <span className="text-xs text-muted-foreground">General</span>
+                    )}
                   </td>
                   <td className="p-3">
                     <span className={`text-xs px-2 py-0.5 rounded-full ${

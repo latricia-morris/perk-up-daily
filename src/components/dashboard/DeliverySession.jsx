@@ -63,12 +63,11 @@ export default function DeliverySession({ libraryItems, userEntries, categories,
     const yesterdayIds = getYesterdaySeenIds();
 
     // --- Filter both pools ---
-    const filterItem = (item, typeField) => {
-      if (!christianEnabled && item.category === 'deep_faith') return false;
-      if (!christianEnabled && item[typeField] === 'scripture') return false;
-      if (preferredCats && preferredCats.size > 0 && !preferredCats.has(item.category)) return false;
-      return true;
-    };
+     const filterItem = (item, typeField) => {
+       if (!christianEnabled && item.is_christian) return false;
+       if (preferredCats && preferredCats.size > 0 && !preferredCats.has(item.category)) return false;
+       return true;
+     };
 
     const libPool = libraryItems
       .filter(item => item.status === 'active' && filterItem(item, 'content_type'))

@@ -17,6 +17,7 @@ export default function AdminAddItem() {
     body: '',
     author: '',
     category: '',
+    is_christian: false,
     status: 'active',
   });
   const [saved, setSaved] = useState(false);
@@ -25,7 +26,7 @@ export default function AdminAddItem() {
     mutationFn: (data) => base44.entities.AppLibrary.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-library'] });
-      setForm({ content_type: '', body: '', author: '', category: '', status: 'active' });
+      setForm({ content_type: '', body: '', author: '', category: '', is_christian: false, status: 'active' });
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     },
@@ -85,6 +86,14 @@ export default function AdminAddItem() {
           {form.content_type === 'scripture' && (
             <p className="text-xs text-muted-foreground mt-1">Use the Bible reference as the author (e.g. John 3:16 NIV)</p>
           )}
+        </div>
+
+        <div className="flex items-center justify-between">
+          <Label className="text-sm">Christian content</Label>
+          <Switch
+            checked={form.is_christian}
+            onCheckedChange={v => setForm(prev => ({ ...prev, is_christian: v }))}
+          />
         </div>
 
         <div className="flex items-center justify-between">

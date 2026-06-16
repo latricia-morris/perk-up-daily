@@ -40,9 +40,8 @@ export default function AdminCSVUpload() {
                 author: { type: 'string' },
                 body: { type: 'string' },
                 category: { type: 'string' },
-                tags: { type: 'string' },
+                is_christian: { type: 'string' },
                 status: { type: 'string' },
-                scheduled_date: { type: 'string' },
               },
             },
           },
@@ -78,15 +77,18 @@ export default function AdminCSVUpload() {
     if (!preview || errors.length > 0) return;
     setPublishing(true);
 
-    const items = preview.map(row => ({
-      content_type: row.content_type,
-      author: row.author || '',
-      body: row.body,
-      category: row.category,
-      tags: row.tags || '',
-      status: row.status || 'active',
-      scheduled_date: row.scheduled_date || '',
-    }));
+    const items = preview.map(row => {
+      const isChristianStr = (row.is_christian || '').toLowerCase();
+      const isChristian = isChristianStr === 'yes' || isChristianStr === 'true';
+      return {
+        content_type: row.content_type,
+        author: row.author || '',
+        body: row.body,
+        category: row.category,
+        is_christian: isChristian,
+        status: row.status || 'active',
+      };
+    });
 
     await base44.entities.AppLibrary.bulkCreate(items);
     queryClient.invalidateQueries({ queryKey: ['admin-library'] });
@@ -102,10 +104,10 @@ export default function AdminCSVUpload() {
         Upload a CSV with columns:
       </p>
       <code className="text-xs bg-muted px-2 py-1 rounded block mb-6">
-        content_type | author | body | category | tags | status | scheduled_date
+        content_type | author | body | category | is_christian | status
       </code>
       <p className="text-xs text-muted-foreground mb-6">
-        Author is required for quotes. For scriptures, use the Bible reference as author (e.g. John 3:16 NIV).
+        Author is required for quotes. For scriptures, use the Bible reference as author (e.g. John 3:16 NIV). Use yes/no or true/false for is_christian.
       </p>
 
       {!preview && !done && (
@@ -146,6 +148,7 @@ export default function AdminCSVUpload() {
                     <th className="p-2 text-left font-medium">Author</th>
                     <th className="p-2 text-left font-medium">Body</th>
                     <th className="p-2 text-left font-medium">Category</th>
+                    <th className="p-2 text-left font-medium">Christian</th>
                     <th className="p-2 text-left font-medium">Status</th>
                   </tr>
                 </thead>
@@ -156,6 +159,13 @@ export default function AdminCSVUpload() {
                       <td className="p-2 whitespace-nowrap text-muted-foreground">{row.author || '—'}</td>
                       <td className="p-2 max-w-xs truncate">{row.body}</td>
                       <td className="p-2 whitespace-nowrap">{getCategoryLabel(row.category)}</td>
+                      <td className="p-2 whitespace-nowrap text-xs">
+                        {((row.is_christian || '').toLowerCase() === 'yes' || (row.is_christian || '').toLowerCase() === 'true') ? (
+                          <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">Christian</span>
+                        ) : (
+                          <span className="text-muted-foreground">General</span>
+                        )}
+                      </td>
                       <td className="p-2">{row.status || 'active'}</td>
                     </tr>
                   ))}
