@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Sun, Sparkles, Shield, Heart, ArrowRight, Star, BookOpen, Zap, ChevronDown, ChevronUp, Trophy, Share2, X as XIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-const BRAIN_IMAGE = 'https://media.base44.com/images/public/6a312911bcddb0806c388af8/b3a3c60ec_generated_image.png';
+const BRAIN_IMAGE = 'https://media.base44.com/images/public/6a312911bcddb0806c388af8/a83b10a31_BrainGlow2.png';
 
 // ── Hero card preview ──────────────────────────────────────────────────────
 function HeroCards() {
