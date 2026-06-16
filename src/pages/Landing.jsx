@@ -313,10 +313,12 @@ export default function Landing() {
             <p className="text-sm font-semibold" style={{ color: '#2c1e0f' }}>LaTricia Morris, Founder</p>
           </div>
 
-          <div className="mt-6 rounded-2xl overflow-hidden" style={{ background: '#f0e6d8', border: '1px solid rgba(44,30,15,0.1)', height: '240px' }}>
-            <div className="w-full h-full flex items-center justify-center">
-              <p className="text-sm" style={{ color: '#c4a882' }}>[Founder photo]</p>
-            </div>
+          <div className="mt-6 flex justify-center">
+            <img
+              src="https://media.base44.com/images/public/6a312911bcddb0806c388af8/8873b56bc_DSC_2093sunny.png"
+              alt="LaTricia Morris, Founder"
+              className="w-72 md:w-80 object-contain"
+            />
           </div>
 
           <div className="mt-8 flex flex-col items-center">
