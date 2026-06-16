@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import {
   Home, PlusCircle, Sparkles, Trophy, Settings,
-  ShieldCheck, Zap, BookOpen, Menu, X, LogOut
+  ShieldCheck, Zap, BookOpen, Menu, X, LogOut,
+  Heart, Image, Quote, FileText, Star
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
@@ -15,8 +16,13 @@ const mainNav = [
 ];
 
 const libraryNav = [
+  { path: '/memories', icon: Image, label: 'Memories' },
+  { path: '/blessings', icon: Heart, label: 'Blessings' },
   { path: '/milestones', icon: Trophy, label: 'Life Wins' },
   { path: '/affirmations', icon: Zap, label: 'Affirmations' },
+  { path: '/quotes', icon: Quote, label: 'Quotes' },
+  { path: '/notes', icon: FileText, label: 'Notes' },
+  { path: '/identity-upgrades', icon: Star, label: 'Identity Upgrades' },
 ];
 
 const scriptureNav = { path: '/scriptures', icon: BookOpen, label: 'Scriptures' };

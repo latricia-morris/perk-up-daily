@@ -10,11 +10,11 @@ export const CATEGORIES = [
 export const ENTRY_TYPES = [
   { slug: 'experience', label: 'Memory', allowPhoto: true },
   { slug: 'blessing', label: 'Blessing', allowPhoto: true },
-  { slug: 'life_win', label: 'Win', allowPhoto: true },
+  { slug: 'life_win', label: 'Life Win', allowPhoto: true },
   { slug: 'affirmation', label: 'Affirmation', allowPhoto: false },
   { slug: 'quote', label: 'Quote', allowPhoto: false },
   { slug: 'personal_note', label: 'Note', allowPhoto: false },
-  { slug: 'identity_swap', label: 'Identity Swap', allowPhoto: false },
+  { slug: 'identity_swap', label: 'Identity Upgrade', allowPhoto: false },
   { slug: 'scripture', label: 'Scripture', requiresChristian: true, allowPhoto: false },
 ];
 
