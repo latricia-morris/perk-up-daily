@@ -311,6 +311,7 @@ export default function Landing() {
 
           <div className="mt-8">
             <p className="text-sm font-semibold" style={{ color: '#2c1e0f' }}>LaTricia Morris, Founder</p>
+            <p className="text-xs" style={{ color: '#7a5c3a' }}>The Brand Revivalist® and owner of Ox & Iron, LLC</p>
           </div>
 
           <div className="mt-6 flex justify-center">
