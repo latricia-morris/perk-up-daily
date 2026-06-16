@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Loader2, PenLine, ArrowRight } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { getFilteredCategories } from '@/lib/constants';
+import { getFilteredCategories, getFilteredEntryTypes, getEntryTypeLabel } from '@/lib/constants';
 
 const PROMPTS = [
   'What was one good thing that happened today?',
@@ -20,19 +20,21 @@ const PROMPTS = [
 export default function EveningPrompt({ christianEnabled }) {
   const navigate = useNavigate();
   const [body, setBody] = useState('');
+  const [entryType, setEntryType] = useState('blessing');
   const [category, setCategory] = useState('');
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const categories = getFilteredCategories(christianEnabled);
+  const entryTypes = getFilteredEntryTypes(christianEnabled).filter(t => ['blessing', 'life_win'].includes(t.slug));
 
   // Pick a stable prompt for the session
   const prompt = PROMPTS[new Date().getDate() % PROMPTS.length];
 
   const handleSave = async () => {
-    if (!body.trim() || !category) return;
+    if (!body.trim() || !category || !entryType) return;
     setSaving(true);
     await base44.entities.UserEntry.create({
-      entry_type: 'experience',
+      entry_type: entryType,
       body: body.trim(),
       category,
       entry_date: new Date().toISOString().split('T')[0],
@@ -60,13 +62,13 @@ export default function EveningPrompt({ christianEnabled }) {
           That's the good stuff. It'll find you again when you need it.
         </p>
         <div className="flex gap-3 justify-center">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => { setBody(''); setCategory(''); setSaved(false); }}
-          >
-            Add another
-          </Button>
+           <Button
+             variant="outline"
+             size="sm"
+             onClick={() => { setBody(''); setEntryType('blessing'); setCategory(''); setSaved(false); }}
+           >
+             Add another
+           </Button>
           <Button
             size="sm"
             style={{ background: '#d4830a', color: '#fef9f2' }}
@@ -101,34 +103,47 @@ export default function EveningPrompt({ christianEnabled }) {
       </p>
 
       <div className="space-y-3">
-        <Textarea
-          value={body}
-          onChange={e => setBody(e.target.value)}
-          placeholder="Write it down..."
-          className="min-h-[90px] bg-white/70 border-amber-200 focus:border-primary"
-        />
+         <Textarea
+           value={body}
+           onChange={e => setBody(e.target.value)}
+           placeholder="Write it down..."
+           className="min-h-[90px] bg-white/70 border-amber-200 focus:border-primary"
+         />
 
-        <Select value={category} onValueChange={setCategory}>
-          <SelectTrigger className="bg-white/70 border-amber-200">
-            <SelectValue placeholder="Which area of life?" />
-          </SelectTrigger>
-          <SelectContent>
-            {categories.map(c => (
-              <SelectItem key={c.slug} value={c.slug}>{c.label}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+         <div className="grid grid-cols-2 gap-3">
+           <Select value={entryType} onValueChange={setEntryType}>
+             <SelectTrigger className="bg-white/70 border-amber-200">
+               <SelectValue placeholder="Type" />
+             </SelectTrigger>
+             <SelectContent>
+               {entryTypes.map(t => (
+                 <SelectItem key={t.slug} value={t.slug}>{getEntryTypeLabel(t.slug)}</SelectItem>
+               ))}
+             </SelectContent>
+           </Select>
 
-        <Button
-          onClick={handleSave}
-          disabled={saving || !body.trim() || !category}
-          className="w-full"
-          style={{ background: '#d4830a', color: '#fef9f2' }}
-        >
-          {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-          Save to vault
-        </Button>
-      </div>
+           <Select value={category} onValueChange={setCategory}>
+             <SelectTrigger className="bg-white/70 border-amber-200">
+               <SelectValue placeholder="Category" />
+             </SelectTrigger>
+             <SelectContent>
+               {categories.map(c => (
+                 <SelectItem key={c.slug} value={c.slug}>{c.label}</SelectItem>
+               ))}
+             </SelectContent>
+           </Select>
+         </div>
+
+         <Button
+           onClick={handleSave}
+           disabled={saving || !body.trim() || !category || !entryType}
+           className="w-full"
+           style={{ background: '#d4830a', color: '#fef9f2' }}
+         >
+           {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+           Save to vault
+         </Button>
+       </div>
     </motion.div>
   );
 }
