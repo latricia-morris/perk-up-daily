@@ -1,0 +1,45 @@
+{
+  "name": "DeliveryLog",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "ID of the user who received the delivery"
+    },
+    "session_type": {
+      "type": "string",
+      "enum": [
+        "morning",
+        "midday",
+        "evening"
+      ],
+      "description": "Which delivery session"
+    },
+    "featured_item_id": {
+      "type": "string",
+      "description": "ID of the featured card"
+    },
+    "featured_source": {
+      "type": "string",
+      "enum": [
+        "library",
+        "user_entry"
+      ],
+      "description": "Whether featured came from library or user entries"
+    },
+    "supporting_items": {
+      "type": "string",
+      "description": "JSON array of supporting item IDs and sources"
+    },
+    "delivery_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of delivery"
+    }
+  },
+  "required": [
+    "user_id",
+    "session_type",
+    "delivery_date"
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "user"
+      ],
+      "default": "user"
+    },
+    "christian_content": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether to include Deep Faith content"
+    },
+    "selected_categories": {
+      "type": "string",
+      "description": "JSON array of selected category slugs"
+    },
+    "ai_guard_enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether AI content guard is active"
+    },
+    "email_delivery": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether email deliveries are enabled"
+    },
+    "push_notifications": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether push notifications are enabled"
+    },
+    "morning_time": {
+      "type": "string",
+      "default": "07:00",
+      "description": "Morning delivery time"
+    },
+    "midday_time": {
+      "type": "string",
+      "default": "12:00",
+      "description": "Midday delivery time"
+    },
+    "evening_time": {
+      "type": "string",
+      "default": "19:00",
+      "description": "Evening delivery time"
+    },
+    "subscription_status": {
+      "type": "string",
+      "enum": [
+        "trial",
+        "active",
+        "cancelled",
+        "expired"
+      ],
+      "default": "trial",
+      "description": "Current subscription status"
+    },
+    "trial_start_date": {
+      "type": "string",
+      "format": "date",
+      "description": "When the 7-day trial started"
+    },
+    "onboarding_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "theme": {
+      "type": "string",
+      "enum": [
+        "light",
+        "dark"
+      ],
+      "default": "light"
+    }
+  }
+}

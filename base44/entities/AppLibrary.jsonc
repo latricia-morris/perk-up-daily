@@ -1,0 +1,55 @@
+{
+  "name": "AppLibrary",
+  "type": "object",
+  "properties": {
+    "content_type": {
+      "type": "string",
+      "enum": [
+        "quote",
+        "affirmation",
+        "scripture",
+        "encouragement_note"
+      ],
+      "description": "Type of library content"
+    },
+    "body": {
+      "type": "string",
+      "description": "The content text"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "deep_faith",
+        "rich_relationships",
+        "strong_body",
+        "clear_mind",
+        "strong_business",
+        "sound_money"
+      ],
+      "description": "Life area category"
+    },
+    "tags": {
+      "type": "string",
+      "description": "Comma-separated tags"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "archived"
+      ],
+      "default": "active",
+      "description": "Whether this item is in rotation"
+    },
+    "scheduled_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Optional date when item goes active"
+    }
+  },
+  "required": [
+    "content_type",
+    "body",
+    "category"
+  ]
+}

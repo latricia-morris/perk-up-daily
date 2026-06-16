@@ -1,0 +1,67 @@
+{
+  "name": "UserEntry",
+  "type": "object",
+  "properties": {
+    "entry_type": {
+      "type": "string",
+      "enum": [
+        "experience",
+        "blessing",
+        "accomplishment",
+        "milestone",
+        "affirmation",
+        "quote",
+        "personal_note",
+        "scripture"
+      ],
+      "description": "Type of user entry"
+    },
+    "title": {
+      "type": "string",
+      "description": "Optional title"
+    },
+    "body": {
+      "type": "string",
+      "description": "The entry content"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "deep_faith",
+        "rich_relationships",
+        "strong_body",
+        "clear_mind",
+        "strong_business",
+        "sound_money"
+      ],
+      "description": "Life area category"
+    },
+    "entry_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Optional date for anniversary surfacing"
+    },
+    "tags": {
+      "type": "string",
+      "description": "Comma-separated tags"
+    },
+    "photo_url": {
+      "type": "string",
+      "description": "Optional photo URL for experiences and milestones"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "draft"
+      ],
+      "default": "active",
+      "description": "Active entries appear in deliveries, drafts do not"
+    }
+  },
+  "required": [
+    "entry_type",
+    "body",
+    "category"
+  ]
+}
