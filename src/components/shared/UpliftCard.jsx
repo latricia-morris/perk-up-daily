@@ -59,12 +59,11 @@ export default function UpliftCard({ item, featured = false, source = 'library' 
           <p className="font-display text-xl md:text-2xl italic leading-relaxed" style={{ color: '#2c1e0f' }}>
             "{body}"
           </p>
-          {item.title && (
-            <p className="text-xs mt-3" style={{ color: '#7a5c3a' }}>— {item.title}</p>
-          )}
-          {category && !item.title && (
+          {item.author ? (
+            <p className="text-xs mt-3 font-medium" style={{ color: '#7a5c3a' }}>— {item.author}</p>
+          ) : category ? (
             <p className="text-xs mt-3" style={{ color: '#c4a882' }}>{getCategoryLabel(category)}</p>
-          )}
+          ) : null}
         </div>
       </motion.div>
     );
@@ -97,13 +96,15 @@ export default function UpliftCard({ item, featured = false, source = 'library' 
       >
         "{body}"
       </p>
-      {(item.entry_date || category) && (
+      {item.author ? (
+        <p className="text-[10px] mt-2 font-medium" style={{ color: '#7a5c3a' }}>— {item.author}</p>
+      ) : item.entry_date ? (
         <p className="text-[10px] mt-2" style={{ color: '#c4a882' }}>
-          {item.entry_date
-            ? new Date(item.entry_date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
-            : getCategoryLabel(category)}
+          {new Date(item.entry_date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
         </p>
-      )}
+      ) : category ? (
+        <p className="text-[10px] mt-2" style={{ color: '#c4a882' }}>{getCategoryLabel(category)}</p>
+      ) : null}
     </motion.div>
   );
 }

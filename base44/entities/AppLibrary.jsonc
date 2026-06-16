@@ -16,6 +16,10 @@
       "type": "string",
       "description": "The content text"
     },
+    "author": {
+      "type": "string",
+      "description": "Author or attribution for quotes and scriptures"
+    },
     "category": {
       "type": "string",
       "enum": [
