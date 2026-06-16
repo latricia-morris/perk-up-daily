@@ -72,9 +72,9 @@ export default function EveningPrompt({ christianEnabled }) {
           <Button
             size="sm"
             style={{ background: '#d4830a', color: '#fef9f2' }}
-            onClick={() => navigate('/vault')}
+            onClick={() => navigate('/dashboard')}
           >
-            View vault <ArrowRight className="w-3 h-3 ml-1" />
+            Skip to encouragement <ArrowRight className="w-3 h-3 ml-1" />
           </Button>
         </div>
       </motion.div>
@@ -134,16 +134,25 @@ export default function EveningPrompt({ christianEnabled }) {
            </Select>
          </div>
 
-         <Button
-           onClick={handleSave}
-           disabled={saving || !body.trim() || !category || !entryType}
-           className="w-full"
-           style={{ background: '#d4830a', color: '#fef9f2' }}
-         >
-           {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-           Save to vault
-         </Button>
-       </div>
+         <div className="flex gap-2">
+           <Button
+             onClick={handleSave}
+             disabled={saving || !body.trim() || !category || !entryType}
+             className="flex-1"
+             style={{ background: '#d4830a', color: '#fef9f2' }}
+           >
+             {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+             Save to vault
+           </Button>
+           <Button
+             variant="outline"
+             onClick={() => navigate('/dashboard')}
+             className="flex-1"
+           >
+             Skip
+           </Button>
+         </div>
+         </div>
     </motion.div>
   );
 }
