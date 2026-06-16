@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { ArrowLeft, Upload, Loader2 } from 'lucide-react';
 import { getFilteredEntryTypes, getFilteredCategories } from '@/lib/constants';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import AIGuardDialog from '@/components/shared/AIGuardDialog';
 
 function ChipGroup({ options, value, onChange }) {
@@ -39,6 +39,8 @@ function ChipGroup({ options, value, onChange }) {
   );
 }
 
+const NO_PHOTO_TYPES = ['quote', 'scripture', 'affirmation', 'personal_note', 'identity_swap'];
+
 export default function AddEntry() {
   const navigate = useNavigate();
   const urlParams = new URLSearchParams(window.location.search);
@@ -48,6 +50,7 @@ export default function AddEntry() {
     entry_type: '',
     title: '',
     body: '',
+    old_belief: '',
     category: '',
     entry_date: '',
     photo_url: '',
@@ -64,6 +67,10 @@ export default function AddEntry() {
   const aiGuardEnabled = user?.ai_guard_enabled !== false;
   const entryTypes = getFilteredEntryTypes(christianEnabled);
   const categories = getFilteredCategories(christianEnabled);
+
+  const typeSelected = !!form.entry_type;
+  const showPhoto = typeSelected && !NO_PHOTO_TYPES.includes(form.entry_type);
+  const isIdentitySwap = form.entry_type === 'identity_swap';
 
   const resizeImage = (file, maxPx = 1200) => {
     return new Promise((resolve) => {
@@ -95,10 +102,14 @@ export default function AddEntry() {
     setUploading(false);
   };
 
-  const checkAndSave = async () => {
-    if (!form.body || !form.category || !form.entry_type) return;
+  // For identity swap, body = new truth, old_belief = old lie
+  const canSave = form.entry_type && form.category &&
+    (isIdentitySwap ? (form.body && form.old_belief) : form.body);
 
-    if (aiGuardEnabled) {
+  const checkAndSave = async () => {
+    if (!canSave) return;
+
+    if (aiGuardEnabled && !isIdentitySwap) {
       setSaving(true);
       const result = await base44.integrations.Core.InvokeLLM({
         prompt: `Analyze this personal journal entry for tone. Is it negative, bitter, heavy, resentful, shameful, self-attacking, or clearly not uplifting? Answer with just "positive" or "negative". Entry: "${form.body}"`,
@@ -120,7 +131,6 @@ export default function AddEntry() {
 
   const saveEntry = async (status = 'active') => {
     setSaving(true);
-    // For quotes and scriptures, map the title field to author
     const payload = { ...form, status };
     if (['quote', 'scripture'].includes(form.entry_type) && form.title) {
       payload.author = form.title;
@@ -168,121 +178,174 @@ export default function AddEntry() {
           <h1 className="font-display text-2xl font-semibold text-foreground mb-6">Add an entry</h1>
 
           <div className="space-y-6">
+
+            {/* Step 1: Type — always visible */}
             <div>
               <Label className="text-sm font-medium mb-3 block">Type</Label>
               <ChipGroup
                 options={entryTypes}
                 value={form.entry_type}
-                onChange={v => setForm(prev => ({ ...prev, entry_type: v, title: '', body: '', entry_date: '', photo_url: '' }))}
+                onChange={v => setForm(prev => ({
+                  entry_type: v,
+                  title: '',
+                  body: '',
+                  old_belief: '',
+                  category: '',
+                  entry_date: '',
+                  photo_url: '',
+                }))}
               />
             </div>
 
-            <div>
-              <Label className="text-sm font-medium mb-3 block">Category</Label>
-              <ChipGroup
-                options={categories}
-                value={form.category}
-                onChange={v => setForm(prev => ({ ...prev, category: v }))}
-              />
-            </div>
-
-            {/* Quote fields */}
-            {form.entry_type === 'quote' && (
-              <>
-                <div>
-                  <Label className="text-sm font-medium mb-1.5 block">Quote</Label>
-                  <Textarea
-                    value={form.body}
-                    onChange={e => setForm(prev => ({ ...prev, body: e.target.value }))}
-                    placeholder="The quote text..."
-                    className="min-h-[120px]"
-                  />
-                </div>
-                <div>
-                  <Label className="text-sm font-medium mb-1.5 block">Author</Label>
-                  <Input value={form.title} onChange={e => setForm(prev => ({ ...prev, title: e.target.value }))} placeholder="Who said it?" />
-                </div>
-              </>
-            )}
-
-            {/* Scripture fields */}
-            {form.entry_type === 'scripture' && (
-              <>
-                <div>
-                  <Label className="text-sm font-medium mb-1.5 block">Scripture</Label>
-                  <Textarea
-                    value={form.body}
-                    onChange={e => setForm(prev => ({ ...prev, body: e.target.value }))}
-                    placeholder="The scripture text..."
-                    className="min-h-[120px]"
-                  />
-                </div>
-                <div>
-                  <Label className="text-sm font-medium mb-1.5 block">Reference</Label>
-                  <Input value={form.title} onChange={e => setForm(prev => ({ ...prev, title: e.target.value }))} placeholder="e.g. Jeremiah 29:11 NIV" />
-                </div>
-              </>
-            )}
-
-            {/* Affirmation fields */}
-            {form.entry_type === 'affirmation' && (
-              <div>
-                <Label className="text-sm font-medium mb-1.5 block">Affirmation</Label>
-                <Textarea
-                  value={form.body}
-                  onChange={e => setForm(prev => ({ ...prev, body: e.target.value }))}
-                  placeholder="I am..."
-                  className="min-h-[120px]"
-                />
-              </div>
-            )}
-
-            {/* Default fields for memory-type entries */}
-            {form.entry_type && !['quote', 'scripture', 'affirmation'].includes(form.entry_type) && (
-              <>
-                <div>
-                  <Label className="text-sm font-medium mb-1.5 block">
-                    {form.entry_type === 'life_win' ? 'What was the win?' : form.entry_type === 'blessing' ? 'Describe the blessing' : 'What happened?'}
-                  </Label>
-                  <Textarea
-                    value={form.body}
-                    onChange={e => setForm(prev => ({ ...prev, body: e.target.value }))}
-                    placeholder={form.entry_type === 'life_win' ? 'Describe your win...' : form.entry_type === 'blessing' ? 'What are you grateful for?' : 'Tell the story...'}
-                    className="min-h-[120px]"
-                  />
-                </div>
-                <div>
-                  <Label className="text-sm font-medium mb-1.5 block">Date <span className="text-muted-foreground">(optional)</span></Label>
-                  <Input type="date" value={form.entry_date} onChange={e => setForm(prev => ({ ...prev, entry_date: e.target.value }))} />
-                  <p className="text-xs text-muted-foreground mt-1">Add a date and this entry will surface as an anniversary.</p>
-                </div>
-                <div>
-                  <Label className="text-sm font-medium mb-1.5 block">Photo <span className="text-muted-foreground">(optional)</span></Label>
-                  {form.photo_url ? (
-                    <div className="relative">
-                      <img src={form.photo_url} alt="" className="w-full h-48 object-cover rounded-lg" />
-                      <button onClick={() => setForm(prev => ({ ...prev, photo_url: '' }))} className="absolute top-2 right-2 bg-foreground/50 text-background rounded-full w-6 h-6 flex items-center justify-center text-xs">×</button>
-                    </div>
-                  ) : (
-                    <label className="flex items-center justify-center gap-2 border-2 border-dashed border-border rounded-lg p-8 cursor-pointer hover:border-primary/40 transition-colors">
-                      {uploading ? <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /> : <Upload className="w-5 h-5 text-muted-foreground" />}
-                      <span className="text-sm text-muted-foreground">{uploading ? 'Uploading...' : 'Upload a photo'}</span>
-                      <input type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
-                    </label>
+            {/* Steps 2+: only show once type is selected */}
+            <AnimatePresence>
+              {typeSelected && (
+                <motion.div
+                  key="fields"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 8 }}
+                  transition={{ duration: 0.25 }}
+                  className="space-y-6"
+                >
+                  {/* Identity Swap fields */}
+                  {isIdentitySwap && (
+                    <>
+                      <div>
+                        <Label className="text-sm font-medium mb-1.5 block">My Old Lie-dentity</Label>
+                        <p className="text-xs text-muted-foreground mb-2">The false belief you're releasing</p>
+                        <Textarea
+                          value={form.old_belief}
+                          onChange={e => setForm(prev => ({ ...prev, old_belief: e.target.value }))}
+                          placeholder="I used to believe that I..."
+                          className="min-h-[100px]"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-sm font-medium mb-1.5 block">My True Identity</Label>
+                        <p className="text-xs text-muted-foreground mb-2">The truth you're stepping into</p>
+                        <Textarea
+                          value={form.body}
+                          onChange={e => setForm(prev => ({ ...prev, body: e.target.value }))}
+                          placeholder="The truth is, I am..."
+                          className="min-h-[100px]"
+                        />
+                      </div>
+                    </>
                   )}
-                </div>
-              </>
-            )}
 
-            <Button
-              onClick={checkAndSave}
-              disabled={saving || !form.body || !form.category || !form.entry_type}
-              className="w-full bg-primary hover:bg-primary/90"
-              size="lg"
-            >
-              {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-              Save entry
-            </Button>
+                  {/* Quote fields */}
+                  {form.entry_type === 'quote' && (
+                    <>
+                      <div>
+                        <Label className="text-sm font-medium mb-1.5 block">Quote</Label>
+                        <Textarea
+                          value={form.body}
+                          onChange={e => setForm(prev => ({ ...prev, body: e.target.value }))}
+                          placeholder="The quote text..."
+                          className="min-h-[120px]"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-sm font-medium mb-1.5 block">Author</Label>
+                        <Input value={form.title} onChange={e => setForm(prev => ({ ...prev, title: e.target.value }))} placeholder="Who said it?" />
+                      </div>
+                    </>
+                  )}
+
+                  {/* Scripture fields */}
+                  {form.entry_type === 'scripture' && (
+                    <>
+                      <div>
+                        <Label className="text-sm font-medium mb-1.5 block">Scripture</Label>
+                        <Textarea
+                          value={form.body}
+                          onChange={e => setForm(prev => ({ ...prev, body: e.target.value }))}
+                          placeholder="The scripture text..."
+                          className="min-h-[120px]"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-sm font-medium mb-1.5 block">Reference</Label>
+                        <Input value={form.title} onChange={e => setForm(prev => ({ ...prev, title: e.target.value }))} placeholder="e.g. Jeremiah 29:11 NIV" />
+                      </div>
+                    </>
+                  )}
+
+                  {/* Affirmation */}
+                  {form.entry_type === 'affirmation' && (
+                    <div>
+                      <Label className="text-sm font-medium mb-1.5 block">Affirmation</Label>
+                      <Textarea
+                        value={form.body}
+                        onChange={e => setForm(prev => ({ ...prev, body: e.target.value }))}
+                        placeholder="I am..."
+                        className="min-h-[120px]"
+                      />
+                    </div>
+                  )}
+
+                  {/* Memory-type fields */}
+                  {form.entry_type && !['quote', 'scripture', 'affirmation', 'identity_swap'].includes(form.entry_type) && (
+                    <>
+                      <div>
+                        <Label className="text-sm font-medium mb-1.5 block">
+                          {form.entry_type === 'life_win' ? 'What was the win?' : form.entry_type === 'blessing' ? 'Describe the blessing' : 'What happened?'}
+                        </Label>
+                        <Textarea
+                          value={form.body}
+                          onChange={e => setForm(prev => ({ ...prev, body: e.target.value }))}
+                          placeholder={form.entry_type === 'life_win' ? 'Describe your win...' : form.entry_type === 'blessing' ? 'What are you grateful for?' : 'Tell the story...'}
+                          className="min-h-[120px]"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-sm font-medium mb-1.5 block">Date <span className="text-muted-foreground">(optional)</span></Label>
+                        <Input type="date" value={form.entry_date} onChange={e => setForm(prev => ({ ...prev, entry_date: e.target.value }))} />
+                        <p className="text-xs text-muted-foreground mt-1">Add a date and this entry will surface as an anniversary.</p>
+                      </div>
+                      {showPhoto && (
+                        <div>
+                          <Label className="text-sm font-medium mb-1.5 block">Photo <span className="text-muted-foreground">(optional)</span></Label>
+                          {form.photo_url ? (
+                            <div className="relative">
+                              <img src={form.photo_url} alt="" className="w-full h-48 object-cover rounded-lg" />
+                              <button onClick={() => setForm(prev => ({ ...prev, photo_url: '' }))} className="absolute top-2 right-2 bg-foreground/50 text-background rounded-full w-6 h-6 flex items-center justify-center text-xs">×</button>
+                            </div>
+                          ) : (
+                            <label className="flex items-center justify-center gap-2 border-2 border-dashed border-border rounded-lg p-8 cursor-pointer hover:border-primary/40 transition-colors">
+                              {uploading ? <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /> : <Upload className="w-5 h-5 text-muted-foreground" />}
+                              <span className="text-sm text-muted-foreground">{uploading ? 'Uploading...' : 'Upload a photo'}</span>
+                              <input type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
+                            </label>
+                          )}
+                        </div>
+                      )}
+                    </>
+                  )}
+
+                  {/* Category — always last before save */}
+                  <div>
+                    <Label className="text-sm font-medium mb-3 block">Category</Label>
+                    <ChipGroup
+                      options={categories}
+                      value={form.category}
+                      onChange={v => setForm(prev => ({ ...prev, category: v }))}
+                    />
+                  </div>
+
+                  <Button
+                    onClick={checkAndSave}
+                    disabled={saving || !canSave}
+                    className="w-full bg-primary hover:bg-primary/90"
+                    size="lg"
+                  >
+                    {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                    Save entry
+                  </Button>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </motion.div>
 

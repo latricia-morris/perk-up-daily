@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import {
   Home, PlusCircle, Sparkles, Trophy, Settings,
-  ShieldCheck, Zap, BookOpen, Menu, X
+  ShieldCheck, Zap, BookOpen, Menu, X, LogOut
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
@@ -77,6 +77,13 @@ function SidebarContent({ user, onNavClick }) {
           {isAdmin && (
             <NavLink path="/admin" icon={ShieldCheck} label="Admin" onClick={onNavClick} />
           )}
+          <button
+            onClick={() => base44.auth.logout('/')}
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all w-full text-left text-muted-foreground hover:text-foreground hover:bg-accent"
+          >
+            <LogOut className="w-4 h-4 shrink-0" />
+            Log out
+          </button>
         </div>
       </div>
     </>

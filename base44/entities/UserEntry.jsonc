@@ -11,6 +11,7 @@
         "affirmation",
         "quote",
         "personal_note",
+        "identity_swap",
         "scripture",
         "accomplishment",
         "milestone"
@@ -19,11 +20,15 @@
     },
     "title": {
       "type": "string",
-      "description": "Optional title"
+      "description": "Optional title or author field for quotes/scriptures"
     },
     "body": {
       "type": "string",
-      "description": "The entry content"
+      "description": "The entry content / true identity statement"
+    },
+    "old_belief": {
+      "type": "string",
+      "description": "For identity_swap: the old false belief being released"
     },
     "category": {
       "type": "string",
@@ -41,10 +46,6 @@
       "type": "string",
       "format": "date",
       "description": "Optional date for anniversary surfacing"
-    },
-    "tags": {
-      "type": "string",
-      "description": "Comma-separated tags"
     },
     "photo_url": {
       "type": "string",

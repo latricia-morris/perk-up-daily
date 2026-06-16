@@ -137,10 +137,29 @@ export default function VaultEntryCard({ entry, index, christianEnabled }) {
             />
           )}
           <div className="flex-1 min-w-0">
-            {(form.title || entry.title) && (
-              <p className="text-sm font-semibold text-foreground mb-0.5">{form.title || entry.title}</p>
+            {entry.entry_type === 'identity_swap' ? (
+              <div className="space-y-2">
+                {/* Old lie — struck through, faded */}
+                {entry.old_belief && (
+                  <div>
+                    <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-0.5">My Old Lie-dentity</p>
+                    <p className="text-xs text-muted-foreground line-through leading-relaxed">{entry.old_belief}</p>
+                  </div>
+                )}
+                {/* True identity — bold and clear */}
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-widest mb-0.5" style={{ color: '#d4830a' }}>My True Identity</p>
+                  <p className="text-sm font-semibold text-foreground leading-relaxed">{form.body || entry.body}</p>
+                </div>
+              </div>
+            ) : (
+              <>
+                {(form.title || entry.title) && (
+                  <p className="text-sm font-semibold text-foreground mb-0.5">{form.title || entry.title}</p>
+                )}
+                <p className="text-sm text-foreground leading-relaxed line-clamp-2">{form.body || entry.body}</p>
+              </>
             )}
-            <p className="text-sm text-foreground leading-relaxed line-clamp-2">{form.body || entry.body}</p>
             <div className="flex items-center gap-2 mt-2 flex-wrap">
               <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
                 {getEntryTypeLabel(entry.entry_type)}

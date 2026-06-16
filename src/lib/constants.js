@@ -14,6 +14,7 @@ export const ENTRY_TYPES = [
   { slug: 'affirmation', label: 'Affirmation', allowPhoto: false },
   { slug: 'quote', label: 'Quote', allowPhoto: false },
   { slug: 'personal_note', label: 'Note', allowPhoto: false },
+  { slug: 'identity_swap', label: 'Identity Swap', allowPhoto: false },
   { slug: 'scripture', label: 'Scripture', requiresChristian: true, allowPhoto: false },
 ];
 
@@ -32,6 +33,10 @@ export function getEntryTypeLabel(slug) {
   // Legacy slug support
   if (slug === 'accomplishment' || slug === 'milestone') return 'Life Win';
   return ENTRY_TYPES.find(t => t.slug === slug)?.label || slug;
+}
+
+export function isIdentitySwap(entry) {
+  return entry?.entry_type === 'identity_swap';
 }
 
 export function getContentTypeLabel(slug) {
