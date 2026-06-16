@@ -74,20 +74,20 @@ export default function Dashboard() {
           transition={{ duration: 0.5 }}
           className="mb-10"
         >
-          <div className="flex items-center gap-2 mb-2">
-            <SessionIcon className="w-5 h-5 text-primary" />
-            <span className="text-xs font-medium text-primary uppercase tracking-wider">
-              {greeting.session}
+          <div className="flex items-center gap-1.5 mb-3">
+            <SessionIcon className="w-4 h-4" style={{ color: '#d4830a' }} />
+            <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: '#d4830a' }}>
+              {greeting.session} delivery
             </span>
           </div>
-          <h1 className="font-display text-3xl md:text-4xl font-semibold text-foreground">
+          <h1 className="font-display text-3xl md:text-4xl font-semibold" style={{ color: '#2c1e0f' }}>
             {greeting.text}
           </h1>
-          {user?.full_name && (
-            <p className="text-muted-foreground mt-1 text-sm">
-              Here's what's waiting for you, {user.full_name.split(' ')[0]}.
-            </p>
-          )}
+          <p className="mt-1.5 text-sm" style={{ color: '#7a5c3a' }}>
+            {user?.full_name
+              ? `Here's what's waiting for you, ${user.full_name.split(' ')[0]}.`
+              : "Here's what's waiting for you today."}
+          </p>
         </motion.div>
 
         {/* Delivery */}
