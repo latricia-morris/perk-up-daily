@@ -14,6 +14,6 @@ export default function Notes() {
   });
 
   return (
-    <EntryTypePageShell title="Notes" icon={FileText} entries={entries} user={user} emptyText="No notes yet. Write something worth remembering." />
+    <EntryTypePageShell title="Notes" icon={FileText} entries={entries} user={user} emptyText="No notes yet. Write something worth remembering." queryKey="entries-notes" />
   );
 }

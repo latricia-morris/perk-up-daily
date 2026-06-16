@@ -4,10 +4,12 @@ import { base44 } from '@/api/base44Client';
 import { Navigate } from 'react-router-dom';
 import { BookOpen } from 'lucide-react';
 import VaultEntryCard from '@/components/vault/VaultEntryCard';
+import SourceToggle from '@/components/shared/SourceToggle';
 
 export default function Scriptures() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [source, setSource] = useState('all');
 
   useEffect(() => {
     base44.auth.me().then(u => { setUser(u); setLoading(false); });
@@ -27,14 +29,17 @@ export default function Scriptures() {
   if (!user?.christian_content) return <Navigate to="/dashboard" replace />;
 
   const allScriptures = [
-    ...userScriptures.map(e => ({ ...e, source: 'yours' })),
-    ...libraryScriptures.map(e => ({ ...e, entry_type: 'scripture', source: 'library' })),
+    ...(source !== 'library' ? userScriptures.map(e => ({ ...e, source: 'yours' })) : []),
+    ...(source !== 'mine' ? libraryScriptures.map(e => ({ ...e, entry_type: 'scripture', source: 'library' })) : []),
   ];
 
   return (
     <div>
       <div className="max-w-2xl mx-auto px-6 py-8">
-        <h1 className="font-display text-2xl font-semibold text-foreground mb-6">Scriptures</h1>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="font-display text-2xl font-semibold text-foreground">Scriptures</h1>
+          <SourceToggle value={source} onChange={setSource} />
+        </div>
 
         {allScriptures.length === 0 ? (
           <div className="text-center py-16 text-muted-foreground">
@@ -44,7 +49,15 @@ export default function Scriptures() {
         ) : (
           <div className="space-y-3">
             {allScriptures.map((entry, i) => (
-              <VaultEntryCard key={entry.id} entry={entry} index={i} />
+              entry.source === 'yours'
+                ? <VaultEntryCard key={entry.id} entry={entry} index={i} christianEnabled={true} />
+                : (
+                  <div key={entry.id} className="bg-card border border-border rounded-xl p-4">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Library</p>
+                    <p className="text-sm text-foreground leading-relaxed italic">"{entry.body}"</p>
+                    {entry.author && <p className="text-xs text-muted-foreground mt-1">— {entry.author}</p>}
+                  </div>
+                )
             ))}
           </div>
         )}

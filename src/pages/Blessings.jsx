@@ -14,6 +14,6 @@ export default function Blessings() {
   });
 
   return (
-    <EntryTypePageShell title="Blessings" icon={Heart} entries={entries} user={user} emptyText="No blessings logged yet. Start capturing what you're grateful for." />
+    <EntryTypePageShell title="Blessings" icon={Heart} entries={entries} user={user} emptyText="No blessings logged yet. Start capturing what you're grateful for." queryKey="entries-blessings" />
   );
 }

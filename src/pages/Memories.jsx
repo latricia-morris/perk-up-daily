@@ -17,6 +17,6 @@ export default function Memories() {
   });
 
   return (
-    <EntryTypePageShell title="Memories" icon={Image} entries={entries} user={user} emptyText="No memories yet. Log your first one." />
+    <EntryTypePageShell title="Memories" icon={Image} entries={entries} user={user} emptyText="No memories yet. Log your first one." queryKey="entries-memories" />
   );
 }

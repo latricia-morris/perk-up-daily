@@ -14,6 +14,6 @@ export default function IdentityUpgrades() {
   });
 
   return (
-    <EntryTypePageShell title="Identity Upgrades" icon={Sparkles} entries={entries} user={user} emptyText="No identity upgrades yet. Release a lie, step into your truth." />
+    <EntryTypePageShell title="Identity Upgrades" icon={Sparkles} entries={entries} user={user} emptyText="No identity upgrades yet. Release a lie, step into your truth." queryKey="entries-identity-upgrades" />
   );
 }
