@@ -196,16 +196,7 @@ export default function Landing() {
       <header className="sticky top-0 z-50 backdrop-blur-md" style={{ background: 'rgba(254,249,242,0.72)', borderBottom: '1px solid rgba(44,30,15,0.07)' }}>
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <svg width="30" height="30" viewBox="0 0 36 36" fill="none" aria-hidden="true">
-              <circle cx="18" cy="18" r="18" fill="oklch(0.92 0.12 70)"/>
-              <circle cx="18" cy="20" r="7" fill="#E8A838"/>
-              <line x1="18" y1="8" x2="18" y2="5" stroke="#E8A838" strokeWidth="2.5" strokeLinecap="round"/>
-              <line x1="25.5" y1="10.5" x2="27.6" y2="8.4" stroke="#E8A838" strokeWidth="2.5" strokeLinecap="round"/>
-              <line x1="10.5" y1="10.5" x2="8.4" y2="8.4" stroke="#E8A838" strokeWidth="2.5" strokeLinecap="round"/>
-              <line x1="28" y1="20" x2="31" y2="20" stroke="#E8A838" strokeWidth="2.5" strokeLinecap="round"/>
-              <line x1="8" y1="20" x2="5" y2="20" stroke="#E8A838" strokeWidth="2.5" strokeLinecap="round"/>
-              <line x1="6" y1="27" x2="30" y2="27" stroke="#E8A838" strokeWidth="2" strokeLinecap="round" opacity="0.4"/>
-            </svg>
+            <img src="https://media.base44.com/images/public/6a312911bcddb0806c388af8/6fbb871a1_suntwist.png" alt="Perk Up Daily" className="w-8 h-8 object-contain" />
             <h1 className="font-display text-lg font-semibold" style={{ color: '#2c1e0f' }}>Perk Up Daily</h1>
           </div>
           <div className="flex items-center gap-3">
