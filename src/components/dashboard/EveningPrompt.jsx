@@ -61,7 +61,7 @@ export default function EveningPrompt({ christianEnabled, onSkip }) {
         <p className="text-sm mb-6" style={{ color: '#7a5c3a' }}>
           That's the good stuff. It'll find you again when you need it.
         </p>
-        <div className="flex gap-3 justify-center">
+        <div className="flex flex-col md:flex-row gap-3 justify-center">
            <Button
              variant="outline"
              size="sm"
@@ -134,7 +134,7 @@ export default function EveningPrompt({ christianEnabled, onSkip }) {
            </Select>
          </div>
 
-         <div className="flex gap-2">
+         <div className="flex flex-col md:flex-row gap-2">
            <Button
              onClick={handleSave}
              disabled={saving || !body.trim() || !category || !entryType}
