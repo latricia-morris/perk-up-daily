@@ -136,15 +136,7 @@ export default function AppLayout() {
       <header className="md:hidden fixed top-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <div className="flex items-center justify-between px-4 py-3">
           <Link to="/dashboard" className="flex items-center gap-2">
-            <svg width="26" height="26" viewBox="0 0 36 36" fill="none" aria-hidden="true">
-              <circle cx="18" cy="18" r="18" fill="oklch(0.92 0.12 70)"/>
-              <circle cx="18" cy="20" r="7" fill="#d4830a"/>
-              <line x1="18" y1="8" x2="18" y2="5" stroke="#d4830a" strokeWidth="2.5" strokeLinecap="round"/>
-              <line x1="25.5" y1="10.5" x2="27.6" y2="8.4" stroke="#d4830a" strokeWidth="2.5" strokeLinecap="round"/>
-              <line x1="10.5" y1="10.5" x2="8.4" y2="8.4" stroke="#d4830a" strokeWidth="2.5" strokeLinecap="round"/>
-              <line x1="28" y1="20" x2="31" y2="20" stroke="#d4830a" strokeWidth="2.5" strokeLinecap="round"/>
-              <line x1="8" y1="20" x2="5" y2="20" stroke="#d4830a" strokeWidth="2.5" strokeLinecap="round"/>
-            </svg>
+            <img src="https://media.base44.com/images/public/6a312911bcddb0806c388af8/03f4f7e79_suntwist.png" alt="Perk Up Daily" width="26" height="26" className="w-6 h-6" />
             <span className="font-display text-base font-semibold text-foreground">Perk Up Daily</span>
           </Link>
           <button
