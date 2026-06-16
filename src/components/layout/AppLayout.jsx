@@ -162,7 +162,7 @@ export default function AppLayout() {
                 key={path}
                 to={path}
                 onClick={handleTabClick}
-                className={`flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-lg transition-colors ${
+                className={`flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-lg transition-all active:scale-95 ${
                   active ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
                 }`}
               >

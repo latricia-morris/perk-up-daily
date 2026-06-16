@@ -47,10 +47,10 @@ export default function EveningPrompt({ christianEnabled }) {
       <motion.div
         initial={{ opacity: 0, scale: 0.97 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="rounded-2xl p-8 text-center"
+        className="rounded-2xl p-8 text-center bg-card"
         style={{
-          background: 'linear-gradient(135deg, #fde8c0 0%, #fffdf8 60%)',
-          border: '1px solid #f5d680',
+          background: 'linear-gradient(135deg, rgba(232,168,56,0.14) 0%, hsl(var(--card)) 60%)',
+          border: '1px solid hsl(var(--border))',
         }}
       >
         <p className="font-display text-xl font-semibold mb-2" style={{ color: '#2c1e0f' }}>
@@ -83,10 +83,10 @@ export default function EveningPrompt({ christianEnabled }) {
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-2xl p-6"
+      className="rounded-2xl p-6 bg-card"
       style={{
-        background: 'linear-gradient(135deg, #fde8c0 0%, #fffdf8 60%)',
-        border: '1px solid #f5d680',
+        background: 'linear-gradient(135deg, rgba(232,168,56,0.14) 0%, hsl(var(--card)) 60%)',
+        border: '1px solid hsl(var(--border))',
       }}
     >
       <div className="flex items-center gap-2 mb-4">
