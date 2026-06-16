@@ -41,9 +41,12 @@ const sampleCards = [
 
 export default function Landing() {
   return (
-    <div className="min-h-screen" style={{ background: '#fef9f2' }}>
+    <div className="min-h-screen" style={{
+      background: '#fef9f2',
+      backgroundImage: 'radial-gradient(ellipse 90% 55% at 65% 18%, rgba(255,243,210,0.92) 0%, rgba(253,232,175,0.28) 52%, transparent 78%), radial-gradient(ellipse 55% 40% at 8% 72%, rgba(255,236,170,0.38) 0%, transparent 70%)',
+    }}>
       {/* Nav */}
-      <header className="sticky top-0 z-50 backdrop-blur-md border-b" style={{ background: 'rgba(254,249,242,0.85)', borderColor: '#e8d5b0' }}>
+      <header className="sticky top-0 z-50 backdrop-blur-md" style={{ background: 'rgba(254,249,242,0.72)', borderBottom: '1px solid rgba(44,30,15,0.07)' }}>
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             {/* Logo mark */}
@@ -55,7 +58,7 @@ export default function Landing() {
               <line x1="10.5" y1="10.5" x2="8.4" y2="8.4" stroke="#d4830a" strokeWidth="2.5" strokeLinecap="round"/>
               <line x1="28" y1="20" x2="31" y2="20" stroke="#d4830a" strokeWidth="2.5" strokeLinecap="round"/>
               <line x1="8" y1="20" x2="5" y2="20" stroke="#d4830a" strokeWidth="2.5" strokeLinecap="round"/>
-              <line x1="6" y1="27" x2="30" y2="27" stroke="#4a7c59" strokeWidth="2" strokeLinecap="round"/>
+              <line x1="6" y1="27" x2="30" y2="27" stroke="#d4830a" strokeWidth="2" strokeLinecap="round" opacity="0.4"/>
             </svg>
             <h1 className="font-display text-lg font-semibold" style={{ color: '#2c1e0f' }}>Perk Up Daily</h1>
           </div>
@@ -70,15 +73,8 @@ export default function Landing() {
         </div>
       </header>
 
-      {/* Hero — warm layered gradient */}
+      {/* Hero */}
       <section className="relative overflow-hidden">
-        {/* Background gradient layers */}
-        <div className="absolute inset-0 pointer-events-none" style={{
-          background: 'radial-gradient(ellipse 80% 60% at 60% 40%, rgba(255,248,220,0.9) 0%, rgba(253,232,160,0.35) 55%, transparent 78%)',
-        }} />
-        <div className="absolute inset-0 pointer-events-none" style={{
-          background: 'radial-gradient(ellipse 50% 45% at 10% 75%, rgba(255,238,180,0.45) 0%, rgba(253,224,140,0.15) 55%, transparent 78%)',
-        }} />
 
         <div className="relative max-w-6xl mx-auto px-6 pt-20 pb-28 md:pt-32 md:pb-36">
           <motion.div
@@ -157,11 +153,8 @@ export default function Landing() {
       </section>
 
       {/* Features */}
-      <section className="py-20 md:py-28 relative" style={{ background: '#fff8ee' }}>
-        <div className="absolute inset-0 pointer-events-none" style={{
-          background: 'radial-gradient(ellipse 70% 50% at 80% 20%, rgba(255,240,190,0.45) 0%, rgba(253,224,140,0.12) 55%, transparent 75%)',
-        }} />
-        <div className="relative max-w-6xl mx-auto px-6">
+      <section className="py-20 md:py-28">
+        <div className="max-w-6xl mx-auto px-6">
           <h3 className="font-display text-2xl md:text-3xl font-semibold text-center mb-4" style={{ color: '#2c1e0f' }}>
             How it works
           </h3>
@@ -193,7 +186,7 @@ export default function Landing() {
       </section>
 
       {/* Social proof */}
-      <section className="py-20 md:py-28" style={{ background: '#fef9f2' }}>
+      <section className="py-20 md:py-28">
         <div className="max-w-6xl mx-auto px-6">
           <h3 className="font-display text-2xl md:text-3xl font-semibold text-center mb-14" style={{ color: '#2c1e0f' }}>
             People are loving this
@@ -226,12 +219,9 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* CTA — warm gradient with glow */}
-      <section className="py-20 md:py-28 relative overflow-hidden" style={{ background: '#fff8ee' }}>
-        <div className="absolute inset-0 pointer-events-none" style={{
-          background: 'radial-gradient(ellipse 60% 70% at 50% 50%, rgba(255,250,240,0.9) 0%, rgba(253,232,192,0.45) 45%, transparent 72%)',
-        }} />
-        <div className="relative max-w-2xl mx-auto px-6 text-center">
+      {/* CTA */}
+      <section className="py-20 md:py-28">
+        <div className="max-w-2xl mx-auto px-6 text-center">
           <h3 className="font-display text-2xl md:text-3xl font-semibold mb-4" style={{ color: '#2c1e0f' }}>
             Ready to start your day differently?
           </h3>
@@ -247,7 +237,7 @@ export default function Landing() {
       </section>
 
       {/* Footer */}
-      <footer className="py-8" style={{ borderTop: '1px solid #e8d5b0', background: '#fef9f2' }}>
+      <footer className="py-8" style={{ borderTop: '1px solid rgba(44,30,15,0.08)' }}>
         <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-sm" style={{ color: '#c4a882' }}>2025 Perk Up Daily. All rights reserved.</p>
           <div className="flex gap-6 text-sm" style={{ color: '#c4a882' }}>
