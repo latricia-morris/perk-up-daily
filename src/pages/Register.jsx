@@ -45,11 +45,13 @@ export default function Register() {
       if (result?.access_token) {
         base44.auth.setToken(result.access_token);
 
-        // Apply onboarding preferences immediately to User entity
+        // Apply all onboarding preferences immediately to User entity
         const onboardingData = JSON.parse(localStorage.getItem('perkup-onboarding') || '{}');
-        if (onboardingData.christianContent !== undefined) {
+        if (Object.keys(onboardingData).length > 0) {
           await base44.auth.updateMe({
-            christian_content: onboardingData.christianContent,
+            christian_content: onboardingData.christianContent || false,
+            preferred_categories: onboardingData.selectedCategories || [],
+            notification_times: onboardingData.notificationTimes || {},
           });
         }
       }
