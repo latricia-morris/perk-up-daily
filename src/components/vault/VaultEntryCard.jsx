@@ -217,7 +217,7 @@ export default function VaultEntryCard({ entry, index, christianEnabled }) {
             <ShareCard item={{ ...entry, ...form }} />
             <button
               onClick={handleDelete}
-              className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+              className="p-1.5 rounded-lg text-muted-foreground hover:text-[#9a3552] hover:bg-[#9a3552]/10 transition-colors"
             >
               <Trash2 className="w-3.5 h-3.5" />
             </button>

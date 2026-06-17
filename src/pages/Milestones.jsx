@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { motion } from 'framer-motion';
-import { format } from 'date-fns';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { getFilteredCategories, getCategoryLabel } from '@/lib/constants';
-import CategoryBadge from '@/components/shared/CategoryBadge';
+import { getFilteredCategories } from '@/lib/constants';
+import VaultEntryCard from '@/components/vault/VaultEntryCard';
 import { Trophy } from 'lucide-react';
 
 export default function Milestones() {
@@ -16,16 +14,7 @@ export default function Milestones() {
 
   const { data: entries = [] } = useQuery({
     queryKey: ['life-wins'],
-    queryFn: async () => {
-      // Fetch all three legacy types plus new life_win
-      const [wins, accomplishments, milestones] = await Promise.all([
-        base44.entities.UserEntry.filter({ entry_type: 'life_win' }, '-created_date'),
-        base44.entities.UserEntry.filter({ entry_type: 'accomplishment' }, '-created_date'),
-        base44.entities.UserEntry.filter({ entry_type: 'milestone' }, '-created_date'),
-      ]);
-      return [...wins, ...accomplishments, ...milestones]
-        .sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
-    },
+    queryFn: () => base44.entities.UserEntry.filter({ entry_type: 'life_win' }, '-created_date'),
   });
 
   const christianEnabled = user?.christian_content || false;
@@ -61,42 +50,10 @@ export default function Milestones() {
             <p className="text-sm">No life wins yet. Log your first win to start your timeline.</p>
           </div>
         ) : (
-          <div className="relative">
-            <div className="absolute left-4 top-0 bottom-0 w-px bg-border" />
-            <div className="space-y-6">
-              {filtered.map((entry, i) => (
-                <motion.div
-                  key={entry.id}
-                  initial={{ opacity: 0, x: -12 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: i * 0.05 }}
-                  className="relative pl-10"
-                >
-                  <div className="absolute left-2.5 top-4 w-3 h-3 rounded-full bg-primary border-2 border-background" />
-                  <div className="bg-card border border-border rounded-xl p-4">
-                    <div className="flex gap-3">
-                      {entry.photo_url && (
-                        <img src={entry.photo_url} alt="" className="w-16 h-16 rounded-lg object-cover shrink-0" />
-                      )}
-                      <div className="flex-1">
-                        <p className="font-semibold text-foreground">{entry.title || 'Life Win'}</p>
-                        {entry.body && (
-                          <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{entry.body}</p>
-                        )}
-                        <div className="flex items-center gap-2 mt-2">
-                          <CategoryBadge category={entry.category} />
-                          {entry.entry_date && (
-                            <span className="text-xs text-muted-foreground">
-                              {format(new Date(entry.entry_date), 'MMM d, yyyy')}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+          <div className="space-y-3">
+            {filtered.map((entry, i) => (
+              <VaultEntryCard key={entry.id} entry={entry} index={i} christianEnabled={christianEnabled} />
+            ))}
           </div>
         )}
       </div>
