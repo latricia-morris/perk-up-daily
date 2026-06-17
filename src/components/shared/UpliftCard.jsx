@@ -42,33 +42,33 @@ function resolveDisplayFields(item) {
   };
 }
 
-/** Renders the secondary metadata line for a tile, per content type */
+/** Renders ALL populated secondary fields for a tile, per content type — never early-returns */
 function TileSubline({ fields, size = 'sm' }) {
-  const { entryType, author, reference, old_belief, location, date, category } = fields;
+  const { entryType, author, reference, location, date, category } = fields;
   const textClass = size === 'sm' ? 'text-[10px]' : 'text-xs';
+  const lines = [];
 
   if (entryType === 'quote' && author) {
-    return <p className={`${textClass} font-medium mt-2`} style={{ color: '#7a5c3a' }}>— {author}</p>;
+    lines.push(<p key="author" className={`${textClass} font-medium`} style={{ color: '#7a5c3a' }}>— {author}</p>);
   }
   if (entryType === 'scripture' && reference) {
-    return <p className={`${textClass} font-medium mt-2`} style={{ color: '#7a5c3a' }}>{reference}</p>;
-  }
-  if (entryType === 'identity_swap' && old_belief) {
-    return <p className={`${textClass} mt-2 line-through`} style={{ color: '#9a9a9a' }}>{old_belief}</p>;
+    lines.push(<p key="reference" className={`${textClass} font-medium`} style={{ color: '#7a5c3a' }}>{reference}</p>);
   }
   if (entryType === 'experience') {
     const parts = [];
     if (location) parts.push(location);
     if (date) parts.push(new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }));
-    if (parts.length) return <p className={`${textClass} mt-2`} style={{ color: '#c4a882' }}>{parts.join(' • ')}</p>;
+    if (parts.length) lines.push(<p key="meta" className={`${textClass}`} style={{ color: '#c4a882' }}>{parts.join(' • ')}</p>);
   }
   if (['life_win', 'milestone', 'blessing', 'personal_note'].includes(entryType) && date) {
-    return <p className={`${textClass} mt-2`} style={{ color: '#c4a882' }}>{new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>;
+    lines.push(<p key="date" className={`${textClass}`} style={{ color: '#c4a882' }}>{new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>);
   }
-  if (category) {
-    return <p className={`${textClass} mt-2`} style={{ color: '#c4a882' }}>{getCategoryLabel(category)}</p>;
+  if (!lines.length && category) {
+    lines.push(<p key="category" className={`${textClass}`} style={{ color: '#c4a882' }}>{getCategoryLabel(category)}</p>);
   }
-  return null;
+
+  if (!lines.length) return null;
+  return <div className="flex flex-col gap-0.5 mt-2">{lines}</div>;
 }
 
 export default function UpliftCard({ item, featured = false }) {

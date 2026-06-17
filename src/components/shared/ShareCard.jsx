@@ -208,9 +208,25 @@ export default function ShareCard({ item, isDetailView = false }) {
   };
 
   const handleCopyText = () => {
-    const { body, author, reference } = resolveFields(item);
-    const suffix = author ? ` — ${author}` : reference ? ` — ${reference}` : '';
-    navigator.clipboard.writeText(`"${body}"${suffix}`);
+    const { entryType, body, author, reference, old_belief, location, date } = resolveFields(item);
+    const parts = [];
+
+    if (entryType === 'identity_swap') {
+      if (old_belief) parts.push(`Old belief: "${old_belief}"`);
+      parts.push(`New truth: "${body}"`);
+    } else if (entryType === 'quote') {
+      parts.push(`"${body}"`);
+      if (author) parts.push(`— ${author}`);
+    } else if (entryType === 'scripture') {
+      parts.push(`"${body}"`);
+      if (reference) parts.push(reference);
+    } else {
+      parts.push(body);
+      if (location) parts.push(location);
+      if (date) parts.push(new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }));
+    }
+
+    navigator.clipboard.writeText(parts.join('\n'));
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
