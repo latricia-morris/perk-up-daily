@@ -35,7 +35,7 @@ export default function VaultEntryCard({ entry, index, christianEnabled }) {
       await queryClient.cancelQueries({ queryKey: ['vault-entries'] });
       const old = queryClient.getQueryData(['vault-entries']);
       queryClient.setQueryData(['vault-entries'], (prev) =>
-        prev.map(e => e.id === entry.id ? { ...e, ...newData } : e)
+        prev.map(e => e.id === entry.id ? { ...e, ...newData, updated_date: new Date().toISOString() } : e)
       );
       return old;
     },
