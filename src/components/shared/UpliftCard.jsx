@@ -1,85 +1,182 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getCategoryLabel } from '@/lib/constants';
+import { getSchema } from '@/lib/contentSchema';
 import { Sparkles, BookOpen, Quote, Heart, Star, Trophy } from 'lucide-react';
 import ShareCard from '@/components/shared/ShareCard';
 import EntryDetailModal from '@/components/shared/EntryDetailModal';
 
 const typeConfig = {
-  quote:              { icon: Quote,    accent: '#2872a8', bg: 'rgba(40,114,168,0.08)',  label: 'Quote' },
-  affirmation:        { icon: Sparkles, accent: '#c2567a', bg: 'rgba(194,86,122,0.08)',  label: 'Affirmation' },
-  scripture:          { icon: BookOpen, accent: '#2872a8', bg: 'rgba(40,114,168,0.08)',  label: 'Scripture' },
-  encouragement_note: { icon: Heart,    accent: '#d4830a', bg: 'rgba(212,131,10,0.08)',  label: 'Note' },
-  experience:         { icon: Star,     accent: '#d4830a', bg: 'rgba(212,131,10,0.08)',  label: 'Memory' },
-  blessing:           { icon: Heart,    accent: '#c2567a', bg: 'rgba(194,86,122,0.08)', label: 'Blessing' },
-  life_win:           { icon: Trophy,   accent: '#4a7c59', bg: 'rgba(74,124,89,0.08)',   label: 'Life Win' },
-  accomplishment:     { icon: Trophy,   accent: '#4a7c59', bg: 'rgba(74,124,89,0.08)',   label: 'Life Win' },
-  milestone:          { icon: Trophy,   accent: '#9b59b6', bg: 'rgba(155,89,182,0.08)',  label: 'Life Win' },
-  personal_note:      { icon: Quote,    accent: '#d4830a', bg: 'rgba(212,131,10,0.08)',  label: 'Note' },
+  quote:              { icon: Quote,    accent: '#2872a8', bg: 'rgba(40,114,168,0.08)' },
+  affirmation:        { icon: Sparkles, accent: '#c2567a', bg: 'rgba(194,86,122,0.08)' },
+  scripture:          { icon: BookOpen, accent: '#2872a8', bg: 'rgba(40,114,168,0.08)' },
+  encouragement_note: { icon: Heart,    accent: '#d4830a', bg: 'rgba(212,131,10,0.08)' },
+  personal_note:      { icon: Quote,    accent: '#d4830a', bg: 'rgba(212,131,10,0.08)' },
+  experience:         { icon: Star,     accent: '#d4830a', bg: 'rgba(212,131,10,0.08)' },
+  blessing:           { icon: Heart,    accent: '#c2567a', bg: 'rgba(194,86,122,0.08)' },
+  life_win:           { icon: Trophy,   accent: '#4a7c59', bg: 'rgba(74,124,89,0.08)'  },
+  accomplishment:     { icon: Trophy,   accent: '#4a7c59', bg: 'rgba(74,124,89,0.08)'  },
+  milestone:          { icon: Trophy,   accent: '#9b59b6', bg: 'rgba(155,89,182,0.08)' },
+  identity_swap:      { icon: Sparkles, accent: '#d4830a', bg: 'rgba(212,131,10,0.08)' },
 };
 
-const fallback = { icon: Sparkles, accent: '#d4830a', bg: 'rgba(212,131,10,0.08)', label: 'Entry' };
+const fallback = { icon: Sparkles, accent: '#d4830a', bg: 'rgba(212,131,10,0.08)' };
 
-export default function UpliftCard({ item, featured = false, source = 'library' }) {
+/**
+ * Canonical field resolver — reads from the correct field per content type.
+ */
+function resolveDisplayFields(item) {
+  const entryType = item.content_type || item.entry_type;
+  const schema = getSchema(entryType);
+  return {
+    entryType,
+    label: schema?.label || entryType,
+    body: item.body || '',
+    author: item.author || null,
+    reference: item.reference || null,
+    old_belief: item.old_belief || null,
+    photo: item.photo_url || null,
+    location: item.location || null,
+    date: item.entry_date || null,
+    category: item.category || null,
+  };
+}
+
+/** Renders the secondary metadata line for a tile, per content type */
+function TileSubline({ fields, size = 'sm' }) {
+  const { entryType, author, reference, old_belief, location, date, category } = fields;
+  const textClass = size === 'sm' ? 'text-[10px]' : 'text-xs';
+
+  if (entryType === 'quote' && author) {
+    return <p className={`${textClass} font-medium mt-2`} style={{ color: '#7a5c3a' }}>— {author}</p>;
+  }
+  if (entryType === 'scripture' && reference) {
+    return <p className={`${textClass} font-medium mt-2`} style={{ color: '#7a5c3a' }}>{reference}</p>;
+  }
+  if (entryType === 'identity_swap' && old_belief) {
+    return <p className={`${textClass} mt-2 line-through`} style={{ color: '#9a9a9a' }}>{old_belief}</p>;
+  }
+  if (entryType === 'experience') {
+    const parts = [];
+    if (location) parts.push(location);
+    if (date) parts.push(new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }));
+    if (parts.length) return <p className={`${textClass} mt-2`} style={{ color: '#c4a882' }}>{parts.join(' • ')}</p>;
+  }
+  if (['life_win', 'milestone', 'blessing', 'personal_note'].includes(entryType) && date) {
+    return <p className={`${textClass} mt-2`} style={{ color: '#c4a882' }}>{new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>;
+  }
+  if (category) {
+    return <p className={`${textClass} mt-2`} style={{ color: '#c4a882' }}>{getCategoryLabel(category)}</p>;
+  }
+  return null;
+}
+
+export default function UpliftCard({ item, featured = false }) {
   const [detailOpen, setDetailOpen] = useState(false);
-  const contentType = item.content_type || item.entry_type;
-  const cfg = typeConfig[contentType] || fallback;
-  const { icon: Icon, accent, bg, label } = cfg;
-  const body = item.body;
-  const category = item.category;
+  const fields = resolveDisplayFields(item);
+  const { entryType, label, body, photo } = fields;
+  const cfg = typeConfig[entryType] || fallback;
+  const { icon: Icon, accent } = cfg;
 
   if (featured) {
     return (
       <>
+        <motion.div
+          onClick={() => setDetailOpen(true)}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="relative overflow-hidden rounded-2xl cursor-pointer transition-shadow hover:shadow-lg"
+          style={{
+            background: 'linear-gradient(135deg, rgba(212,131,10,0.14) 0%, #fffdf8 60%)',
+            border: '1px solid rgba(212,131,10,0.2)',
+            boxShadow: '0 4px 24px rgba(212,131,10,0.10)',
+          }}
+        >
+          {/* Photo — full width, 50% of card height when present */}
+          {photo && (
+            <div className="w-full overflow-hidden" style={{ height: '240px' }}>
+              <img
+                src={photo}
+                alt=""
+                style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center center', display: 'block' }}
+              />
+            </div>
+          )}
+
+          <div className="p-6 md:p-8 relative">
+            <div
+              className="absolute pointer-events-none"
+              style={{ top: '-40px', right: '-40px', width: '180px', height: '180px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(212,131,10,0.14) 0%, transparent 70%)' }}
+            />
+            <div className="relative">
+              <div className="flex items-center gap-2 mb-4">
+                <Icon className="w-3.5 h-3.5" style={{ color: accent }} />
+                <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: accent }}>{label}</span>
+              </div>
+
+              {entryType === 'identity_swap' && fields.old_belief ? (
+                <>
+                  <p className="font-display text-base italic line-through mb-3" style={{ color: '#9a9a9a' }}>"{fields.old_belief}"</p>
+                  <p className="font-display text-xl md:text-2xl font-semibold leading-relaxed" style={{ color: '#d4830a' }}>"{body}"</p>
+                </>
+              ) : (
+                <p className="font-display text-xl md:text-2xl italic leading-relaxed" style={{ color: '#2c1e0f' }}>"{body}"</p>
+              )}
+
+              <TileSubline fields={fields} size="base" />
+
+              <div className="absolute bottom-0 right-0">
+                <ShareCard item={item} />
+              </div>
+            </div>
+          </div>
+        </motion.div>
+        <AnimatePresence>
+          {detailOpen && <EntryDetailModal item={item} onClose={() => setDetailOpen(false)} />}
+        </AnimatePresence>
+      </>
+    );
+  }
+
+  return (
+    <>
       <motion.div
         onClick={() => setDetailOpen(true)}
-        initial={{ opacity: 0, y: 12 }}
+        className="cursor-pointer rounded-xl p-4 transition-shadow hover:shadow-md"
+        initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="relative overflow-hidden rounded-2xl p-6 md:p-8 cursor-pointer transition-shadow hover:shadow-lg"
-        style={{
-          background: `linear-gradient(135deg, rgba(212,131,10,0.14) 0%, #fffdf8 60%)`,
-          border: '1px solid rgba(212,131,10,0.2)',
-          boxShadow: '0 4px 24px rgba(212,131,10,0.10)',
-        }}
+        transition={{ duration: 0.4 }}
+        style={{ background: '#fffdf8', border: '1px solid rgba(44,30,15,0.07)', boxShadow: '0 1px 4px rgba(44,30,15,0.06)' }}
       >
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            top: '-40px', right: '-40px',
-            width: '180px', height: '180px',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(212,131,10,0.14) 0%, transparent 70%)',
-          }}
-        />
-        <div className="relative">
-          <div className="flex items-center gap-2 mb-4">
-            <Icon className="w-3.5 h-3.5" style={{ color: accent }} />
-            <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: accent }}>
-              {label}
-            </span>
+        {/* Photo thumbnail */}
+        {photo && (
+          <div className="w-full overflow-hidden rounded-lg mb-3" style={{ height: '120px' }}>
+            <img
+              src={photo}
+              alt=""
+              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center center', display: 'block' }}
+            />
           </div>
-          <p className="font-display text-xl md:text-2xl italic leading-relaxed" style={{ color: '#2c1e0f' }}>
-            "{body}"
-          </p>
-          {contentType === 'quote' && item.author ? (
-            <p className="text-xs mt-3 font-medium" style={{ color: '#7a5c3a' }}>— {item.author}</p>
-          ) : contentType === 'scripture' && item.author ? (
-            <p className="text-xs mt-3 font-medium" style={{ color: '#7a5c3a' }}>{item.author}</p>
-          ) : (contentType === 'life_win' || contentType === 'milestone') && item.entry_date ? (
-            <p className="text-xs mt-3" style={{ color: '#c4a882' }}>
-              {new Date(item.entry_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-            </p>
-          ) : contentType === 'experience' ? (
-            <div className="text-xs mt-3" style={{ color: '#c4a882' }}>
-              {item.location && item.entry_date && <p>{item.location}, {new Date(item.entry_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>}
-              {item.location && !item.entry_date && <p>{item.location}</p>}
-              {!item.location && item.entry_date && <p>{new Date(item.entry_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>}
-            </div>
-          ) : category ? (
-            <p className="text-xs mt-3" style={{ color: '#c4a882' }}>{getCategoryLabel(category)}</p>
-          ) : null}
-          <div className="absolute bottom-4 right-4">
+        )}
+
+        <div className="flex items-center gap-1.5 mb-2.5">
+          <Icon className="w-3 h-3" style={{ color: accent }} />
+          <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: accent }}>{label}</span>
+        </div>
+
+        {entryType === 'identity_swap' && fields.old_belief ? (
+          <>
+            <p className="font-display text-xs italic line-through mb-1 line-clamp-2" style={{ color: '#9a9a9a' }}>"{fields.old_belief}"</p>
+            <p className="font-display text-sm font-semibold leading-relaxed line-clamp-2" style={{ color: '#d4830a' }}>"{body}"</p>
+          </>
+        ) : (
+          <p className="font-display text-sm italic leading-relaxed line-clamp-3" style={{ color: '#2c1e0f' }}>"{body}"</p>
+        )}
+
+        <div className="flex flex-col gap-2 mt-2">
+          <TileSubline fields={fields} size="sm" />
+          <div className="self-end">
             <ShareCard item={item} />
           </div>
         </div>
@@ -87,61 +184,6 @@ export default function UpliftCard({ item, featured = false, source = 'library' 
       <AnimatePresence>
         {detailOpen && <EntryDetailModal item={item} onClose={() => setDetailOpen(false)} />}
       </AnimatePresence>
-      </>
-    );
-  }
-
-  return (
-    <>
-    <motion.div
-      onClick={() => setDetailOpen(true)}
-      className="cursor-pointer rounded-xl p-4 transition-shadow hover:shadow-md"
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      style={{
-        background: '#fffdf8',
-        border: '1px solid rgba(44,30,15,0.07)',
-        boxShadow: '0 1px 4px rgba(44,30,15,0.06)',
-      }}
-    >
-      <div className="flex items-center gap-1.5 mb-2.5">
-        <Icon className="w-3 h-3" style={{ color: accent }} />
-        <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: accent }}>
-          {label}
-        </span>
-      </div>
-      <p className="font-display text-sm italic leading-relaxed line-clamp-3" style={{ color: '#2c1e0f' }}>
-        "{body}"
-      </p>
-      <div className="flex flex-col gap-2 mt-2">
-        <div>
-          {contentType === 'quote' && item.author ? (
-            <p className="text-[10px] font-medium" style={{ color: '#7a5c3a' }}>— {item.author}</p>
-          ) : contentType === 'scripture' && item.author ? (
-            <p className="text-[10px] font-medium" style={{ color: '#7a5c3a' }}>{item.author}</p>
-          ) : (contentType === 'life_win' || contentType === 'milestone') && item.entry_date ? (
-            <p className="text-[10px]" style={{ color: '#c4a882' }}>
-              {new Date(item.entry_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-            </p>
-          ) : contentType === 'experience' && (item.location || item.entry_date) ? (
-            <p className="text-[10px]" style={{ color: '#c4a882' }}>
-              {item.location && item.entry_date && `${item.location}, ${new Date(item.entry_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`}
-              {item.location && !item.entry_date && item.location}
-              {!item.location && item.entry_date && new Date(item.entry_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-            </p>
-          ) : category ? (
-            <p className="text-[10px]" style={{ color: '#c4a882' }}>{getCategoryLabel(category)}</p>
-          ) : null}
-        </div>
-        <div className="self-end">
-          <ShareCard item={item} />
-        </div>
-      </div>
-      </motion.div>
-      <AnimatePresence>
-      {detailOpen && <EntryDetailModal item={item} onClose={() => setDetailOpen(false)} />}
-      </AnimatePresence>
-      </>
-      );
-      }
+    </>
+  );
+}

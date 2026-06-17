@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import AdminLibrary from '@/components/admin/AdminLibrary';
 import AdminAddItem from '@/components/admin/AdminAddItem';
 import AdminCSVUpload from '@/components/admin/AdminCSVUpload';
+import SchemaRegistryTable from '@/components/admin/SchemaRegistryTable';
 
 export default function Admin() {
   const [user, setUser] = useState(null);
@@ -37,6 +38,7 @@ export default function Admin() {
             <TabsTrigger value="library">Library</TabsTrigger>
             <TabsTrigger value="add">Add Item</TabsTrigger>
             <TabsTrigger value="csv">CSV Upload</TabsTrigger>
+            <TabsTrigger value="schema">Schema Registry</TabsTrigger>
           </TabsList>
 
           <TabsContent value="library" className="mt-6">
@@ -49,6 +51,16 @@ export default function Admin() {
 
           <TabsContent value="csv" className="mt-6">
             <AdminCSVUpload />
+          </TabsContent>
+
+          <TabsContent value="schema" className="mt-6">
+            <div className="bg-card border border-border rounded-xl overflow-hidden">
+              <div className="px-4 py-3 border-b border-border">
+                <h2 className="font-semibold text-foreground text-sm">Content Type Schema Registry</h2>
+                <p className="text-xs text-muted-foreground mt-0.5">Single source of truth for all content types and their field visibility across the app.</p>
+              </div>
+              <SchemaRegistryTable />
+            </div>
           </TabsContent>
         </Tabs>
       </div>

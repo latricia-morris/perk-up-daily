@@ -7,6 +7,7 @@ export const CATEGORIES = [
   { slug: 'sound_money', label: 'Financial Freedom', emoji: '💰' },
 ];
 
+// ENTRY_TYPES is kept for legacy callers. The canonical source is lib/contentSchema.js
 export const ENTRY_TYPES = [
   { slug: 'experience', label: 'Memory', allowPhoto: true },
   { slug: 'blessing', label: 'Blessing', allowPhoto: true },

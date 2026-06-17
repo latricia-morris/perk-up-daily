@@ -7,7 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { ArrowLeft, Upload, Loader2 } from 'lucide-react';
-import { getFilteredEntryTypes, getFilteredCategories } from '@/lib/constants';
+import { getFilteredCategories } from '@/lib/constants';
+import { getSchemaEntryTypes, buildEmptyForm, serializeEntry } from '@/lib/contentSchema';
 import { motion, AnimatePresence } from 'framer-motion';
 import AIGuardDialog from '@/components/shared/AIGuardDialog';
 import { SelectContent, SelectItem } from '@/components/ui/select';
@@ -42,8 +43,6 @@ function ChipGroup({ options, value, onChange }) {
   );
 }
 
-const NO_PHOTO_TYPES = ['quote', 'scripture', 'affirmation', 'personal_note', 'identity_swap'];
-
 export default function AddEntry() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -51,31 +50,17 @@ export default function AddEntry() {
   const isFirst = urlParams.get('first') === '1';
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [form, setForm] = useState({
-    entry_type: '',
-    title: '',
-    body: '',
-    old_belief: '',
-    category: '',
-    entry_date: '',
-    location: '',
-    photo_url: '',
-  });
+  const [entryType, setEntryType] = useState('');
+  const [form, setForm] = useState({});
   const [uploading, setUploading] = useState(false);
   const [guardOpen, setGuardOpen] = useState(false);
 
   const createEntryMutation = useMutation({
     mutationFn: (payload) => base44.entities.UserEntry.create(payload),
     onMutate: async (newEntry) => {
-      // Cancel ongoing queries
       await queryClient.cancelQueries({ queryKey: ['vault-entries'] });
-      
-      // Get previous data
       const previousEntries = queryClient.getQueryData(['vault-entries']) || [];
-      
-      // Optimistically update cache
       queryClient.setQueryData(['vault-entries'], [...previousEntries, { ...newEntry, id: 'temp-' + Date.now() }]);
-      
       return { previousEntries };
     },
     onSuccess: () => {
@@ -87,7 +72,6 @@ export default function AddEntry() {
       }
     },
     onError: (err, newEntry, context) => {
-      // Revert on error
       if (context?.previousEntries) {
         queryClient.setQueryData(['vault-entries'], context.previousEntries);
       }
@@ -100,7 +84,6 @@ export default function AddEntry() {
         const currentUser = await base44.auth.me();
         setUser(currentUser || null);
       } catch (err) {
-        console.error('Failed to fetch user:', err);
         setUser(null);
         navigate('/login');
       } finally {
@@ -112,12 +95,17 @@ export default function AddEntry() {
 
   const christianEnabled = user?.christian_content || false;
   const aiGuardEnabled = user?.ai_guard_enabled !== false;
-  const entryTypes = getFilteredEntryTypes(christianEnabled);
+  const entryTypes = getSchemaEntryTypes(christianEnabled);
   const categories = getFilteredCategories(christianEnabled);
 
-  const typeSelected = !!form.entry_type;
-  const showPhoto = typeSelected && !NO_PHOTO_TYPES.includes(form.entry_type);
-  const isIdentitySwap = form.entry_type === 'identity_swap';
+  const handleTypeChange = (slug) => {
+    setEntryType(slug);
+    const today = new Date().toISOString().split('T')[0];
+    const blank = buildEmptyForm(slug);
+    // Default date for types that support it
+    if (blank.hasOwnProperty('entry_date')) blank.entry_date = today;
+    setForm(blank);
+  };
 
   const resizeImage = (file, maxPx = 1200) => {
     return new Promise((resolve) => {
@@ -149,22 +137,12 @@ export default function AddEntry() {
     setUploading(false);
   };
 
-  const getDefaultDateForType = (entryType) => {
-    if (['experience', 'life_win', 'milestone', 'accomplishment', 'blessing'].includes(entryType)) {
-      const today = new Date();
-      return today.toISOString().split('T')[0];
-    }
-    return '';
-  };
-
-  // For identity swap, body = new truth, old_belief = old lie
-  const canSave = form.entry_type && form.category &&
-    (isIdentitySwap ? (form.body && form.old_belief) : form.body);
+  const canSave = entryType && form.category &&
+    (entryType === 'identity_swap' ? (form.body && form.old_belief) : form.body);
 
   const checkAndSave = async () => {
     if (!canSave) return;
-
-    if (aiGuardEnabled && !isIdentitySwap) {
+    if (aiGuardEnabled && entryType !== 'identity_swap') {
       const result = await base44.integrations.Core.InvokeLLM({
         prompt: `Analyze this personal journal entry for tone. Is it negative, bitter, heavy, resentful, shameful, self-attacking, or clearly not uplifting? Answer with just "positive" or "negative". Entry: "${form.body}"`,
         response_json_schema: {
@@ -172,24 +150,17 @@ export default function AddEntry() {
           properties: { tone: { type: 'string', enum: ['positive', 'negative'] } },
         },
       });
-
       if (result.tone === 'negative') {
         setGuardOpen(true);
         return;
       }
     }
-
     await saveEntry('active');
   };
 
   const saveEntry = async (status = 'active') => {
-    const payload = { ...form, status };
-    // For quotes and scriptures, keep the author in the title field as defined in the schema
-    createEntryMutation.mutate(payload, {
-      onMutate: async () => {
-        // UI updates immediately, then syncs with backend
-      },
-    });
+    const payload = { ...serializeEntry(entryType, form), status };
+    createEntryMutation.mutate(payload);
   };
 
   const handleGuardChoice = async (choice) => {
@@ -214,9 +185,7 @@ export default function AddEntry() {
     );
   }
 
-  if (!user) {
-    return null; // Already redirected in useEffect
-  }
+  if (!user) return null;
 
   return (
     <div>
@@ -240,28 +209,17 @@ export default function AddEntry() {
           <h1 className="font-display text-2xl font-semibold text-foreground mb-6">Add an entry</h1>
 
           <div className="space-y-6">
-
-            {/* Step 1: Type — always visible */}
             <div>
               <Label className="text-sm font-medium mb-3 block">Type</Label>
               <ChipGroup
                 options={entryTypes}
-                value={form.entry_type}
-                onChange={v => setForm(prev => ({
-                  entry_type: v,
-                  title: '',
-                  body: '',
-                  old_belief: '',
-                  category: '',
-                  entry_date: getDefaultDateForType(v),
-                  photo_url: '',
-                }))}
+                value={entryType}
+                onChange={handleTypeChange}
               />
             </div>
 
-            {/* Steps 2+: only show once type is selected */}
             <AnimatePresence>
-              {typeSelected && (
+              {entryType && (
                 <motion.div
                   key="fields"
                   initial={{ opacity: 0, y: 8 }}
@@ -270,129 +228,14 @@ export default function AddEntry() {
                   transition={{ duration: 0.25 }}
                   className="space-y-6"
                 >
-                  {/* Identity Swap fields */}
-                  {isIdentitySwap && (
-                    <>
-                      <div>
-                        <Label className="text-sm font-medium mb-1.5 block">My Old Lie-dentity</Label>
-                        <p className="text-xs text-muted-foreground mb-2">The false belief you're releasing</p>
-                        <Textarea
-                          value={form.old_belief}
-                          onChange={e => setForm(prev => ({ ...prev, old_belief: e.target.value }))}
-                          placeholder="I used to believe that I..."
-                          className="min-h-[100px]"
-                        />
-                      </div>
-                      <div>
-                        <Label className="text-sm font-medium mb-1.5 block">My True Identity</Label>
-                        <p className="text-xs text-muted-foreground mb-2">The truth you're stepping into</p>
-                        <Textarea
-                          value={form.body}
-                          onChange={e => setForm(prev => ({ ...prev, body: e.target.value }))}
-                          placeholder="The truth is, I am..."
-                          className="min-h-[100px]"
-                        />
-                      </div>
-                    </>
-                  )}
+                  <EntryFormFields
+                    entryType={entryType}
+                    form={form}
+                    setForm={setForm}
+                    uploading={uploading}
+                    onPhotoUpload={handlePhotoUpload}
+                  />
 
-                  {/* Quote fields */}
-                  {form.entry_type === 'quote' && (
-                    <>
-                      <div>
-                        <Label className="text-sm font-medium mb-1.5 block">Quote</Label>
-                        <Textarea
-                          value={form.body}
-                          onChange={e => setForm(prev => ({ ...prev, body: e.target.value }))}
-                          placeholder="The quote text..."
-                          className="min-h-[120px]"
-                        />
-                      </div>
-                      <div>
-                        <Label className="text-sm font-medium mb-1.5 block">Author</Label>
-                        <Input value={form.title} onChange={e => setForm(prev => ({ ...prev, title: e.target.value }))} placeholder="Who said it?" />
-                      </div>
-                    </>
-                  )}
-
-                  {/* Scripture fields */}
-                  {form.entry_type === 'scripture' && (
-                    <>
-                      <div>
-                        <Label className="text-sm font-medium mb-1.5 block">Scripture</Label>
-                        <Textarea
-                          value={form.body}
-                          onChange={e => setForm(prev => ({ ...prev, body: e.target.value }))}
-                          placeholder="The scripture text..."
-                          className="min-h-[120px]"
-                        />
-                      </div>
-                      <div>
-                        <Label className="text-sm font-medium mb-1.5 block">Reference</Label>
-                        <Input value={form.title} onChange={e => setForm(prev => ({ ...prev, title: e.target.value }))} placeholder="e.g. Jeremiah 29:11 NIV" />
-                      </div>
-                    </>
-                  )}
-
-                  {/* Affirmation */}
-                  {form.entry_type === 'affirmation' && (
-                    <div>
-                      <Label className="text-sm font-medium mb-1.5 block">Affirmation</Label>
-                      <Textarea
-                        value={form.body}
-                        onChange={e => setForm(prev => ({ ...prev, body: e.target.value }))}
-                        placeholder="I am..."
-                        className="min-h-[120px]"
-                      />
-                    </div>
-                  )}
-
-                  {/* Memory-type fields */}
-                  {form.entry_type && !['quote', 'scripture', 'affirmation', 'identity_swap'].includes(form.entry_type) && (
-                    <>
-                      <div>
-                        <Label className="text-sm font-medium mb-1.5 block">
-                          {form.entry_type === 'life_win' ? 'What was the win?' : form.entry_type === 'blessing' ? 'Describe the blessing' : 'What happened?'}
-                        </Label>
-                        <Textarea
-                          value={form.body}
-                          onChange={e => setForm(prev => ({ ...prev, body: e.target.value }))}
-                          placeholder={form.entry_type === 'life_win' ? 'Describe your win...' : form.entry_type === 'blessing' ? 'What are you grateful for?' : 'Tell the story...'}
-                          className="min-h-[120px]"
-                        />
-                      </div>
-                      {form.entry_type === 'experience' && (
-                        <div>
-                          <Label className="text-sm font-medium mb-1.5 block">Location <span className="text-muted-foreground">(optional)</span></Label>
-                          <Input value={form.location} onChange={e => setForm(prev => ({ ...prev, location: e.target.value }))} placeholder="e.g. Yosemite, our kitchen, the backyard" />
-                        </div>
-                      )}
-                      <div>
-                        <Label className="text-sm font-medium mb-1.5 block">Date <span className="text-muted-foreground">(optional)</span></Label>
-                        <Input type="date" value={form.entry_date} onChange={e => setForm(prev => ({ ...prev, entry_date: e.target.value }))} />
-                        <p className="text-xs text-muted-foreground mt-1">Add a date and this entry will surface as an anniversary.</p>
-                      </div>
-                      {showPhoto && (
-                        <div>
-                          <Label className="text-sm font-medium mb-1.5 block">Photo <span className="text-muted-foreground">(optional)</span></Label>
-                          {form.photo_url ? (
-                            <div className="relative">
-                              <img src={form.photo_url} alt="" className="w-full h-48 object-cover rounded-lg" />
-                              <button onClick={() => setForm(prev => ({ ...prev, photo_url: '' }))} className="absolute top-2 right-2 bg-foreground/50 text-background rounded-full w-6 h-6 flex items-center justify-center text-xs">×</button>
-                            </div>
-                          ) : (
-                            <label className="flex items-center justify-center gap-2 border-2 border-dashed border-border rounded-lg p-8 cursor-pointer hover:border-primary/40 transition-colors">
-                              {uploading ? <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /> : <Upload className="w-5 h-5 text-muted-foreground" />}
-                              <span className="text-sm text-muted-foreground">{uploading ? 'Uploading...' : 'Upload a photo'}</span>
-                              <input type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
-                            </label>
-                          )}
-                        </div>
-                      )}
-                    </>
-                  )}
-
-                  {/* Category — always last before save */}
                   <div>
                     <Label className="text-sm font-medium mb-3 block">Category</Label>
                     <div className="hidden md:block">
@@ -432,5 +275,108 @@ export default function AddEntry() {
         <AIGuardDialog open={guardOpen} onChoice={handleGuardChoice} />
       </div>
     </div>
+  );
+}
+
+/** Shared form fields component — driven entirely by the schema */
+export function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUpload }) {
+  const f = (key) => form[key] ?? '';
+  const set = (key) => (e) => setForm(prev => ({ ...prev, [key]: e.target.value }));
+
+  if (entryType === 'identity_swap') return (
+    <>
+      <div>
+        <Label className="text-sm font-medium mb-1.5 block">My Old Lie-dentity</Label>
+        <p className="text-xs text-muted-foreground mb-2">The false belief you're releasing</p>
+        <Textarea value={f('old_belief')} onChange={set('old_belief')} placeholder="I used to believe that I..." className="min-h-[100px]" />
+      </div>
+      <div>
+        <Label className="text-sm font-medium mb-1.5 block">My True Identity</Label>
+        <p className="text-xs text-muted-foreground mb-2">The truth you're stepping into</p>
+        <Textarea value={f('body')} onChange={set('body')} placeholder="The truth is, I am..." className="min-h-[100px]" />
+      </div>
+    </>
+  );
+
+  if (entryType === 'quote') return (
+    <>
+      <div>
+        <Label className="text-sm font-medium mb-1.5 block">Quote</Label>
+        <Textarea value={f('body')} onChange={set('body')} placeholder="The quote text..." className="min-h-[120px]" />
+      </div>
+      <div>
+        <Label className="text-sm font-medium mb-1.5 block">Author <span className="text-muted-foreground">(optional)</span></Label>
+        <Input value={f('author')} onChange={set('author')} placeholder="Who said it?" />
+      </div>
+    </>
+  );
+
+  if (entryType === 'scripture') return (
+    <>
+      <div>
+        <Label className="text-sm font-medium mb-1.5 block">Scripture</Label>
+        <Textarea value={f('body')} onChange={set('body')} placeholder="The scripture text..." className="min-h-[120px]" />
+      </div>
+      <div>
+        <Label className="text-sm font-medium mb-1.5 block">Reference <span className="text-muted-foreground">(optional)</span></Label>
+        <Input value={f('reference')} onChange={set('reference')} placeholder="e.g. Jeremiah 29:11 NIV" />
+      </div>
+    </>
+  );
+
+  if (entryType === 'affirmation') return (
+    <div>
+      <Label className="text-sm font-medium mb-1.5 block">Affirmation</Label>
+      <Textarea value={f('body')} onChange={set('body')} placeholder="I am..." className="min-h-[120px]" />
+    </div>
+  );
+
+  // Memory, Blessing, Life Win, Note
+  const labelMap = {
+    experience: 'What happened?',
+    blessing: 'Describe the blessing',
+    life_win: 'What was the win?',
+    personal_note: 'Note',
+  };
+  const placeholderMap = {
+    experience: 'Tell the story...',
+    blessing: 'What are you grateful for?',
+    life_win: 'Describe your win...',
+    personal_note: 'Write your note...',
+  };
+
+  return (
+    <>
+      <div>
+        <Label className="text-sm font-medium mb-1.5 block">{labelMap[entryType] || 'Content'}</Label>
+        <Textarea value={f('body')} onChange={set('body')} placeholder={placeholderMap[entryType] || ''} className="min-h-[120px]" />
+      </div>
+      {entryType === 'experience' && (
+        <div>
+          <Label className="text-sm font-medium mb-1.5 block">Location <span className="text-muted-foreground">(optional)</span></Label>
+          <Input value={f('location')} onChange={set('location')} placeholder="e.g. Yosemite, our kitchen, the backyard" />
+        </div>
+      )}
+      <div>
+        <Label className="text-sm font-medium mb-1.5 block">Date <span className="text-muted-foreground">(optional)</span></Label>
+        <Input type="date" value={f('entry_date')} onChange={set('entry_date')} />
+        <p className="text-xs text-muted-foreground mt-1">Add a date and this entry will surface as an anniversary.</p>
+      </div>
+      <div>
+        <Label className="text-sm font-medium mb-1.5 block">Photo <span className="text-muted-foreground">(optional)</span></Label>
+        {form.photo_url ? (
+          <div className="relative">
+            <img src={form.photo_url} alt="" className="w-full h-48 object-cover rounded-lg" />
+            <button onClick={() => setForm(prev => ({ ...prev, photo_url: '' }))} className="absolute top-2 right-2 bg-foreground/50 text-background rounded-full w-6 h-6 flex items-center justify-center text-xs">×</button>
+          </div>
+        ) : (
+          <label className="flex items-center justify-center gap-2 border-2 border-dashed border-border rounded-lg p-8 cursor-pointer hover:border-primary/40 transition-colors">
+            {uploading ? <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /> : <Upload className="w-5 h-5 text-muted-foreground" />}
+            <span className="text-sm text-muted-foreground">{uploading ? 'Uploading...' : 'Upload a photo'}</span>
+            <input type="file" accept="image/*" onChange={onPhotoUpload} className="hidden" />
+          </label>
+        )}
+      </div>
+    </>
   );
 }
