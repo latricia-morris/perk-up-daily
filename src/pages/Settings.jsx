@@ -129,7 +129,7 @@ export default function Settings() {
             <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4">Content</h2>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <Label className="text-sm">Christian content</Label>
+                <Label className="text-sm">Faith-Based Content</Label>
                 <Switch
                   checked={prefs.christian_content}
                   onCheckedChange={v => {

@@ -59,7 +59,7 @@ function HeroCards() {
 
       {/* Toggle */}
       <div className="flex items-center justify-center gap-3 pt-1">
-        <span className="text-xs font-medium" style={{ color: '#7a5c3a' }}>Christian Content</span>
+        <span className="text-xs font-medium" style={{ color: '#7a5c3a' }}>Faith-Based Content</span>
         <button
           onClick={() => setChristianOn(v => !v)}
           className="relative w-11 h-6 rounded-full transition-colors duration-300 focus:outline-none"
