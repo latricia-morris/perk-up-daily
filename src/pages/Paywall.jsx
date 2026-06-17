@@ -26,10 +26,17 @@ export default function Paywall() {
     setLoading(true);
     try {
       const origin = window.location.origin;
+      
+      // Get onboarding prefs from localStorage if they exist
+      const onboardingData = JSON.parse(localStorage.getItem('perkup-onboarding') || '{}');
+
       const response = await base44.functions.invoke('createCheckoutSession', {
         plan: selectedPlan,
         successUrl: `${origin}/add-entry?first=1`,
         cancelUrl: `${origin}/paywall`,
+        metadata: onboardingData.christianContent !== undefined ? {
+          christian_content: String(onboardingData.christianContent)
+        } : {},
       });
 
       if (response.data?.url) {

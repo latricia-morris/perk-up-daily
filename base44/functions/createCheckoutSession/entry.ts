@@ -7,7 +7,7 @@ const PRICES = {
 
 Deno.serve(async (req) => {
   try {
-    const { plan, successUrl, cancelUrl } = await req.json();
+    const { plan, successUrl, cancelUrl, metadata } = await req.json();
 
     if (!plan || !PRICES[plan]) {
       return Response.json({ error: 'Invalid plan. Must be "monthly" or "annual".' }, { status: 400 });
@@ -23,6 +23,7 @@ Deno.serve(async (req) => {
       metadata: {
         base44_app_id: Deno.env.get('BASE44_APP_ID'),
         plan,
+        ...(metadata || {}),
       },
     };
 

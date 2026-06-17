@@ -47,11 +47,19 @@ Deno.serve(async (req) => {
         else if (subscription.status === 'active') status = 'active';
       }
 
-      await base44.asServiceRole.entities.User.update(user.id, {
+      // Apply onboarding preferences if they exist (from Paywall redirect metadata)
+      const updateData = {
         subscription_status: status,
         stripe_customer_id: session.customer,
         stripe_subscription_id: subscriptionId,
-      });
+      };
+
+      // Check if onboarding prefs were stored in metadata
+      if (session.metadata?.christian_content !== undefined) {
+        updateData.christian_content = session.metadata.christian_content === 'true';
+      }
+
+      await base44.asServiceRole.entities.User.update(user.id, updateData);
 
       console.log(`Updated user ${user.id} subscription_status to ${status}`);
     }
