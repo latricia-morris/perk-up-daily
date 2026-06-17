@@ -37,18 +37,23 @@ export default function ShareCard({ item, isDetailView = false }) {
       container.style.boxSizing = 'border-box';
       container.style.gap = '20px';
 
-      // Photo section (if exists) — 50% of card height, top section
+      // Photo section (if exists) — 50% of card height, full width
       if (item.photo_url) {
-        const photoHeight = height * 0.4;
+        const photoHeight = height * 0.5;
+        const photoContainer = document.createElement('div');
+        photoContainer.style.width = '100%';
+        photoContainer.style.height = `${photoHeight}px`;
+        photoContainer.style.overflow = 'hidden';
+        photoContainer.style.borderRadius = '12px';
+        
         const img = document.createElement('img');
         img.src = item.photo_url;
         img.style.width = '100%';
-        img.style.height = `${photoHeight}px`;
-        img.style.maxHeight = `${photoHeight}px`;
+        img.style.height = '100%';
         img.style.objectFit = 'cover';
         img.style.objectPosition = 'center';
-        img.style.borderRadius = '12px';
-        container.appendChild(img);
+        photoContainer.appendChild(img);
+        container.appendChild(photoContainer);
       }
 
       // Content section
@@ -80,10 +85,11 @@ export default function ShareCard({ item, isDetailView = false }) {
       label.style.margin = '0';
       content.appendChild(label);
 
-      // Title (if exists, for non-quotes)
-      if (item.title && item.entry_type !== 'quote' && item.entry_type !== 'scripture') {
+      // Title (if exists, for entries with custom titles like identity_swap)
+      const titleToShow = item.title || item.author;
+      if (titleToShow && item.entry_type !== 'quote' && item.entry_type !== 'scripture' && item.entry_type !== 'life_win' && item.entry_type !== 'experience' && item.entry_type !== 'blessing') {
         const title = document.createElement('p');
-        title.textContent = item.title;
+        title.textContent = titleToShow;
         title.style.fontSize = '20px';
         title.style.fontWeight = '600';
         title.style.lineHeight = '1.4';
@@ -104,9 +110,10 @@ export default function ShareCard({ item, isDetailView = false }) {
       content.appendChild(body);
 
       // Attribution (author/reference for quotes and scriptures)
-      if ((item.entry_type === 'quote' || item.entry_type === 'scripture') && item.title) {
+      const attribution = item.title || item.author;
+      if ((item.entry_type === 'quote' || item.entry_type === 'scripture') && attribution) {
         const author = document.createElement('p');
-        author.textContent = `— ${item.title}`;
+        author.textContent = item.entry_type === 'quote' ? `— ${attribution}` : attribution;
         author.style.fontSize = '13px';
         author.style.color = '#7a5c3a';
         author.style.margin = '0';
