@@ -71,30 +71,18 @@ export default function ShareCard({ item, isDetailView = false }) {
       content.style.overflow = 'hidden';
       content.style.gap = '16px';
 
-      // Type label
       const contentType = item.entry_type || item.content_type;
-      
-      // Quote: show in Author field
-      if (contentType === 'quote' && item.body && (item.title || item.author)) {
-        const authorEl = document.createElement('p');
-        authorEl.textContent = `"${item.body}"`;
-        authorEl.style.fontSize = '16px';
-        authorEl.style.fontWeight = '600';
-        authorEl.style.color = '#2f2a26';
-        authorEl.style.marginBottom = '8px';
-        authorEl.style.lineHeight = '1.5';
-        content.appendChild(authorEl);
-      }
 
+      // Type label
       const label = document.createElement('p');
       label.textContent = contentType === 'quote' ? 'QUOTE' : 
-                          contentType === 'scripture' ? 'SCRIPTURE' :
-                          contentType === 'affirmation' ? 'AFFIRMATION' :
-                          contentType === 'blessing' ? 'BLESSING' :
-                          contentType === 'life_win' || contentType === 'accomplishment' || contentType === 'milestone' ? 'LIFE WIN' :
-                          contentType === 'experience' ? 'MEMORY' :
-                          contentType === 'personal_note' || contentType === 'encouragement_note' ? 'NOTE' :
-                          contentType === 'identity_swap' ? 'IDENTITY UPGRADE' : 'ENTRY';
+                         contentType === 'scripture' ? 'SCRIPTURE' :
+                         contentType === 'affirmation' ? 'AFFIRMATION' :
+                         contentType === 'blessing' ? 'BLESSING' :
+                         contentType === 'life_win' || contentType === 'accomplishment' || contentType === 'milestone' ? 'LIFE WIN' :
+                         contentType === 'experience' ? 'MEMORY' :
+                         contentType === 'personal_note' || contentType === 'encouragement_note' ? 'NOTE' :
+                         contentType === 'identity_swap' ? 'IDENTITY UPGRADE' : 'ENTRY';
       label.style.fontSize = '11px';
       label.style.fontWeight = 'bold';
       label.style.letterSpacing = '2px';
@@ -103,99 +91,117 @@ export default function ShareCard({ item, isDetailView = false }) {
       label.style.margin = '0';
       content.appendChild(label);
 
-      // Title (if exists, for entries with custom titles like identity_swap)
-      const titleToShow = item.title || item.author;
-      if (titleToShow && item.entry_type !== 'quote' && item.entry_type !== 'scripture' && item.entry_type !== 'life_win' && item.entry_type !== 'experience' && item.entry_type !== 'blessing') {
-        const title = document.createElement('p');
-        title.textContent = titleToShow;
-        title.style.fontSize = '20px';
-        title.style.fontWeight = '600';
-        title.style.lineHeight = '1.4';
-        title.style.margin = '0';
-        title.style.fontFamily = "'Playfair Display', serif";
-        content.appendChild(title);
+      // QUOTE: Show quote text + author
+      if (contentType === 'quote') {
+       const quoteEl = document.createElement('p');
+       quoteEl.textContent = `"${item.body}"`;
+       quoteEl.style.fontSize = '18px';
+       quoteEl.style.fontWeight = '600';
+       quoteEl.style.fontStyle = 'italic';
+       quoteEl.style.lineHeight = '1.6';
+       quoteEl.style.color = '#2c1e0f';
+       quoteEl.style.margin = '0';
+       quoteEl.style.fontFamily = "'Playfair Display', serif";
+       content.appendChild(quoteEl);
+
+       if (item.title || item.author) {
+         const authorEl = document.createElement('p');
+         authorEl.textContent = `— ${item.title || item.author}`;
+         authorEl.style.fontSize = '13px';
+         authorEl.style.color = '#7a5c3a';
+         authorEl.style.margin = '0';
+         authorEl.style.marginTop = '8px';
+         content.appendChild(authorEl);
+       }
       }
 
-      // Body text
-      const body = document.createElement('p');
-      body.textContent = item.body;
-      body.style.fontSize = '20px';
-      body.style.fontStyle = item.entry_type === 'quote' || item.entry_type === 'scripture' ? 'italic' : 'normal';
-      body.style.lineHeight = '1.6';
-      body.style.margin = '0';
-      body.style.fontFamily = item.entry_type === 'quote' || item.entry_type === 'scripture' ? "'Playfair Display', serif" : "'DM Sans', sans-serif";
-      body.style.color = '#2c1e0f';
-      content.appendChild(body);
+      // SCRIPTURE: Show text + reference
+      if (contentType === 'scripture') {
+       const scriptureEl = document.createElement('p');
+       scriptureEl.textContent = item.body;
+       scriptureEl.style.fontSize = '18px';
+       scriptureEl.style.fontStyle = 'italic';
+       scriptureEl.style.lineHeight = '1.6';
+       scriptureEl.style.color = '#2c1e0f';
+       scriptureEl.style.margin = '0';
+       scriptureEl.style.fontFamily = "'Playfair Display', serif";
+       content.appendChild(scriptureEl);
 
-      // Attribution (author/reference for scriptures only; quotes handled above)
-      if (contentType === 'scripture' && (item.title || item.author)) {
-        const ref = document.createElement('p');
-        ref.textContent = item.title || item.author;
-        ref.style.fontSize = '13px';
-        ref.style.color = '#7a5c3a';
-        ref.style.margin = '0';
-        content.appendChild(ref);
-      }
-      
-      // For non-quotes, show body + metadata
-      if (contentType !== 'quote' && item.body && !['scripture', 'affirmation', 'identity_swap'].includes(contentType)) {
-        const bodyEl = document.createElement('p');
-        bodyEl.textContent = item.body;
-        bodyEl.style.fontSize = '16px';
-        bodyEl.style.fontWeight = '600';
-        bodyEl.style.color = '#2f2a26';
-        bodyEl.style.marginBottom = '8px';
-        bodyEl.style.lineHeight = '1.5';
-        content.appendChild(bodyEl);
+       if (item.title || item.author) {
+         const refEl = document.createElement('p');
+         refEl.textContent = item.title || item.author;
+         refEl.style.fontSize = '13px';
+         refEl.style.color = '#7a5c3a';
+         refEl.style.margin = '0';
+         refEl.style.marginTop = '8px';
+         content.appendChild(refEl);
+       }
       }
 
-      // Location + date for memories/blessings/life wins
-      if ((contentType === 'experience' || contentType === 'blessing' || contentType === 'life_win') && (item.location || item.entry_date)) {
-        const metaEl = document.createElement('p');
-        const parts = [];
-        if (item.location) parts.push(item.location);
-        if (item.entry_date) parts.push(new Date(item.entry_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }));
-        metaEl.textContent = parts.join(' • ');
-        metaEl.style.fontSize = '12px';
-        metaEl.style.color = '#c4a882';
-        metaEl.style.marginTop = '8px';
-        content.appendChild(metaEl);
+      // AFFIRMATION: Just the text
+      if (contentType === 'affirmation') {
+       const affEl = document.createElement('p');
+       affEl.textContent = item.body;
+       affEl.style.fontSize = '20px';
+       affEl.style.fontWeight = '600';
+       affEl.style.lineHeight = '1.6';
+       affEl.style.color = '#2c1e0f';
+       affEl.style.margin = '0';
+       content.appendChild(affEl);
       }
 
-      // Metadata row (category, date, location)
-      const metaRow = document.createElement('div');
-      metaRow.style.display = 'flex';
-      metaRow.style.gap = '12px';
-      metaRow.style.flexWrap = 'wrap';
-      metaRow.style.justifyContent = 'center';
-      metaRow.style.fontSize = '11px';
-      metaRow.style.color = '#7a5c3a';
-      metaRow.style.margin = '0';
+      // IDENTITY SWAP: Old lie + new truth
+      if (contentType === 'identity_swap') {
+       if (item.old_belief) {
+         const oldEl = document.createElement('p');
+         oldEl.textContent = `"${item.old_belief}"`;
+         oldEl.style.fontSize = '14px';
+         oldEl.style.textDecoration = 'line-through';
+         oldEl.style.color = '#9a9a9a';
+         oldEl.style.fontStyle = 'italic';
+         oldEl.style.lineHeight = '1.5';
+         oldEl.style.margin = '0';
+         content.appendChild(oldEl);
+       }
 
-      const categoryMap = {
-        deep_faith: 'Deep Faith',
-        rich_relationships: 'Rich Relationships',
-        strong_body: 'Healthy Body',
-        clear_mind: 'Sound Mind',
-        strong_business: 'Legacy Business',
-        sound_money: 'Financial Freedom'
-      };
-
-      if (item.category) {
-        metaRow.textContent += (categoryMap[item.category] || item.category);
-      }
-      if (item.entry_date) {
-        if (metaRow.textContent) metaRow.textContent += ' • ';
-        metaRow.textContent += format(new Date(item.entry_date), 'MMM d, yyyy');
-      }
-      if (item.location) {
-        if (metaRow.textContent) metaRow.textContent += ' • ';
-        metaRow.textContent += item.location;
+       if (item.body) {
+         const newEl = document.createElement('p');
+         newEl.textContent = `"${item.body}"`;
+         newEl.style.fontSize = '18px';
+         newEl.style.fontWeight = '600';
+         newEl.style.color = '#d4830a';
+         newEl.style.lineHeight = '1.6';
+         newEl.style.margin = '0';
+         newEl.style.marginTop = '12px';
+         content.appendChild(newEl);
+       }
       }
 
-      if (metaRow.textContent) {
-        content.appendChild(metaRow);
+      // MEMORY/BLESSING/LIFE WIN: Body + metadata
+      if (['experience', 'blessing', 'life_win'].includes(contentType)) {
+       const bodyEl = document.createElement('p');
+       bodyEl.textContent = item.body;
+       bodyEl.style.fontSize = '18px';
+       bodyEl.style.lineHeight = '1.6';
+       bodyEl.style.color = '#2c1e0f';
+       bodyEl.style.margin = '0';
+       content.appendChild(bodyEl);
+
+       if (item.location || item.entry_date) {
+         const metaEl = document.createElement('p');
+         const parts = [];
+         if (item.location) parts.push(item.location);
+         if (item.entry_date) parts.push(new Date(item.entry_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }));
+         metaEl.textContent = parts.join(' • ');
+         metaEl.style.fontSize = '12px';
+         metaEl.style.color = '#c4a882';
+         metaEl.style.marginTop = '8px';
+         metaEl.style.margin = '0';
+         content.appendChild(metaEl);
+       }
       }
+
+
 
       // Branding footer
       const footer = document.createElement('p');
