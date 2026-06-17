@@ -76,35 +76,27 @@ function HeroCards() {
         </span>
       </div>
 
-      {/* Scripture card — below toggle, animates in/out with height */}
-      <AnimatePresence>
-        {christianOn && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.35 }}
-            className="overflow-hidden"
-          >
-            <div
-              className="rounded-2xl p-5 shadow-md"
-              style={{
-                background: 'linear-gradient(135deg, #e8f4fd 0%, #fffdf8 60%)',
-                border: '1px solid #bde0f5',
-              }}
-            >
-              <div className="flex items-center gap-1.5 mb-3">
-                <BookOpen className="w-3 h-3 text-sky-600" />
-                <span className="text-xs font-bold uppercase tracking-wider text-sky-600">Scripture</span>
-              </div>
-              <p className="font-display text-sm italic leading-relaxed" style={{ color: '#2c1e0f' }}>
-                "For I know the plans I have for you," declares the Lord, "plans to prosper you and not to harm you."
-              </p>
-              <p className="text-xs mt-2" style={{ color: '#7a5c3a' }}>Jeremiah 29:11</p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Scripture card — always in DOM to prevent layout shift, visibility+opacity only */}
+      <div
+        className="rounded-2xl p-5 shadow-md"
+        style={{
+          background: 'linear-gradient(135deg, #e8f4fd 0%, #fffdf8 60%)',
+          border: '1px solid #bde0f5',
+          opacity: christianOn ? 1 : 0,
+          visibility: christianOn ? 'visible' : 'hidden',
+          transition: 'opacity 0.35s ease, visibility 0.35s ease',
+          pointerEvents: christianOn ? 'auto' : 'none',
+        }}
+      >
+        <div className="flex items-center gap-1.5 mb-3">
+          <BookOpen className="w-3 h-3 text-sky-600" />
+          <span className="text-xs font-bold uppercase tracking-wider text-sky-600">Scripture</span>
+        </div>
+        <p className="font-display text-sm italic leading-relaxed" style={{ color: '#2c1e0f' }}>
+          "For I know the plans I have for you," declares the Lord, "plans to prosper you and not to harm you."
+        </p>
+        <p className="text-xs mt-2" style={{ color: '#7a5c3a' }}>Jeremiah 29:11</p>
+      </div>
     </div>
   );
 }
