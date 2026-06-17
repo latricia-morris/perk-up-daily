@@ -95,13 +95,19 @@ export default function AddEntry() {
   });
 
   useEffect(() => {
-    base44.auth.me()
-      .then(setUser)
-      .catch(() => {
+    const fetchUser = async () => {
+      try {
+        const currentUser = await base44.auth.me();
+        setUser(currentUser || null);
+      } catch (err) {
+        console.error('Failed to fetch user:', err);
         setUser(null);
         navigate('/login');
-      })
-      .finally(() => setLoading(false));
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUser();
   }, [navigate]);
 
   const christianEnabled = user?.christian_content || false;
@@ -215,6 +221,10 @@ export default function AddEntry() {
         <div className="w-8 h-8 border-4 border-border border-t-primary rounded-full animate-spin"></div>
       </div>
     );
+  }
+
+  if (!user) {
+    return null; // Already redirected in useEffect
   }
 
   return (
