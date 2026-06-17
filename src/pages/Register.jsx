@@ -48,11 +48,17 @@ export default function Register() {
         // Apply all onboarding preferences immediately to User entity
         const onboardingData = JSON.parse(localStorage.getItem('perkup-onboarding') || '{}');
         if (Object.keys(onboardingData).length > 0) {
-          await base44.auth.updateMe({
+          const updateData = {
             christian_content: onboardingData.christianContent || false,
-            preferred_categories: onboardingData.selectedCategories || [],
-            notification_times: onboardingData.notificationTimes || {},
-          });
+            selected_categories: JSON.stringify(onboardingData.selectedCategories || []),
+            morning_time: onboardingData.notificationTimes?.morning || '07:00',
+            midday_time: onboardingData.notificationTimes?.midday || '12:00',
+            evening_time: onboardingData.notificationTimes?.evening || '19:00',
+          };
+          if (onboardingData.birthday) {
+            updateData.birthday = onboardingData.birthday;
+          }
+          await base44.auth.updateMe(updateData);
         }
       }
       // All new users go to paywall first

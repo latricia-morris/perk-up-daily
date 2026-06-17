@@ -65,6 +65,7 @@ export default function Onboarding() {
   const [step, setStep] = useState(1);
   const [christianContent, setChristianContent] = useState(null);
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [birthday, setBirthday] = useState('');
   const [times, setTimes] = useState({
     morning: '07:00',
     midday: '12:00',
@@ -87,11 +88,12 @@ export default function Onboarding() {
       christianContent: christianContent || false,
       selectedCategories: cats,
       notificationTimes: times,
+      birthday: birthday || null,
     }));
     navigate('/register');
   };
 
-  const TOTAL_STEPS = 4;
+  const TOTAL_STEPS = 5;
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-6">
@@ -296,10 +298,49 @@ export default function Onboarding() {
             </motion.div>
           )}
 
-          {/* Step 4: Create account */}
+          {/* Step 4: Birthday */}
           {step === 4 && (
             <motion.div
               key="step4"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <h2 className="font-display text-2xl font-semibold text-foreground mb-3">
+                When's your birthday?
+              </h2>
+              <p className="text-muted-foreground leading-relaxed mb-6">
+                We'll celebrate you with confetti and a special message on your big day. (Optional)
+              </p>
+              <input
+                type="date"
+                value={birthday}
+                onChange={(e) => setBirthday(e.target.value)}
+                className="w-full h-10 px-3 rounded-md border border-input bg-transparent text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+              />
+              <div className="flex gap-3 mt-8">
+                <Button
+                  onClick={() => setStep(3)}
+                  variant="outline"
+                  className="flex-1"
+                >
+                  Back
+                </Button>
+                <Button
+                  onClick={() => setStep(5)}
+                  className="flex-1 bg-primary hover:bg-primary/90"
+                >
+                  Continue <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Step 5: Create account */}
+          {step === 5 && (
+            <motion.div
+              key="step5"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}

@@ -49,6 +49,11 @@
       "default": "19:00",
       "description": "Evening delivery time"
     },
+    "birthday": {
+      "type": "string",
+      "format": "date",
+      "description": "User's birthday (YYYY-MM-DD)"
+    },
     "subscription_status": {
       "type": "string",
       "enum": [
