@@ -13,13 +13,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-export default function VaultEntryCard({ entry, index, christianEnabled }) {
+export default function VaultEntryCard({ entry, index, christianEnabled, isLibrary = false }) {
   const queryClient = useQueryClient();
   const [editing, setEditing] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [detailOpen, setDetailOpen] = useState(false);
   const [form, setForm] = useState({
-    title: entry.title || '',
+    title: isLibrary ? (entry.author || '') : (entry.title || ''),
     body: entry.body || '',
     category: entry.category || '',
     entry_date: entry.entry_date || '',
@@ -29,37 +29,49 @@ export default function VaultEntryCard({ entry, index, christianEnabled }) {
   const categories = getFilteredCategories(christianEnabled);
   const entryTypes = getFilteredEntryTypes(christianEnabled);
 
+  const entityName = isLibrary ? 'AppLibrary' : 'UserEntry';
+
   const updateMutation = useMutation({
-    mutationFn: (data) => base44.entities.UserEntry.update(entry.id, data),
+    mutationFn: (data) => {
+      if (isLibrary) {
+        return base44.entities.AppLibrary.update(entry.id, { author: data.title, body: data.body, category: data.category, is_christian: entry.is_christian });
+      }
+      return base44.entities.UserEntry.update(entry.id, data);
+    },
     onMutate: async (newData) => {
-      await queryClient.cancelQueries({ queryKey: ['vault-entries'] });
-      const old = queryClient.getQueryData(['vault-entries']);
-      queryClient.setQueryData(['vault-entries'], (prev) =>
+      const key = isLibrary ? 'admin-library' : 'vault-entries';
+      await queryClient.cancelQueries({ queryKey: [key] });
+      const old = queryClient.getQueryData([key]);
+      queryClient.setQueryData([key], (prev) =>
         prev.map(e => e.id === entry.id ? { ...e, ...newData, updated_date: new Date().toISOString() } : e)
       );
       return old;
     },
     onSuccess: () => {
       setEditing(false);
-      queryClient.invalidateQueries({ queryKey: ['vault-entries'] });
+      const key = isLibrary ? 'admin-library' : 'vault-entries';
+      queryClient.invalidateQueries({ queryKey: [key] });
     },
     onError: (err, vars, context) => {
-      if (context) queryClient.setQueryData(['vault-entries'], context);
+      const key = isLibrary ? 'admin-library' : 'vault-entries';
+      if (context) queryClient.setQueryData([key], context);
     },
   });
 
   const deleteMutation = useMutation({
-    mutationFn: () => base44.entities.UserEntry.delete(entry.id),
+    mutationFn: () => isLibrary ? base44.entities.AppLibrary.delete(entry.id) : base44.entities.UserEntry.delete(entry.id),
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ['vault-entries'] });
-      const old = queryClient.getQueryData(['vault-entries']);
-      queryClient.setQueryData(['vault-entries'], (prev) =>
+      const key = isLibrary ? 'admin-library' : 'vault-entries';
+      await queryClient.cancelQueries({ queryKey: [key] });
+      const old = queryClient.getQueryData([key]);
+      queryClient.setQueryData([key], (prev) =>
         prev.filter(e => e.id !== entry.id)
       );
       return old;
     },
     onError: (err, vars, context) => {
-      if (context) queryClient.setQueryData(['vault-entries'], context);
+      const key = isLibrary ? 'admin-library' : 'vault-entries';
+      if (context) queryClient.setQueryData([key], context);
     },
   });
 
@@ -95,7 +107,7 @@ export default function VaultEntryCard({ entry, index, christianEnabled }) {
           <Input
             value={form.title}
             onChange={e => setForm(p => ({ ...p, title: e.target.value }))}
-            placeholder="Title (optional)"
+            placeholder={isLibrary ? 'Author / Reference' : 'Title (optional)'}
             className="text-sm"
           />
           <Textarea
@@ -113,12 +125,14 @@ export default function VaultEntryCard({ entry, index, christianEnabled }) {
               ))}
             </SelectContent>
           </Select>
-          <Input
-            type="date"
-            value={form.entry_date}
-            onChange={e => setForm(p => ({ ...p, entry_date: e.target.value }))}
-            className="text-sm"
-          />
+          {!isLibrary && (
+            <Input
+              type="date"
+              value={form.entry_date}
+              onChange={e => setForm(p => ({ ...p, entry_date: e.target.value }))}
+              className="text-sm"
+            />
+          )}
 
           {/* Photo */}
           {form.photo_url ? (

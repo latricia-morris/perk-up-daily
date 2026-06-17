@@ -20,6 +20,9 @@ export default function ShareCard({ item, isDetailView = false }) {
         ? [1080, 1920] 
         : [1080, 1080];
 
+      const photoHeight = item.photo_url ? height * 0.5 : 0;
+      const availableHeight = height - 80 - photoHeight; // 80px for padding
+
       container.style.width = `${width}px`;
       container.style.height = `${height}px`;
       container.style.position = 'fixed';
@@ -64,6 +67,7 @@ export default function ShareCard({ item, isDetailView = false }) {
       content.style.justifyContent = 'flex-start';
       content.style.alignItems = 'center';
       content.style.width = '100%';
+      content.style.maxHeight = `${availableHeight}px`;
       content.style.overflow = 'hidden';
       content.style.gap = '16px';
 
