@@ -165,12 +165,6 @@ export default function AddEntry() {
     if (!canSave) return;
 
     if (aiGuardEnabled && !isIdentitySwap) {
-      createEntryMutation.mutate(form, {
-        onMutate: async () => {
-          // Keep UI responsive during guard check
-        },
-      });
-
       const result = await base44.integrations.Core.InvokeLLM({
         prompt: `Analyze this personal journal entry for tone. Is it negative, bitter, heavy, resentful, shameful, self-attacking, or clearly not uplifting? Answer with just "positive" or "negative". Entry: "${form.body}"`,
         response_json_schema: {
