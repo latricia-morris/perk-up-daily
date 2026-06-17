@@ -44,9 +44,16 @@ export default function Register() {
       const result = await base44.auth.verifyOtp({ email, otpCode });
       if (result?.access_token) {
         base44.auth.setToken(result.access_token);
+
+        // Apply onboarding preferences immediately to User entity
+        const onboardingData = JSON.parse(localStorage.getItem('perkup-onboarding') || '{}');
+        if (onboardingData.christianContent !== undefined) {
+          await base44.auth.updateMe({
+            christian_content: onboardingData.christianContent,
+          });
+        }
       }
-      // Check if onboarding prefs exist — new user coming from onboarding
-      // All new users go to paywall first; onboarding prefs are applied after subscribe
+      // All new users go to paywall first
       window.location.href = "/paywall";
     } catch (err) {
       setError(err.message || "Invalid verification code");
