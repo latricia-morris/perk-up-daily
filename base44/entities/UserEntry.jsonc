@@ -20,11 +20,11 @@
     },
     "title": {
       "type": "string",
-      "description": "Optional title or author field for quotes/scriptures"
+      "description": "Title or author/reference (for quotes/scriptures). Optional for most types."
     },
     "body": {
       "type": "string",
-      "description": "The entry content / true identity statement"
+      "description": "Main entry content"
     },
     "old_belief": {
       "type": "string",
@@ -45,11 +45,11 @@
     "entry_date": {
       "type": "string",
       "format": "date",
-      "description": "Optional date for anniversary surfacing"
+      "description": "Optional date for entries"
     },
     "location": {
       "type": "string",
-      "description": "Optional location for memory entries (free text)"
+      "description": "Optional location for entries"
     },
     "photo_url": {
       "type": "string",
