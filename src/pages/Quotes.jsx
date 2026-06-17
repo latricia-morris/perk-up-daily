@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Quote as QuoteIcon } from 'lucide-react';
 import VaultEntryCard from '@/components/vault/VaultEntryCard';
+import UpliftCard from '@/components/shared/UpliftCard';
 import SourceToggle from '@/components/shared/SourceToggle';
 
 export default function Quotes() {
@@ -46,13 +47,7 @@ export default function Quotes() {
             {allQuotes.map((entry, i) => (
               entry.source === 'yours'
                 ? <VaultEntryCard key={entry.id} entry={entry} index={i} christianEnabled={christianEnabled} />
-                : (
-                  <div key={entry.id} className="bg-card border border-border rounded-xl p-4">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Library</p>
-                    <p className="text-sm text-foreground leading-relaxed italic">"{entry.body}"</p>
-                    {entry.author && <p className="text-xs text-muted-foreground mt-1">— {entry.author}</p>}
-                  </div>
-                )
+                : <UpliftCard key={entry.id} item={entry} source="library" />
             ))}
           </div>
         )}

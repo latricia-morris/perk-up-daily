@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Navigate } from 'react-router-dom';
 import { BookOpen } from 'lucide-react';
 import VaultEntryCard from '@/components/vault/VaultEntryCard';
+import UpliftCard from '@/components/shared/UpliftCard';
 import SourceToggle from '@/components/shared/SourceToggle';
 
 export default function Scriptures() {
@@ -51,13 +52,7 @@ export default function Scriptures() {
             {allScriptures.map((entry, i) => (
               entry.source === 'yours'
                 ? <VaultEntryCard key={entry.id} entry={entry} index={i} christianEnabled={true} />
-                : (
-                  <div key={entry.id} className="bg-card border border-border rounded-xl p-4">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Library</p>
-                    <p className="text-sm text-foreground leading-relaxed italic">"{entry.body}"</p>
-                    {entry.author && <p className="text-xs text-muted-foreground mt-1">— {entry.author}</p>}
-                  </div>
-                )
+                : <UpliftCard key={entry.id} item={entry} source="library" />
             ))}
           </div>
         )}

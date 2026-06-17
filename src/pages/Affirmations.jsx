@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Sparkles } from 'lucide-react';
 import { getFilteredCategories } from '@/lib/constants';
 import VaultEntryCard from '@/components/vault/VaultEntryCard';
+import UpliftCard from '@/components/shared/UpliftCard';
 import SourceToggle from '@/components/shared/SourceToggle';
 
 export default function Affirmations() {
@@ -47,12 +48,7 @@ export default function Affirmations() {
             {allAffirmations.map((entry, i) => (
               entry.source === 'yours'
                 ? <VaultEntryCard key={entry.id} entry={entry} index={i} christianEnabled={christianEnabled} />
-                : (
-                  <div key={entry.id} className="bg-card border border-border rounded-xl p-4">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Library</p>
-                    <p className="text-sm text-foreground leading-relaxed">{entry.body}</p>
-                  </div>
-                )
+                : <UpliftCard key={entry.id} item={entry} source="library" />
             ))}
           </div>
         )}
