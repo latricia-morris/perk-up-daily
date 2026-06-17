@@ -35,16 +35,15 @@ function HeroCards() {
         </p>
       </div>
 
-      {/* Scripture card — always in DOM, opacity-only animation to avoid layout shift */}
-      <motion.div
-        animate={{ opacity: christianOn ? 1 : 0 }}
-        transition={{ duration: 0.4 }}
+      {/* Scripture card — always in DOM, CSS opacity only so height never changes */}
+      <div
         className="rounded-2xl p-5 shadow-md overflow-hidden"
         style={{
           background: 'linear-gradient(135deg, #e8f4fd 0%, #fffdf8 60%)',
           border: '1px solid #bde0f5',
+          opacity: christianOn ? 1 : 0,
+          transition: 'opacity 0.4s ease',
           pointerEvents: christianOn ? 'auto' : 'none',
-          visibility: christianOn ? 'visible' : 'hidden',
         }}
       >
         <div className="flex items-center gap-1.5 mb-3">
@@ -55,7 +54,7 @@ function HeroCards() {
           "For I know the plans I have for you," declares the Lord, "plans to prosper you and not to harm you."
         </p>
         <p className="text-xs mt-2" style={{ color: '#7a5c3a' }}>Jeremiah 29:11</p>
-      </motion.div>
+      </div>
 
       {/* Mini cards row */}
       <div className="grid grid-cols-2 gap-3">
