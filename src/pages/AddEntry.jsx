@@ -50,6 +50,7 @@ export default function AddEntry() {
   const urlParams = new URLSearchParams(window.location.search);
   const isFirst = urlParams.get('first') === '1';
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({
     entry_type: '',
     title: '',
@@ -94,8 +95,14 @@ export default function AddEntry() {
   });
 
   useEffect(() => {
-    base44.auth.me().then(setUser);
-  }, []);
+    base44.auth.me()
+      .then(setUser)
+      .catch(() => {
+        setUser(null);
+        navigate('/login');
+      })
+      .finally(() => setLoading(false));
+  }, [navigate]);
 
   const christianEnabled = user?.christian_content || false;
   const aiGuardEnabled = user?.ai_guard_enabled !== false;
@@ -201,6 +208,14 @@ export default function AddEntry() {
       await saveEntry('draft');
     }
   };
+
+  if (loading) {
+    return (
+      <div className="max-w-lg mx-auto px-6 py-8 flex items-center justify-center min-h-screen">
+        <div className="w-8 h-8 border-4 border-border border-t-primary rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div>
