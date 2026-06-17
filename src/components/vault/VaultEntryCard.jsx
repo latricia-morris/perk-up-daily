@@ -21,8 +21,10 @@ export default function VaultEntryCard({ entry, index, christianEnabled, isLibra
   const [form, setForm] = useState({
     title: isLibrary ? (entry.author || '') : (entry.title || ''),
     body: entry.body || '',
+    old_belief: entry.old_belief || '',
     category: entry.category || '',
     entry_date: entry.entry_date || '',
+    location: entry.location || '',
     photo_url: entry.photo_url || '',
   });
 
@@ -36,7 +38,9 @@ export default function VaultEntryCard({ entry, index, christianEnabled, isLibra
       if (isLibrary) {
         return base44.entities.AppLibrary.update(entry.id, { author: data.title, body: data.body, category: data.category, is_christian: entry.is_christian });
       }
-      return base44.entities.UserEntry.update(entry.id, data);
+      // For UserEntry, pass all fields except old_belief (only for initial create)
+      const { old_belief, ...updateData } = data;
+      return base44.entities.UserEntry.update(entry.id, updateData);
     },
     onMutate: async (newData) => {
       const key = isLibrary ? 'admin-library' : 'vault-entries';
@@ -104,17 +108,98 @@ export default function VaultEntryCard({ entry, index, christianEnabled, isLibra
     >
       {editing ? (
         <div className="space-y-3">
-          <Input
-            value={form.title}
-            onChange={e => setForm(p => ({ ...p, title: e.target.value }))}
-            placeholder={isLibrary ? 'Author / Reference' : 'Title (optional)'}
-            className="text-sm"
-          />
-          <Textarea
-            value={form.body}
-            onChange={e => setForm(p => ({ ...p, body: e.target.value }))}
-            className="min-h-[80px] text-sm"
-          />
+          {/* Quote */}
+          {entry.entry_type === 'quote' && (
+            <>
+              <Textarea
+                value={form.body}
+                onChange={e => setForm(p => ({ ...p, body: e.target.value }))}
+                placeholder="The quote text..."
+                className="min-h-[100px] text-sm"
+              />
+              <Input
+                value={form.title}
+                onChange={e => setForm(p => ({ ...p, title: e.target.value }))}
+                placeholder="Author"
+                className="text-sm"
+              />
+            </>
+          )}
+
+          {/* Scripture */}
+          {entry.entry_type === 'scripture' && (
+            <>
+              <Textarea
+                value={form.body}
+                onChange={e => setForm(p => ({ ...p, body: e.target.value }))}
+                placeholder="The scripture text..."
+                className="min-h-[100px] text-sm"
+              />
+              <Input
+                value={form.title}
+                onChange={e => setForm(p => ({ ...p, title: e.target.value }))}
+                placeholder="Reference (e.g. Jeremiah 29:11 NIV)"
+                className="text-sm"
+              />
+            </>
+          )}
+
+          {/* Identity Swap */}
+          {entry.entry_type === 'identity_swap' && (
+            <>
+              <div>
+                <p className="text-xs text-muted-foreground mb-1">Old Lie-dentity</p>
+                <Textarea
+                  value={form.old_belief}
+                  onChange={e => setForm(p => ({ ...p, old_belief: e.target.value }))}
+                  placeholder="The false belief you're releasing"
+                  className="min-h-[80px] text-sm"
+                />
+              </div>
+              <Textarea
+                value={form.body}
+                onChange={e => setForm(p => ({ ...p, body: e.target.value }))}
+                placeholder="The truth you're stepping into"
+                className="min-h-[80px] text-sm"
+              />
+            </>
+          )}
+
+          {/* Affirmation */}
+          {entry.entry_type === 'affirmation' && (
+            <Textarea
+              value={form.body}
+              onChange={e => setForm(p => ({ ...p, body: e.target.value }))}
+              placeholder="I am..."
+              className="min-h-[100px] text-sm"
+            />
+          )}
+
+          {/* Other types (memory, blessing, life_win, etc.) */}
+          {entry.entry_type && !['quote', 'scripture', 'affirmation', 'identity_swap'].includes(entry.entry_type) && (
+            <>
+              <Textarea
+                value={form.body}
+                onChange={e => setForm(p => ({ ...p, body: e.target.value }))}
+                className="min-h-[100px] text-sm"
+              />
+              {entry.entry_type === 'experience' && (
+                <Input
+                  value={form.location || ''}
+                  onChange={e => setForm(p => ({ ...p, location: e.target.value }))}
+                  placeholder="Location (optional)"
+                  className="text-sm"
+                />
+              )}
+              <Input
+                type="date"
+                value={form.entry_date}
+                onChange={e => setForm(p => ({ ...p, entry_date: e.target.value }))}
+                className="text-sm"
+              />
+            </>
+          )}
+
           <Select value={form.category} onValueChange={v => setForm(p => ({ ...p, category: v }))}>
             <SelectTrigger className="text-sm">
               <SelectValue placeholder="Category" />
@@ -125,14 +210,6 @@ export default function VaultEntryCard({ entry, index, christianEnabled, isLibra
               ))}
             </SelectContent>
           </Select>
-          {!isLibrary && (
-            <Input
-              type="date"
-              value={form.entry_date}
-              onChange={e => setForm(p => ({ ...p, entry_date: e.target.value }))}
-              className="text-sm"
-            />
-          )}
 
           {/* Photo */}
           {form.photo_url ? (

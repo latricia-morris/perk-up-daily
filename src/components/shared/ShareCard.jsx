@@ -73,6 +73,19 @@ export default function ShareCard({ item, isDetailView = false }) {
 
       // Type label
       const contentType = item.entry_type || item.content_type;
+      
+      // Quote: show in Author field
+      if (contentType === 'quote' && item.body && (item.title || item.author)) {
+        const authorEl = document.createElement('p');
+        authorEl.textContent = `"${item.body}"`;
+        authorEl.style.fontSize = '16px';
+        authorEl.style.fontWeight = '600';
+        authorEl.style.color = '#2f2a26';
+        authorEl.style.marginBottom = '8px';
+        authorEl.style.lineHeight = '1.5';
+        content.appendChild(authorEl);
+      }
+
       const label = document.createElement('p');
       label.textContent = contentType === 'quote' ? 'QUOTE' : 
                           contentType === 'scripture' ? 'SCRIPTURE' :
@@ -114,16 +127,39 @@ export default function ShareCard({ item, isDetailView = false }) {
       body.style.color = '#2c1e0f';
       content.appendChild(body);
 
-      // Attribution (author/reference for quotes and scriptures)
-      const attribution = item.title || item.author;
-      if ((contentType === 'quote' || contentType === 'scripture') && attribution) {
-        const author = document.createElement('p');
-        author.textContent = contentType === 'quote' ? `— ${attribution}` : attribution;
-        author.style.fontSize = '13px';
-        author.style.color = '#7a5c3a';
-        author.style.margin = '0';
-        author.style.fontStyle = 'normal';
-        content.appendChild(author);
+      // Attribution (author/reference for scriptures only; quotes handled above)
+      if (contentType === 'scripture' && (item.title || item.author)) {
+        const ref = document.createElement('p');
+        ref.textContent = item.title || item.author;
+        ref.style.fontSize = '13px';
+        ref.style.color = '#7a5c3a';
+        ref.style.margin = '0';
+        content.appendChild(ref);
+      }
+      
+      // For non-quotes, show body + metadata
+      if (contentType !== 'quote' && item.body && !['scripture', 'affirmation', 'identity_swap'].includes(contentType)) {
+        const bodyEl = document.createElement('p');
+        bodyEl.textContent = item.body;
+        bodyEl.style.fontSize = '16px';
+        bodyEl.style.fontWeight = '600';
+        bodyEl.style.color = '#2f2a26';
+        bodyEl.style.marginBottom = '8px';
+        bodyEl.style.lineHeight = '1.5';
+        content.appendChild(bodyEl);
+      }
+
+      // Location + date for memories/blessings/life wins
+      if ((contentType === 'experience' || contentType === 'blessing' || contentType === 'life_win') && (item.location || item.entry_date)) {
+        const metaEl = document.createElement('p');
+        const parts = [];
+        if (item.location) parts.push(item.location);
+        if (item.entry_date) parts.push(new Date(item.entry_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }));
+        metaEl.textContent = parts.join(' • ');
+        metaEl.style.fontSize = '12px';
+        metaEl.style.color = '#c4a882';
+        metaEl.style.marginTop = '8px';
+        content.appendChild(metaEl);
       }
 
       // Metadata row (category, date, location)
