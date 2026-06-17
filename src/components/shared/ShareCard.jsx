@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Share2, Copy, Check, Download, X, ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { getSchema, getDisplayLabel } from '@/lib/contentSchema';
+import { getSchema } from '@/lib/contentSchema';
 
 const FORMATS = [
   { id: 'post',  label: 'Instagram Post',  sub: '1080 × 1080',  w: 1080, h: 1080 },
@@ -13,7 +13,6 @@ function resolveFields(item) {
   const entryType = item.entry_type || item.content_type;
   return {
     entryType,
-    label: getDisplayLabel(entryType, item.category),
     body: item.body || '',
     author: item.author || null,
     reference: item.reference || null,
@@ -26,10 +25,10 @@ function resolveFields(item) {
 
 /**
  * Draw the social card onto a canvas directly.
- * This avoids html2canvas object-fit bugs — we draw everything manually.
+ * No type label on social graphics — clean branded output only.
  */
 async function renderCardToCanvas(item, w, h) {
-  const { entryType, label, body, author, reference, old_belief, photo, location, date } = resolveFields(item);
+  const { entryType, body, author, reference, old_belief, photo, location, date } = resolveFields(item);
 
   const canvas = document.createElement('canvas');
   canvas.width = w;
@@ -43,131 +42,156 @@ async function renderCardToCanvas(item, w, h) {
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, w, h);
 
-  const PAD = 60;
-  let cursor = PAD;
+  const PAD = 72;
+  const brandH = scalePx(60, w); // reserved height at bottom for branding
+  const centerX = w / 2;
 
-  // Photo: draw top 50% of card, cover-cropped, with rounded corners
+  // ── Photo (top 50%, cover-cropped) ──────────────────────────────────────
+  let photoDrawnH = 0;
   if (photo) {
-    const photoH = Math.round(h * 0.50);
     const img = await loadImage(photo);
     if (img) {
       const destW = w;
-      const destH = photoH;
+      const destH = Math.round(h * 0.50);
       const srcAspect = img.naturalWidth / img.naturalHeight;
       const destAspect = destW / destH;
       let sx = 0, sy = 0, sw = img.naturalWidth, sh = img.naturalHeight;
       if (srcAspect > destAspect) {
-        // Wider than frame — crop sides
         sw = img.naturalHeight * destAspect;
         sx = (img.naturalWidth - sw) / 2;
       } else {
-        // Taller than frame — crop top/bottom
         sh = img.naturalWidth / destAspect;
         sy = (img.naturalHeight - sh) / 2;
       }
-      // Rounded clip
-      const radius = 20;
       ctx.save();
-      roundedRect(ctx, 0, 0, destW, destH, radius);
+      roundedRect(ctx, 0, 0, destW, destH, 20);
       ctx.clip();
       ctx.drawImage(img, sx, sy, sw, sh, 0, 0, destW, destH);
       ctx.restore();
-      cursor = photoH + 36;
-    } else {
-      cursor = PAD;
+      photoDrawnH = destH;
     }
   }
 
-  const contentTop = cursor;
-  const contentH = h - contentTop - PAD;
-  const centerX = w / 2;
+  // ── Text content area ───────────────────────────────────────────────────
+  // For photo cards: text sits below the image.
+  // For text-only cards: text is vertically centered in the full card.
 
-  // Type label
-  ctx.save();
-  ctx.font = `bold ${scalePx(22, w)}px 'DM Sans', sans-serif`;
-  ctx.fillStyle = '#d4830a';
-  ctx.textAlign = 'center';
-  ctx.letterSpacing = '3px';
-  ctx.fillText(label.toUpperCase(), centerX, contentTop + scalePx(36, w));
-  ctx.restore();
+  const isQuoteStyle = ['quote', 'scripture', 'affirmation'].includes(entryType);
+  const displayBody = isQuoteStyle ? `"${body}"` : body;
 
-  let textCursor = contentTop + scalePx(80, w);
+  // Larger font for text-only cards
+  const bodyFontSize = photoDrawnH > 0
+    ? scalePx(36, w)
+    : scalePx(46, w);
 
-  // Identity swap — strikethrough old belief first
+  const attrFontSize = scalePx(26, w);
+  const lineHeight = bodyFontSize * 1.52;
+  const attrLineH = attrFontSize * 1.5;
+
+  // Measure all text blocks to calculate total height for centering
+  const bodyFont = entryType === 'identity_swap'
+    ? `600 ${bodyFontSize}px 'Playfair Display', Georgia, serif`
+    : `500 italic ${bodyFontSize}px 'Playfair Display', Georgia, serif`;
+
+  ctx.font = bodyFont;
+  const bodyLines = wrapText(ctx, displayBody, w - PAD * 2, bodyFontSize);
+
+  // Strike-through block for identity_swap
+  let strikeLines = [];
   if (entryType === 'identity_swap' && old_belief) {
-    const strikeLines = wrapText(ctx, `"${old_belief}"`, w - PAD * 2, scalePx(28, w));
+    ctx.font = `italic ${scalePx(30, w)}px 'Playfair Display', Georgia, serif`;
+    strikeLines = wrapText(ctx, `"${old_belief}"`, w - PAD * 2, scalePx(30, w));
+  }
+
+  // Attribution line(s)
+  const attrLines = [];
+  if (entryType === 'quote' && author) attrLines.push(`— ${author}`);
+  if (entryType === 'scripture' && reference) attrLines.push(reference);
+  if (['experience', 'blessing', 'life_win', 'personal_note'].includes(entryType)) {
+    const parts = [];
+    if (location) parts.push(location);
+    if (date) parts.push(new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }));
+    if (parts.length > 0) attrLines.push(parts.join(' • '));
+  }
+
+  const strikeFontSize = scalePx(30, w);
+  const strikeLineH = strikeFontSize * 1.5;
+
+  // Total text block height
+  const totalTextH =
+    (strikeLines.length > 0 ? strikeLines.length * strikeLineH + scalePx(28, w) : 0) +
+    bodyLines.length * lineHeight +
+    (attrLines.length > 0 ? scalePx(20, w) + attrLines.length * attrLineH : 0);
+
+  // Vertical start position
+  let textStart;
+  if (photoDrawnH > 0) {
+    // Below photo — center in the remaining space above branding
+    const textAreaTop = photoDrawnH + scalePx(24, w);
+    const textAreaH = h - textAreaTop - brandH - PAD;
+    textStart = textAreaTop + Math.max(PAD, (textAreaH - totalTextH) / 2);
+  } else {
+    // Text-only — center in full card above branding
+    const textAreaH = h - brandH - PAD * 2;
+    textStart = PAD + Math.max(0, (textAreaH - totalTextH) / 2);
+  }
+
+  let cursor = textStart;
+
+  // Draw strikethrough block
+  if (strikeLines.length > 0) {
     ctx.save();
-    ctx.font = `italic ${scalePx(28, w)}px 'Playfair Display', Georgia, serif`;
+    ctx.font = `italic ${strikeFontSize}px 'Playfair Display', Georgia, serif`;
     ctx.fillStyle = '#aaaaaa';
     ctx.textAlign = 'center';
     strikeLines.forEach((line, i) => {
-      const y = textCursor + i * scalePx(40, w);
+      const y = cursor + i * strikeLineH + strikeFontSize;
       ctx.fillText(line, centerX, y);
       const tw = ctx.measureText(line).width;
       ctx.beginPath();
       ctx.strokeStyle = '#aaaaaa';
       ctx.lineWidth = 2;
-      ctx.moveTo(centerX - tw / 2, y - scalePx(10, w));
-      ctx.lineTo(centerX + tw / 2, y - scalePx(10, w));
+      ctx.moveTo(centerX - tw / 2, y - strikeFontSize * 0.3);
+      ctx.lineTo(centerX + tw / 2, y - strikeFontSize * 0.3);
       ctx.stroke();
     });
     ctx.restore();
-    textCursor += strikeLines.length * scalePx(40, w) + scalePx(20, w);
+    cursor += strikeLines.length * strikeLineH + scalePx(28, w);
   }
 
-  // Main body text
-  const isQuoteStyle = ['quote', 'scripture', 'affirmation'].includes(entryType);
-  const displayBody = isQuoteStyle ? `"${body}"` : body;
-  const bodyFontSize = h === 1080 ? scalePx(34, w) : scalePx(38, w);
+  // Draw main body
   ctx.save();
-  ctx.font = `${entryType === 'affirmation' ? '600' : '500'} italic ${bodyFontSize}px 'Playfair Display', Georgia, serif`;
-  if (entryType === 'identity_swap') {
-    ctx.fillStyle = '#d4830a';
-    ctx.font = `600 ${bodyFontSize}px 'Playfair Display', Georgia, serif`;
-  } else {
-    ctx.fillStyle = '#2c1e0f';
-  }
+  ctx.font = bodyFont;
+  ctx.fillStyle = entryType === 'identity_swap' ? '#d4830a' : '#2c1e0f';
   ctx.textAlign = 'center';
-  const bodyLines = wrapText(ctx, displayBody, w - PAD * 2, bodyFontSize);
   bodyLines.forEach((line, i) => {
-    ctx.fillText(line, centerX, textCursor + i * (bodyFontSize * 1.55));
+    ctx.fillText(line, centerX, cursor + i * lineHeight + bodyFontSize);
   });
   ctx.restore();
-  textCursor += bodyLines.length * (bodyFontSize * 1.55) + scalePx(24, w);
+  cursor += bodyLines.length * lineHeight + scalePx(20, w);
 
-  // Attribution / secondary fields
+  // Draw attribution
+  if (attrLines.length > 0) {
+    ctx.save();
+    ctx.font = `${attrFontSize}px 'DM Sans', sans-serif`;
+    ctx.fillStyle = '#7a5c3a';
+    ctx.textAlign = 'center';
+    attrLines.forEach((line, i) => {
+      ctx.fillText(line, centerX, cursor + i * attrLineH + attrFontSize);
+    });
+    ctx.restore();
+  }
+
+  // ── Branding — bottom left + bottom right ───────────────────────────────
+  const brandY = h - scalePx(32, w);
+  const brandFontSize = scalePx(24, w);
   ctx.save();
-  ctx.font = `${scalePx(24, w)}px 'DM Sans', sans-serif`;
-  ctx.fillStyle = '#7a5c3a';
-  ctx.textAlign = 'center';
-
-  if (entryType === 'quote' && author) {
-    ctx.fillText(`— ${author}`, centerX, textCursor);
-    textCursor += scalePx(38, w);
-  }
-  if (entryType === 'scripture' && reference) {
-    ctx.fillText(reference, centerX, textCursor);
-    textCursor += scalePx(38, w);
-  }
-
-  const metaParts = [];
-  if (['experience', 'blessing', 'life_win', 'personal_note'].includes(entryType)) {
-    if (location) metaParts.push(location);
-    if (date) metaParts.push(new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }));
-  }
-  if (metaParts.length > 0) {
-    ctx.fillStyle = '#c4a882';
-    ctx.font = `${scalePx(20, w)}px 'DM Sans', sans-serif`;
-    ctx.fillText(metaParts.join(' • '), centerX, textCursor);
-  }
-  ctx.restore();
-
-  // Branding — bottom center
-  ctx.save();
-  ctx.font = `500 ${scalePx(22, w)}px 'DM Sans', sans-serif`;
-  ctx.fillStyle = 'rgba(196,168,130,0.85)';
-  ctx.textAlign = 'center';
-  ctx.fillText('✦  Perk Up Daily  ✦', centerX, h - PAD + scalePx(4, w));
+  ctx.font = `500 ${brandFontSize}px 'DM Sans', sans-serif`;
+  ctx.fillStyle = 'rgba(122,92,58,0.75)';
+  ctx.textAlign = 'left';
+  ctx.fillText('Perk Up Daily', PAD, brandY);
+  ctx.textAlign = 'right';
+  ctx.fillText('perkupdaily.app', w - PAD, brandY);
   ctx.restore();
 
   return canvas;
