@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
 import { Pencil, Trash2, X, Check, Upload, Loader2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
@@ -8,6 +8,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { getEntryTypeLabel, getFilteredCategories, getFilteredEntryTypes } from '@/lib/constants';
 import CategoryBadge from '@/components/shared/CategoryBadge';
 import ShareCard from '@/components/shared/ShareCard';
+import EntryDetailModal from '@/components/shared/EntryDetailModal';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -16,6 +17,7 @@ export default function VaultEntryCard({ entry, index, christianEnabled }) {
   const queryClient = useQueryClient();
   const [editing, setEditing] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [detailOpen, setDetailOpen] = useState(false);
   const [form, setForm] = useState({
     title: entry.title || '',
     body: entry.body || '',
@@ -81,6 +83,7 @@ export default function VaultEntryCard({ entry, index, christianEnabled }) {
   if (deleteMutation.isPending) return null;
 
   return (
+    <>
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
@@ -155,7 +158,7 @@ export default function VaultEntryCard({ entry, index, christianEnabled }) {
           </div>
         </div>
       ) : (
-        <div className="flex gap-3">
+        <div className="flex gap-3 cursor-pointer hover:opacity-75 transition-opacity" onClick={() => setDetailOpen(true)}>
           {(entry.photo_url || form.photo_url) && (
             <img
               src={form.photo_url || entry.photo_url}
@@ -222,5 +225,9 @@ export default function VaultEntryCard({ entry, index, christianEnabled }) {
         </div>
       )}
     </motion.div>
+    <AnimatePresence>
+      {detailOpen && <EntryDetailModal item={entry} onClose={() => setDetailOpen(false)} />}
+    </AnimatePresence>
+    </>
   );
 }

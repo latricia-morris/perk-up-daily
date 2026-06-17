@@ -190,10 +190,7 @@ export default function AddEntry() {
 
   const saveEntry = async (status = 'active') => {
     const payload = { ...form, status };
-    if (['quote', 'scripture'].includes(form.entry_type) && form.title) {
-      payload.author = form.title;
-      payload.title = '';
-    }
+    // For quotes and scriptures, keep the author in the title field as defined in the schema
     createEntryMutation.mutate(payload, {
       onMutate: async () => {
         // UI updates immediately, then syncs with backend

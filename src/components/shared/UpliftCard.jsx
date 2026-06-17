@@ -1,7 +1,9 @@
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { getCategoryLabel } from '@/lib/constants';
 import { Sparkles, BookOpen, Quote, Heart, Star, Trophy } from 'lucide-react';
 import ShareCard from '@/components/shared/ShareCard';
+import EntryDetailModal from '@/components/shared/EntryDetailModal';
 
 const typeConfig = {
   quote:              { icon: Quote,    accent: '#2872a8', bg: 'rgba(40,114,168,0.08)',  label: 'Quote' },
@@ -19,6 +21,7 @@ const typeConfig = {
 const fallback = { icon: Sparkles, accent: '#d4830a', bg: 'rgba(212,131,10,0.08)', label: 'Entry' };
 
 export default function UpliftCard({ item, featured = false, source = 'library' }) {
+  const [detailOpen, setDetailOpen] = useState(false);
   const contentType = item.content_type || item.entry_type;
   const cfg = typeConfig[contentType] || fallback;
   const { icon: Icon, accent, bg, label } = cfg;
@@ -27,6 +30,7 @@ export default function UpliftCard({ item, featured = false, source = 'library' 
 
   if (featured) {
     return (
+      <>
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -79,11 +83,18 @@ export default function UpliftCard({ item, featured = false, source = 'library' 
           </div>
         </div>
       </motion.div>
+      <AnimatePresence>
+        {detailOpen && <EntryDetailModal item={item} onClose={() => setDetailOpen(false)} />}
+      </AnimatePresence>
+      </>
     );
   }
 
   return (
+    <>
     <motion.div
+      onClick={() => setDetailOpen(true)}
+      className="cursor-pointer"
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
@@ -127,6 +138,10 @@ export default function UpliftCard({ item, featured = false, source = 'library' 
           <ShareCard item={item} />
         </div>
       </div>
-    </motion.div>
-  );
-}
+      </motion.div>
+      <AnimatePresence>
+      {detailOpen && <EntryDetailModal item={item} onClose={() => setDetailOpen(false)} />}
+      </AnimatePresence>
+      </>
+      );
+      }
