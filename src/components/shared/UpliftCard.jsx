@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getCategoryLabel } from '@/lib/constants';
-import { getSchema } from '@/lib/contentSchema';
+import { getSchema, getDisplayLabel } from '@/lib/contentSchema';
 import { Sparkles, BookOpen, Quote, Heart, Star, Trophy } from 'lucide-react';
 import ShareCard from '@/components/shared/ShareCard';
 import EntryDetailModal from '@/components/shared/EntryDetailModal';
@@ -27,10 +27,9 @@ const fallback = { icon: Sparkles, accent: '#d4830a', bg: 'rgba(212,131,10,0.08)
  */
 function resolveDisplayFields(item) {
   const entryType = item.content_type || item.entry_type;
-  const schema = getSchema(entryType);
   return {
     entryType,
-    label: schema?.label || entryType,
+    label: getDisplayLabel(entryType, item.category),
     body: item.body || '',
     author: item.author || null,
     reference: item.reference || null,

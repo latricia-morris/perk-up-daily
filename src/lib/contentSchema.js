@@ -29,7 +29,7 @@ export const CONTENT_SCHEMA = {
     requiresChristian: false,
     fields: {
       body:     { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Describe the blessing', placeholder: 'What are you grateful for?' },
-      date:     { show: { form: true,  edit: true,  tile: false, social: false }, label: 'Date',                  optional: true },
+      date:     { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Date',                  optional: true },
       photo:    { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Photo',                 optional: true },
       category: { show: { form: true,  edit: true,  tile: false, social: false } },
     },
@@ -41,7 +41,7 @@ export const CONTENT_SCHEMA = {
     requiresChristian: false,
     fields: {
       body:     { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'What was the win?', placeholder: 'Describe your win...' },
-      date:     { show: { form: true,  edit: true,  tile: false, social: false }, label: 'Date',              optional: true },
+      date:     { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Date',              optional: true },
       photo:    { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Photo',             optional: true },
       category: { show: { form: true,  edit: true,  tile: false, social: false } },
     },
@@ -74,7 +74,7 @@ export const CONTENT_SCHEMA = {
     requiresChristian: false,
     fields: {
       body:     { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Note',  placeholder: 'Write your note...' },
-      date:     { show: { form: true,  edit: true,  tile: false, social: false }, label: 'Date',  optional: true },
+      date:     { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Date',  optional: true },
       photo:    { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Photo', optional: true },
       category: { show: { form: true,  edit: true,  tile: false, social: false } },
     },
@@ -171,4 +171,19 @@ export function fieldVisible(entryType, fieldKey, surface) {
   const schema = getSchema(entryType);
   if (!schema) return false;
   return schema.fields[fieldKey]?.show?.[surface] === true;
+}
+
+/**
+ * "Power Ups" display label rule:
+ * When type === 'quote' AND category === 'strong_body' (Healthy Body),
+ * render label as "Power Ups" everywhere a type label appears.
+ * The underlying content type field stays as 'quote' in the data.
+ */
+export function getDisplayLabel(entryType, category) {
+  const normalized = entryType || '';
+  const legacy = normalized === 'accomplishment' || normalized === 'milestone' ? 'life_win'
+    : normalized === 'encouragement_note' ? 'personal_note'
+    : normalized;
+  if (legacy === 'quote' && category === 'strong_body') return 'Power Ups';
+  return getSchema(legacy)?.label || legacy;
 }
