@@ -32,10 +32,11 @@ export default function UpliftCard({ item, featured = false, source = 'library' 
     return (
       <>
       <motion.div
+        onClick={() => setDetailOpen(true)}
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="relative overflow-hidden rounded-2xl p-6 md:p-8"
+        className="relative overflow-hidden rounded-2xl p-6 md:p-8 cursor-pointer transition-shadow hover:shadow-lg"
         style={{
           background: `linear-gradient(135deg, rgba(212,131,10,0.14) 0%, #fffdf8 60%)`,
           border: '1px solid rgba(212,131,10,0.2)',
