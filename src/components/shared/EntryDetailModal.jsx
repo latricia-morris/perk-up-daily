@@ -18,7 +18,7 @@ const typeConfig = {
 };
 
 export default function EntryDetailModal({ item, onClose }) {
-  const contentType = item.entry_type;
+  const contentType = item.entry_type || item.content_type;
   const cfg = typeConfig[contentType] || { label: 'Entry' };
 
   return (
@@ -97,11 +97,11 @@ export default function EntryDetailModal({ item, onClose }) {
 
           {/* Attribution/metadata */}
           <div className="mt-8 space-y-2 text-sm">
-            {contentType === 'quote' && item.title && (
-              <p style={{ color: '#7a5c3a' }}>— {item.title}</p>
+            {contentType === 'quote' && (item.title || item.author) && (
+              <p style={{ color: '#7a5c3a' }}>— {item.title || item.author}</p>
             )}
-            {contentType === 'scripture' && item.title && (
-              <p style={{ color: '#7a5c3a' }}>{item.title}</p>
+            {contentType === 'scripture' && (item.title || item.author) && (
+              <p style={{ color: '#7a5c3a' }}>{item.title || item.author}</p>
             )}
             {(contentType === 'life_win' || contentType === 'accomplishment' || contentType === 'milestone') && item.entry_date && (
               <p style={{ color: '#c4a882' }}>

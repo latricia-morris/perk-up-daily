@@ -72,15 +72,16 @@ export default function ShareCard({ item, isDetailView = false }) {
       content.style.gap = '16px';
 
       // Type label
+      const contentType = item.entry_type || item.content_type;
       const label = document.createElement('p');
-      label.textContent = item.entry_type === 'quote' ? 'QUOTE' : 
-                          item.entry_type === 'scripture' ? 'SCRIPTURE' :
-                          item.entry_type === 'affirmation' ? 'AFFIRMATION' :
-                          item.entry_type === 'blessing' ? 'BLESSING' :
-                          item.entry_type === 'life_win' ? 'LIFE WIN' :
-                          item.entry_type === 'experience' ? 'MEMORY' :
-                          item.entry_type === 'personal_note' ? 'NOTE' :
-                          item.entry_type === 'identity_swap' ? 'IDENTITY UPGRADE' : 'ENTRY';
+      label.textContent = contentType === 'quote' ? 'QUOTE' : 
+                          contentType === 'scripture' ? 'SCRIPTURE' :
+                          contentType === 'affirmation' ? 'AFFIRMATION' :
+                          contentType === 'blessing' ? 'BLESSING' :
+                          contentType === 'life_win' || contentType === 'accomplishment' || contentType === 'milestone' ? 'LIFE WIN' :
+                          contentType === 'experience' ? 'MEMORY' :
+                          contentType === 'personal_note' || contentType === 'encouragement_note' ? 'NOTE' :
+                          contentType === 'identity_swap' ? 'IDENTITY UPGRADE' : 'ENTRY';
       label.style.fontSize = '11px';
       label.style.fontWeight = 'bold';
       label.style.letterSpacing = '2px';
@@ -115,9 +116,9 @@ export default function ShareCard({ item, isDetailView = false }) {
 
       // Attribution (author/reference for quotes and scriptures)
       const attribution = item.title || item.author;
-      if ((item.entry_type === 'quote' || item.entry_type === 'scripture') && attribution) {
+      if ((contentType === 'quote' || contentType === 'scripture') && attribution) {
         const author = document.createElement('p');
-        author.textContent = item.entry_type === 'quote' ? `— ${attribution}` : attribution;
+        author.textContent = contentType === 'quote' ? `— ${attribution}` : attribution;
         author.style.fontSize = '13px';
         author.style.color = '#7a5c3a';
         author.style.margin = '0';
