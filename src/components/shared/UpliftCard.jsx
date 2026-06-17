@@ -95,11 +95,10 @@ export default function UpliftCard({ item, featured = false, source = 'library' 
     <>
     <motion.div
       onClick={() => setDetailOpen(true)}
-      className="cursor-pointer"
+      className="cursor-pointer rounded-xl p-4 transition-shadow hover:shadow-md"
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="rounded-xl p-4 transition-shadow hover:shadow-md"
       style={{
         background: '#fffdf8',
         border: '1px solid rgba(44,30,15,0.07)',
