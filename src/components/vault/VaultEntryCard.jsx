@@ -214,7 +214,7 @@ export default function VaultEntryCard({ entry, index, christianEnabled }) {
             >
               <Pencil className="w-3.5 h-3.5" />
             </button>
-            <ShareCard item={entry} />
+            <ShareCard item={{ ...entry, ...form }} />
             <button
               onClick={handleDelete}
               className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
