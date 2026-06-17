@@ -35,31 +35,27 @@ function HeroCards() {
         </p>
       </div>
 
-      {/* Scripture card — revealed when toggle is on */}
-      <AnimatePresence>
-        {christianOn && (
-          <motion.div
-            initial={{ opacity: 0, height: 0, scale: 0.97 }}
-            animate={{ opacity: 1, height: 'auto', scale: 1 }}
-            exit={{ opacity: 0, height: 0, scale: 0.97 }}
-            transition={{ duration: 0.4 }}
-            className="rounded-2xl p-5 shadow-md overflow-hidden"
-            style={{
-              background: 'linear-gradient(135deg, #e8f4fd 0%, #fffdf8 60%)',
-              border: '1px solid #bde0f5',
-            }}
-          >
-            <div className="flex items-center gap-1.5 mb-3">
-              <BookOpen className="w-3 h-3 text-sky-600" />
-              <span className="text-xs font-bold uppercase tracking-wider text-sky-600">Scripture</span>
-            </div>
-            <p className="font-display text-sm italic leading-relaxed" style={{ color: '#2c1e0f' }}>
-              "For I know the plans I have for you," declares the Lord, "plans to prosper you and not to harm you."
-            </p>
-            <p className="text-xs mt-2" style={{ color: '#7a5c3a' }}>Jeremiah 29:11</p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Scripture card — always in DOM, opacity-only animation to avoid layout shift */}
+      <motion.div
+        animate={{ opacity: christianOn ? 1 : 0 }}
+        transition={{ duration: 0.4 }}
+        className="rounded-2xl p-5 shadow-md overflow-hidden"
+        style={{
+          background: 'linear-gradient(135deg, #e8f4fd 0%, #fffdf8 60%)',
+          border: '1px solid #bde0f5',
+          pointerEvents: christianOn ? 'auto' : 'none',
+          visibility: christianOn ? 'visible' : 'hidden',
+        }}
+      >
+        <div className="flex items-center gap-1.5 mb-3">
+          <BookOpen className="w-3 h-3 text-sky-600" />
+          <span className="text-xs font-bold uppercase tracking-wider text-sky-600">Scripture</span>
+        </div>
+        <p className="font-display text-sm italic leading-relaxed" style={{ color: '#2c1e0f' }}>
+          "For I know the plans I have for you," declares the Lord, "plans to prosper you and not to harm you."
+        </p>
+        <p className="text-xs mt-2" style={{ color: '#7a5c3a' }}>Jeremiah 29:11</p>
+      </motion.div>
 
       {/* Mini cards row */}
       <div className="grid grid-cols-2 gap-3">
@@ -211,7 +207,7 @@ export default function Landing() {
       </header>
 
       {/* ── SECTION 1: HERO ───────────────────────────────────────────── */}
-      <section className="max-w-6xl mx-auto px-6 pt-16 pb-12 md:pt-24 md:pb-16">
+      <section className="max-w-6xl mx-auto px-6 pt-16 pb-6 md:pt-24 md:pb-16">
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-start">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -248,7 +244,7 @@ export default function Landing() {
       </section>
 
       {/* ── SECTION 2: SOCIAL PROOF ───────────────────────────────────── */}
-      <section className="py-12 md:py-16">
+      <section className="pt-6 pb-12 md:py-16">
         <div className="max-w-6xl mx-auto px-6">
           <h3 className="font-display text-2xl md:text-3xl font-semibold text-center mb-2" style={{ color: '#2c1e0f' }}>
             People coming alive
