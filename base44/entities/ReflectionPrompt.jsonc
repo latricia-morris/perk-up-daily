@@ -1,0 +1,35 @@
+{
+  "name": "ReflectionPrompt",
+  "type": "object",
+  "properties": {
+    "prompt": {
+      "type": "string",
+      "description": "The guided reflection question"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "deep_faith",
+        "rich_relationships",
+        "strong_body",
+        "clear_mind",
+        "strong_business",
+        "sound_money",
+        "general"
+      ],
+      "default": "general",
+      "description": "Life area this prompt relates to"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "archived"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "prompt"
+  ]
+}

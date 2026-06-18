@@ -32,6 +32,7 @@ import IdentityUpgrades from '@/pages/IdentityUpgrades';
 import Search from '@/pages/Search';
 import Settings from '@/pages/Settings';
 import Admin from '@/pages/Admin';
+import Reflections from '@/pages/Reflections';
 import AppLayout from '@/components/layout/AppLayout';
 
 const AuthenticatedApp = () => {
@@ -82,6 +83,7 @@ const AuthenticatedApp = () => {
           <Route path="/search" element={<Search />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/reflections" element={<Reflections />} />
         </Route>
       </Route>
 

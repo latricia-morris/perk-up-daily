@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Home, PlusCircle, Sparkles, Trophy, Settings,
   ShieldCheck, Zap, BookOpen, Menu, X, LogOut,
-  Heart, Image, Quote, FileText, Star, Search
+  Heart, Image, Quote, FileText, Star, Search, PenLine
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
@@ -14,6 +14,7 @@ const mainNav = [
   { path: '/dashboard', icon: Home, label: 'Home' },
   { path: '/add-entry', icon: PlusCircle, label: 'Add Entry' },
   { path: '/vault', icon: Sparkles, label: 'Perk Ups' },
+  { path: '/reflections', icon: PenLine, label: 'Reflections' },
   { path: '/search', icon: Search, label: 'Search' },
 ];
 

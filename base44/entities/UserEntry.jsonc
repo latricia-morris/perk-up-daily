@@ -14,13 +14,14 @@
         "identity_swap",
         "scripture",
         "accomplishment",
-        "milestone"
+        "milestone",
+        "reflection"
       ],
       "description": "Type of user entry"
     },
     "title": {
       "type": "string",
-      "description": "Title or author/reference (for quotes/scriptures). Optional for most types."
+      "description": "Title or author/reference (for quotes/scriptures). For reflections, stores the prompt text."
     },
     "body": {
       "type": "string",
