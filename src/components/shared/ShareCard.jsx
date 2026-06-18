@@ -76,32 +76,12 @@ async function renderCardToCanvas(item, w, h) {
   // For photo cards: text sits below the image.
   // For text-only cards: text is vertically centered in the full card.
 
+  const BODY_FONT_MIN = scalePx(36, w);   // never shrink below this
+  const ATTR_FONT_MIN = scalePx(24, w);   // never shrink below this
+  const MAX_BODY_FONT  = photoDrawnH > 0 ? scalePx(36, w) : scalePx(46, w);
+
   const isQuoteStyle = ['quote', 'scripture', 'affirmation'].includes(entryType);
   const displayBody = isQuoteStyle ? `"${body}"` : body;
-
-  // Larger font for text-only cards
-  const bodyFontSize = photoDrawnH > 0
-    ? scalePx(36, w)
-    : scalePx(46, w);
-
-  const attrFontSize = scalePx(26, w);
-  const lineHeight = bodyFontSize * 1.52;
-  const attrLineH = attrFontSize * 1.5;
-
-  // Measure all text blocks to calculate total height for centering
-  const bodyFont = entryType === 'identity_swap'
-    ? `600 ${bodyFontSize}px 'Playfair Display', Georgia, serif`
-    : `500 italic ${bodyFontSize}px 'Playfair Display', Georgia, serif`;
-
-  ctx.font = bodyFont;
-  const bodyLines = wrapText(ctx, displayBody, w - PAD * 2, bodyFontSize);
-
-  // Strike-through block for identity_swap
-  let strikeLines = [];
-  if (entryType === 'identity_swap' && old_belief) {
-    ctx.font = `italic ${scalePx(30, w)}px 'Playfair Display', Georgia, serif`;
-    strikeLines = wrapText(ctx, `"${old_belief}"`, w - PAD * 2, scalePx(30, w));
-  }
 
   // Attribution line(s)
   const attrLines = [];
@@ -114,26 +94,91 @@ async function renderCardToCanvas(item, w, h) {
     if (parts.length > 0) attrLines.push(parts.join(' • '));
   }
 
-  const strikeFontSize = scalePx(30, w);
-  const strikeLineH = strikeFontSize * 1.5;
+  // Available vertical space for text
+  const textAreaTop = photoDrawnH > 0 ? photoDrawnH + scalePx(24, w) : PAD;
+  const textAreaH   = h - textAreaTop - brandH - PAD;
+  const textWidth   = w - PAD * 2;
 
-  // Total text block height
+  // ── Font-size scaling with minimum clamp ─────────────────────────────────
+  // Try preferred size; shrink if text block overflows; stop at minimum.
+  function measureTotalH(bodyFS, attrFS) {
+    const bodyFontStr = entryType === 'identity_swap'
+      ? `600 ${bodyFS}px 'Playfair Display', Georgia, serif`
+      : `500 italic ${bodyFS}px 'Playfair Display', Georgia, serif`;
+    ctx.font = bodyFontStr;
+    let lines = wrapText(ctx, displayBody, textWidth, bodyFS);
+
+    let strikeH = 0;
+    if (entryType === 'identity_swap' && old_belief) {
+      const sfs = Math.max(bodyFS * 0.75, BODY_FONT_MIN * 0.75);
+      ctx.font = `italic ${sfs}px 'Playfair Display', Georgia, serif`;
+      const sl = wrapText(ctx, `"${old_belief}"`, textWidth, sfs);
+      strikeH = sl.length * (sfs * 1.5) + scalePx(28, w);
+    }
+
+    ctx.font = `${attrFS}px 'DM Sans', sans-serif`;
+    const aLines = attrLines.length;
+    return (
+      strikeH +
+      lines.length * (bodyFS * 1.52) +
+      (aLines > 0 ? scalePx(20, w) + aLines * (attrFS * 1.5) : 0)
+    );
+  }
+
+  let bodyFontSize = MAX_BODY_FONT;
+  let attrFontSize = scalePx(26, w);
+
+  // Step down until it fits or we hit minimums
+  while (measureTotalH(bodyFontSize, attrFontSize) > textAreaH) {
+    if (bodyFontSize > BODY_FONT_MIN) {
+      bodyFontSize = Math.max(bodyFontSize - scalePx(2, w), BODY_FONT_MIN);
+    } else if (attrFontSize > ATTR_FONT_MIN) {
+      attrFontSize = Math.max(attrFontSize - scalePx(2, w), ATTR_FONT_MIN);
+    } else {
+      break; // at minimums — will truncate below
+    }
+  }
+
+  const bodyFont = entryType === 'identity_swap'
+    ? `600 ${bodyFontSize}px 'Playfair Display', Georgia, serif`
+    : `500 italic ${bodyFontSize}px 'Playfair Display', Georgia, serif`;
+  const lineHeight = bodyFontSize * 1.52;
+  const attrLineH  = attrFontSize * 1.5;
+  const strikeFontSize = Math.max(bodyFontSize * 0.75, BODY_FONT_MIN * 0.75);
+  const strikeLineH    = strikeFontSize * 1.5;
+
+  // Final wrapped lines (may need truncation if at minimums and still overflows)
+  ctx.font = bodyFont;
+  let bodyLines = wrapText(ctx, displayBody, textWidth, bodyFontSize);
+
+  let strikeLines = [];
+  if (entryType === 'identity_swap' && old_belief) {
+    ctx.font = `italic ${strikeFontSize}px 'Playfair Display', Georgia, serif`;
+    strikeLines = wrapText(ctx, `"${old_belief}"`, textWidth, strikeFontSize);
+  }
+
+  // Truncate visible lines if still overflowing at minimum font sizes
+  const spaceForBody = textAreaH
+    - (strikeLines.length > 0 ? strikeLines.length * strikeLineH + scalePx(28, w) : 0)
+    - (attrLines.length > 0 ? scalePx(20, w) + attrLines.length * attrLineH : 0);
+  const maxBodyLines = Math.max(1, Math.floor(spaceForBody / lineHeight));
+  if (bodyLines.length > maxBodyLines) {
+    bodyLines = bodyLines.slice(0, maxBodyLines);
+    const last = bodyLines[maxBodyLines - 1];
+    bodyLines[maxBodyLines - 1] = last.length > 3 ? last.slice(0, -3) + '…' : last + '…';
+  }
+
+  // Total height for vertical centering
   const totalTextH =
     (strikeLines.length > 0 ? strikeLines.length * strikeLineH + scalePx(28, w) : 0) +
     bodyLines.length * lineHeight +
     (attrLines.length > 0 ? scalePx(20, w) + attrLines.length * attrLineH : 0);
 
-  // Vertical start position
   let textStart;
   if (photoDrawnH > 0) {
-    // Below photo — center in the remaining space above branding
-    const textAreaTop = photoDrawnH + scalePx(24, w);
-    const textAreaH = h - textAreaTop - brandH - PAD;
-    textStart = textAreaTop + Math.max(PAD, (textAreaH - totalTextH) / 2);
+    textStart = textAreaTop + Math.max(PAD / 2, (textAreaH - totalTextH) / 2);
   } else {
-    // Text-only — center in full card above branding
-    const textAreaH = h - brandH - PAD * 2;
-    textStart = PAD + Math.max(0, (textAreaH - totalTextH) / 2);
+    textStart = textAreaTop + Math.max(0, (textAreaH - totalTextH) / 2);
   }
 
   let cursor = textStart;

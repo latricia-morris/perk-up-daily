@@ -4,11 +4,12 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { ArrowLeft, Upload, Loader2 } from 'lucide-react';
 import { getFilteredCategories } from '@/lib/constants';
 import { getSchemaEntryTypes, buildEmptyForm, serializeEntry } from '@/lib/contentSchema';
+import LimitedTextarea from '@/components/ui/limited-textarea';
+import { getLimit } from '@/lib/storageLimits';
 import { motion, AnimatePresence } from 'framer-motion';
 import AIGuardDialog from '@/components/shared/AIGuardDialog';
 import { SelectContent, SelectItem } from '@/components/ui/select';
@@ -283,51 +284,82 @@ export function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUp
   const f = (key) => form[key] ?? '';
   const set = (key) => (e) => setForm(prev => ({ ...prev, [key]: e.target.value }));
 
+  // Helper: LimitedTextarea wired to a specific field
+  const LTA = ({ fieldKey, placeholder, className }) => {
+    const lim = getLimit(entryType, fieldKey);
+    return (
+      <LimitedTextarea
+        value={f(fieldKey)}
+        onChange={set(fieldKey)}
+        placeholder={placeholder}
+        softLimit={lim.soft}
+        hardLimit={lim.hard}
+        className={className || 'min-h-[120px]'}
+      />
+    );
+  };
+
   if (entryType === 'identity_swap') return (
     <>
       <div>
         <Label className="text-sm font-medium mb-1.5 block">My Old Lie-dentity</Label>
         <p className="text-xs text-muted-foreground mb-2">The false belief you're releasing</p>
-        <Textarea value={f('old_belief')} onChange={set('old_belief')} placeholder="I used to believe that I..." className="min-h-[100px]" />
+        <LTA fieldKey="old_belief" placeholder="I used to believe that I..." className="min-h-[100px]" />
       </div>
       <div>
         <Label className="text-sm font-medium mb-1.5 block">My True Identity</Label>
         <p className="text-xs text-muted-foreground mb-2">The truth you're stepping into</p>
-        <Textarea value={f('body')} onChange={set('body')} placeholder="The truth is, I am..." className="min-h-[100px]" />
+        <LTA fieldKey="body" placeholder="The truth is, I am..." className="min-h-[100px]" />
       </div>
     </>
   );
 
-  if (entryType === 'quote') return (
-    <>
-      <div>
-        <Label className="text-sm font-medium mb-1.5 block">Quote</Label>
-        <Textarea value={f('body')} onChange={set('body')} placeholder="The quote text..." className="min-h-[120px]" />
-      </div>
-      <div>
-        <Label className="text-sm font-medium mb-1.5 block">Author <span className="text-muted-foreground">(optional)</span></Label>
-        <Input value={f('author')} onChange={set('author')} placeholder="Who said it?" />
-      </div>
-    </>
-  );
+  if (entryType === 'quote') {
+    const authorLim = getLimit(entryType, 'author');
+    return (
+      <>
+        <div>
+          <Label className="text-sm font-medium mb-1.5 block">Quote</Label>
+          <LTA fieldKey="body" placeholder="The quote text..." />
+        </div>
+        <div>
+          <Label className="text-sm font-medium mb-1.5 block">Author <span className="text-muted-foreground">(optional)</span></Label>
+          <Input
+            value={f('author')}
+            onChange={(e) => setForm(prev => ({ ...prev, author: e.target.value.slice(0, authorLim.hard) }))}
+            placeholder="Who said it?"
+            maxLength={authorLim.hard}
+          />
+        </div>
+      </>
+    );
+  }
 
-  if (entryType === 'scripture') return (
-    <>
-      <div>
-        <Label className="text-sm font-medium mb-1.5 block">Scripture</Label>
-        <Textarea value={f('body')} onChange={set('body')} placeholder="The scripture text..." className="min-h-[120px]" />
-      </div>
-      <div>
-        <Label className="text-sm font-medium mb-1.5 block">Reference <span className="text-muted-foreground">(optional)</span></Label>
-        <Input value={f('reference')} onChange={set('reference')} placeholder="e.g. Jeremiah 29:11 NIV" />
-      </div>
-    </>
-  );
+  if (entryType === 'scripture') {
+    const refLim = getLimit(entryType, 'reference');
+    return (
+      <>
+        <div>
+          <Label className="text-sm font-medium mb-1.5 block">Scripture</Label>
+          <LTA fieldKey="body" placeholder="The scripture text..." />
+        </div>
+        <div>
+          <Label className="text-sm font-medium mb-1.5 block">Reference <span className="text-muted-foreground">(optional)</span></Label>
+          <Input
+            value={f('reference')}
+            onChange={(e) => setForm(prev => ({ ...prev, reference: e.target.value.slice(0, refLim.hard) }))}
+            placeholder="e.g. Jeremiah 29:11 NIV"
+            maxLength={refLim.hard}
+          />
+        </div>
+      </>
+    );
+  }
 
   if (entryType === 'affirmation') return (
     <div>
       <Label className="text-sm font-medium mb-1.5 block">Affirmation</Label>
-      <Textarea value={f('body')} onChange={set('body')} placeholder="I am..." className="min-h-[120px]" />
+      <LTA fieldKey="body" placeholder="I am..." />
     </div>
   );
 
@@ -344,17 +376,23 @@ export function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUp
     life_win: 'Describe your win...',
     personal_note: 'Write your note...',
   };
+  const locLim = getLimit(entryType, 'location');
 
   return (
     <>
       <div>
         <Label className="text-sm font-medium mb-1.5 block">{labelMap[entryType] || 'Content'}</Label>
-        <Textarea value={f('body')} onChange={set('body')} placeholder={placeholderMap[entryType] || ''} className="min-h-[120px]" />
+        <LTA fieldKey="body" placeholder={placeholderMap[entryType] || ''} />
       </div>
       {entryType === 'experience' && (
         <div>
           <Label className="text-sm font-medium mb-1.5 block">Location <span className="text-muted-foreground">(optional)</span></Label>
-          <Input value={f('location')} onChange={set('location')} placeholder="e.g. Yosemite, our kitchen, the backyard" />
+          <Input
+            value={f('location')}
+            onChange={(e) => setForm(prev => ({ ...prev, location: e.target.value.slice(0, locLim.hard) }))}
+            placeholder="e.g. Yosemite, our kitchen, the backyard"
+            maxLength={locLim.hard}
+          />
         </div>
       )}
       <div>
