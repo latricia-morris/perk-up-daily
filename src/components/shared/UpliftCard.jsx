@@ -7,16 +7,16 @@ import ShareCard from '@/components/shared/ShareCard';
 import EntryDetailModal from '@/components/shared/EntryDetailModal';
 
 const typeConfig = {
-  quote:              { icon: Quote,    accent: '#2872a8', bg: 'rgba(40,114,168,0.08)' },
-  affirmation:        { icon: Sparkles, accent: '#c2567a', bg: 'rgba(194,86,122,0.08)' },
-  scripture:          { icon: BookOpen, accent: '#2872a8', bg: 'rgba(40,114,168,0.08)' },
+  quote:              { icon: Quote,    accent: '#C98A2E', bg: 'rgba(201,138,46,0.08)' },
+  affirmation:        { icon: Sparkles, accent: '#D9B15F', bg: 'rgba(217,177,95,0.08)' },
+  scripture:          { icon: BookOpen, accent: '#C98A2E', bg: 'rgba(201,138,46,0.08)' },
   encouragement_note: { icon: Heart,    accent: '#d4830a', bg: 'rgba(212,131,10,0.08)' },
-  personal_note:      { icon: Quote,    accent: '#d4830a', bg: 'rgba(212,131,10,0.08)' },
+  personal_note:      { icon: Quote,    accent: '#C9A06A', bg: 'rgba(201,160,106,0.08)' },
   experience:         { icon: Star,     accent: '#d4830a', bg: 'rgba(212,131,10,0.08)' },
-  blessing:           { icon: Heart,    accent: '#c2567a', bg: 'rgba(194,86,122,0.08)' },
-  life_win:           { icon: Trophy,   accent: '#4a7c59', bg: 'rgba(74,124,89,0.08)'  },
-  accomplishment:     { icon: Trophy,   accent: '#4a7c59', bg: 'rgba(74,124,89,0.08)'  },
-  milestone:          { icon: Trophy,   accent: '#9b59b6', bg: 'rgba(155,89,182,0.08)' },
+  blessing:           { icon: Heart,    accent: '#C98A2E', bg: 'rgba(201,138,46,0.08)' },
+  life_win:           { icon: Trophy,   accent: '#8C6239', bg: 'rgba(140,98,57,0.08)'  },
+  accomplishment:     { icon: Trophy,   accent: '#8C6239', bg: 'rgba(140,98,57,0.08)'  },
+  milestone:          { icon: Trophy,   accent: '#8C6239', bg: 'rgba(140,98,57,0.08)'  },
   identity_swap:      { icon: Sparkles, accent: '#d4830a', bg: 'rgba(212,131,10,0.08)' },
 };
 
