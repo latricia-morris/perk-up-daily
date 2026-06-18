@@ -7,17 +7,17 @@ import ShareCard from '@/components/shared/ShareCard';
 import EntryDetailModal from '@/components/shared/EntryDetailModal';
 
 const typeConfig = {
-  quote:              { icon: Quote,    accent: '#C98A2E', bg: 'rgba(201,138,46,0.08)' },
-  affirmation:        { icon: Sparkles, accent: '#D9B15F', bg: 'rgba(217,177,95,0.08)' },
-  scripture:          { icon: BookOpen, accent: '#C98A2E', bg: 'rgba(201,138,46,0.08)' },
-  encouragement_note: { icon: Heart,    accent: '#d4830a', bg: 'rgba(212,131,10,0.08)' },
-  personal_note:      { icon: Quote,    accent: '#C9A06A', bg: 'rgba(201,160,106,0.08)' },
-  experience:         { icon: Star,     accent: '#d4830a', bg: 'rgba(212,131,10,0.08)' },
-  blessing:           { icon: Heart,    accent: '#C98A2E', bg: 'rgba(201,138,46,0.08)' },
-  life_win:           { icon: Trophy,   accent: '#8C6239', bg: 'rgba(140,98,57,0.08)'  },
-  accomplishment:     { icon: Trophy,   accent: '#8C6239', bg: 'rgba(140,98,57,0.08)'  },
-  milestone:          { icon: Trophy,   accent: '#8C6239', bg: 'rgba(140,98,57,0.08)'  },
-  identity_swap:      { icon: Sparkles, accent: '#d4830a', bg: 'rgba(212,131,10,0.08)' },
+  quote:              { icon: Quote,    accent: '#D0902D', bg: 'rgba(208,144,45,0.08)' },
+  affirmation:        { icon: Sparkles, accent: '#E6A037', bg: 'rgba(230,160,55,0.08)' },
+  scripture:          { icon: BookOpen, accent: '#D0902D', bg: 'rgba(208,144,45,0.08)' },
+  encouragement_note: { icon: Heart,    accent: '#E6A037', bg: 'rgba(230,160,55,0.08)' },
+  personal_note:      { icon: Quote,    accent: '#D0902D', bg: 'rgba(208,144,45,0.08)' },
+  experience:         { icon: Star,     accent: '#E6A037', bg: 'rgba(230,160,55,0.08)' },
+  blessing:           { icon: Heart,    accent: '#D0902D', bg: 'rgba(208,144,45,0.08)' },
+  life_win:           { icon: Trophy,   accent: '#E6A037', bg: 'rgba(230,160,55,0.08)' },
+  accomplishment:     { icon: Trophy,   accent: '#E6A037', bg: 'rgba(230,160,55,0.08)' },
+  milestone:          { icon: Trophy,   accent: '#D0902D', bg: 'rgba(208,144,45,0.08)' },
+  identity_swap:      { icon: Sparkles, accent: '#E6A037', bg: 'rgba(230,160,55,0.08)' },
 };
 
 const fallback = { icon: Sparkles, accent: '#d4830a', bg: 'rgba(212,131,10,0.08)' };

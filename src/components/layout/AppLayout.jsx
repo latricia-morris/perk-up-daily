@@ -45,8 +45,9 @@ function NavLink({ path, icon: Icon, label, onClick }) {
       to={path}
       onClick={onClick}
       className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
-        active ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+        active ? 'bg-primary/10 text-primary' : 'hover:bg-accent'
       }`}
+      style={active ? {} : { color: '#2F2C29' }}
     >
       <Icon className="w-4 h-4 shrink-0" />
       {label}
@@ -90,7 +91,8 @@ function SidebarContent({ user, onNavClick }) {
           )}
           <button
             onClick={() => base44.auth.logout('/')}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all w-full text-left text-muted-foreground hover:text-foreground hover:bg-accent"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all w-full text-left hover:bg-accent"
+            style={{ color: '#2F2C29' }}
           >
             <LogOut className="w-4 h-4 shrink-0" />
             Log out
@@ -182,8 +184,9 @@ export default function AppLayout() {
                 to={path}
                 onClick={handleTabClick}
                 className={`flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-lg transition-all active:scale-95 ${
-                  active ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+                  active ? 'text-primary' : 'hover:text-foreground'
                 }`}
+              style={active ? {} : { color: '#2F2C29' }}
               >
                 <Icon className="w-5 h-5" strokeWidth={active ? 2.5 : 1.5} />
                 <span className="text-[10px] font-medium">{label}</span>

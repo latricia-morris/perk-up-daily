@@ -15,6 +15,15 @@ import AIGuardDialog from '@/components/shared/AIGuardDialog';
 import { SelectContent, SelectItem } from '@/components/ui/select';
 import { MobileSelect } from '@/components/ui/mobile-select';
 
+const catColors = {
+  deep_faith:         { bg: '#37154A', color: '#FFFCF2' },
+  rich_relationships: { bg: '#C43911', color: '#FFFCF2' },
+  strong_body:        { bg: '#F78F00', color: '#2F2C29' },
+  clear_mind:         { bg: '#0F2459', color: '#FFFCF2' },
+  strong_business:    { bg: '#75003C', color: '#FFFCF2' },
+  sound_money:        { bg: '#E6A037', color: '#2F2C29' },
+};
+
 function ChipGroup({ options, value, onChange }) {
   return (
     <div className="flex flex-wrap gap-2">
@@ -27,12 +36,12 @@ function ChipGroup({ options, value, onChange }) {
             onClick={() => onChange(selected ? '' : opt.slug)}
             className="h-11 px-4 rounded-full text-sm font-medium transition-all border"
             style={selected ? {
-              background: '#E8A838',
-              color: '#2c1e0f',
-              borderColor: '#E8A838',
+              background: catColors[opt.slug]?.bg || '#E6A037',
+              color: catColors[opt.slug]?.color || '#2F2C29',
+              borderColor: catColors[opt.slug]?.bg || '#E6A037',
             } : {
               background: '#FDF8F0',
-              color: '#7a5c3a',
+              color: '#2F2C29',
               borderColor: '#e2d5c0',
             }}
           >
