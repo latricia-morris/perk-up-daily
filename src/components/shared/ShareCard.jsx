@@ -42,9 +42,12 @@ async function renderCardToCanvas(item, w, h) {
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, w, h);
 
-  const PAD = 72;
-  const brandH = scalePx(60, w); // reserved height at bottom for branding
-  const centerX = w / 2;
+  // ── Layout constants (all scaled to canvas width) ────────────────────────
+  const EDGE_PAD    = scalePx(64, w);   // safe area: left/right edge padding
+  const INNER_PAD   = scalePx(30, w);   // internal text block top/bottom padding
+  const FOOTER_ZONE = scalePx(96, w);   // protected footer band height
+  const BRAND_FONT  = Math.max(scalePx(30, w), scalePx(26, w)); // 28–30px target, 26px min
+  const centerX     = w / 2;
 
   // ── Photo (top 50%, cover-cropped) ──────────────────────────────────────
   let photoDrawnH = 0;
@@ -72,18 +75,41 @@ async function renderCardToCanvas(item, w, h) {
     }
   }
 
-  // ── Text content area ───────────────────────────────────────────────────
-  // For photo cards: text sits below the image.
-  // For text-only cards: text is vertically centered in the full card.
+  // ── Branding footer (drawn last but zone reserved now) ───────────────────
+  // Footer zone: bottom FOOTER_ZONE px of card.
+  // Brand text sits vertically centered within the footer zone.
+  const footerTop  = h - FOOTER_ZONE;
+  const brandY     = footerTop + FOOTER_ZONE / 2 + BRAND_FONT * 0.35; // baseline center
 
-  const BODY_FONT_MIN = scalePx(36, w);   // never shrink below this
-  const ATTR_FONT_MIN = scalePx(24, w);   // never shrink below this
-  const MAX_BODY_FONT  = photoDrawnH > 0 ? scalePx(36, w) : scalePx(46, w);
+  // ── Usable text area ─────────────────────────────────────────────────────
+  // Top: below image (or card top) + inner pad
+  // Bottom: above footer zone - inner pad
+  const textAreaTop    = (photoDrawnH > 0 ? photoDrawnH : 0) + INNER_PAD;
+  const textAreaBottom = footerTop - INNER_PAD;
+  const textAreaH      = textAreaBottom - textAreaTop;
+  const textWidth      = w - EDGE_PAD * 2;
 
+  // ── Starting font size by character count ────────────────────────────────
   const isQuoteStyle = ['quote', 'scripture', 'affirmation'].includes(entryType);
-  const displayBody = isQuoteStyle ? `"${body}"` : body;
+  const displayBody  = isQuoteStyle ? `"${body}"` : body;
+  const charCount    = displayBody.length;
 
-  // Attribution line(s)
+  const BODY_FONT_MIN = scalePx(40, w);
+  const ATTR_FONT_MIN = scalePx(26, w);
+
+  let startBodyFont;
+  if (charCount <= 120)      startBodyFont = scalePx(72, w);
+  else if (charCount <= 220) startBodyFont = scalePx(64, w);
+  else if (charCount <= 360) startBodyFont = scalePx(56, w);
+  else                       startBodyFont = scalePx(48, w);
+
+  // For photo cards cap the start size a bit more to leave room below image
+  if (photoDrawnH > 0) startBodyFont = Math.min(startBodyFont, scalePx(56, w));
+
+  let bodyFontSize = startBodyFont;
+  let attrFontSize = scalePx(32, w); // target 30–34px
+
+  // ── Attribution lines ─────────────────────────────────────────────────────
   const attrLines = [];
   if (entryType === 'quote' && author) attrLines.push(`— ${author}`);
   if (entryType === 'scripture' && reference) attrLines.push(reference);
@@ -94,60 +120,46 @@ async function renderCardToCanvas(item, w, h) {
     if (parts.length > 0) attrLines.push(parts.join(' • '));
   }
 
-  // Available vertical space for text
-  const textAreaTop = photoDrawnH > 0 ? photoDrawnH + scalePx(24, w) : PAD;
-  const textAreaH   = h - textAreaTop - brandH - PAD;
-  const textWidth   = w - PAD * 2;
-
-  // ── Font-size scaling with minimum clamp ─────────────────────────────────
-  // Try preferred size; shrink if text block overflows; stop at minimum.
-  function measureTotalH(bodyFS, attrFS) {
-    const bodyFontStr = entryType === 'identity_swap'
+  // ── Measure helper ────────────────────────────────────────────────────────
+  function measureBlockH(bodyFS, attrFS) {
+    const bFont = entryType === 'identity_swap'
       ? `600 ${bodyFS}px 'Playfair Display', Georgia, serif`
       : `500 italic ${bodyFS}px 'Playfair Display', Georgia, serif`;
-    ctx.font = bodyFontStr;
-    let lines = wrapText(ctx, displayBody, textWidth, bodyFS);
+    ctx.font = bFont;
+    const bLines = wrapText(ctx, displayBody, textWidth, bodyFS).length;
 
     let strikeH = 0;
     if (entryType === 'identity_swap' && old_belief) {
-      const sfs = Math.max(bodyFS * 0.75, BODY_FONT_MIN * 0.75);
+      const sfs = bodyFS * 0.75;
       ctx.font = `italic ${sfs}px 'Playfair Display', Georgia, serif`;
-      const sl = wrapText(ctx, `"${old_belief}"`, textWidth, sfs);
-      strikeH = sl.length * (sfs * 1.5) + scalePx(28, w);
+      const sl = wrapText(ctx, `"${old_belief}"`, textWidth, sfs).length;
+      strikeH = sl * (sfs * 1.5) + scalePx(32, w);
     }
 
-    ctx.font = `${attrFS}px 'DM Sans', sans-serif`;
-    const aLines = attrLines.length;
-    return (
-      strikeH +
-      lines.length * (bodyFS * 1.52) +
-      (aLines > 0 ? scalePx(20, w) + aLines * (attrFS * 1.5) : 0)
-    );
+    const aGap = attrLines.length > 0 ? scalePx(24, w) + attrLines.length * (attrFS * 1.5) : 0;
+    return strikeH + bLines * (bodyFS * 1.5) + aGap;
   }
 
-  let bodyFontSize = MAX_BODY_FONT;
-  let attrFontSize = scalePx(26, w);
-
-  // Step down until it fits or we hit minimums
-  while (measureTotalH(bodyFontSize, attrFontSize) > textAreaH) {
+  // ── Scale down to fit ─────────────────────────────────────────────────────
+  while (measureBlockH(bodyFontSize, attrFontSize) > textAreaH) {
     if (bodyFontSize > BODY_FONT_MIN) {
       bodyFontSize = Math.max(bodyFontSize - scalePx(2, w), BODY_FONT_MIN);
     } else if (attrFontSize > ATTR_FONT_MIN) {
       attrFontSize = Math.max(attrFontSize - scalePx(2, w), ATTR_FONT_MIN);
     } else {
-      break; // at minimums — will truncate below
+      break; // at floor — truncate below
     }
   }
 
-  const bodyFont = entryType === 'identity_swap'
+  const bodyFont       = entryType === 'identity_swap'
     ? `600 ${bodyFontSize}px 'Playfair Display', Georgia, serif`
     : `500 italic ${bodyFontSize}px 'Playfair Display', Georgia, serif`;
-  const lineHeight = bodyFontSize * 1.52;
-  const attrLineH  = attrFontSize * 1.5;
-  const strikeFontSize = Math.max(bodyFontSize * 0.75, BODY_FONT_MIN * 0.75);
+  const lineHeight     = bodyFontSize * 1.5;
+  const attrLineH      = attrFontSize * 1.5;
+  const strikeFontSize = bodyFontSize * 0.75;
   const strikeLineH    = strikeFontSize * 1.5;
 
-  // Final wrapped lines (may need truncation if at minimums and still overflows)
+  // ── Final wrap ────────────────────────────────────────────────────────────
   ctx.font = bodyFont;
   let bodyLines = wrapText(ctx, displayBody, textWidth, bodyFontSize);
 
@@ -157,33 +169,30 @@ async function renderCardToCanvas(item, w, h) {
     strikeLines = wrapText(ctx, `"${old_belief}"`, textWidth, strikeFontSize);
   }
 
-  // Truncate visible lines if still overflowing at minimum font sizes
-  const spaceForBody = textAreaH
-    - (strikeLines.length > 0 ? strikeLines.length * strikeLineH + scalePx(28, w) : 0)
-    - (attrLines.length > 0 ? scalePx(20, w) + attrLines.length * attrLineH : 0);
+  // Truncate body lines if still overflowing at minimum sizes
+  const strikeBlockH = strikeLines.length > 0 ? strikeLines.length * strikeLineH + scalePx(32, w) : 0;
+  const attrBlockH   = attrLines.length > 0 ? scalePx(24, w) + attrLines.length * attrLineH : 0;
+  const spaceForBody = textAreaH - strikeBlockH - attrBlockH;
   const maxBodyLines = Math.max(1, Math.floor(spaceForBody / lineHeight));
   if (bodyLines.length > maxBodyLines) {
     bodyLines = bodyLines.slice(0, maxBodyLines);
     const last = bodyLines[maxBodyLines - 1];
-    bodyLines[maxBodyLines - 1] = last.length > 3 ? last.slice(0, -3) + '…' : last + '…';
+    // trim last line and append ellipsis
+    const trimmed = last.replace(/[\s.…]+$/, '');
+    ctx.font = bodyFont;
+    let shortened = trimmed;
+    while (ctx.measureText(shortened + '…').width > textWidth && shortened.length > 1) {
+      shortened = shortened.slice(0, -1).trimEnd();
+    }
+    bodyLines[maxBodyLines - 1] = shortened + '…';
   }
 
-  // Total height for vertical centering
-  const totalTextH =
-    (strikeLines.length > 0 ? strikeLines.length * strikeLineH + scalePx(28, w) : 0) +
-    bodyLines.length * lineHeight +
-    (attrLines.length > 0 ? scalePx(20, w) + attrLines.length * attrLineH : 0);
+  // ── Vertical centering of text block ─────────────────────────────────────
+  const totalTextH = strikeBlockH + bodyLines.length * lineHeight + attrBlockH;
+  const centerOffset = Math.max(0, (textAreaH - totalTextH) / 2);
+  let cursor = textAreaTop + centerOffset;
 
-  let textStart;
-  if (photoDrawnH > 0) {
-    textStart = textAreaTop + Math.max(PAD / 2, (textAreaH - totalTextH) / 2);
-  } else {
-    textStart = textAreaTop + Math.max(0, (textAreaH - totalTextH) / 2);
-  }
-
-  let cursor = textStart;
-
-  // Draw strikethrough block
+  // ── Draw strikethrough block (identity_swap) ──────────────────────────────
   if (strikeLines.length > 0) {
     ctx.save();
     ctx.font = `italic ${strikeFontSize}px 'Playfair Display', Georgia, serif`;
@@ -195,16 +204,16 @@ async function renderCardToCanvas(item, w, h) {
       const tw = ctx.measureText(line).width;
       ctx.beginPath();
       ctx.strokeStyle = '#aaaaaa';
-      ctx.lineWidth = 2;
+      ctx.lineWidth = scalePx(2, w);
       ctx.moveTo(centerX - tw / 2, y - strikeFontSize * 0.3);
       ctx.lineTo(centerX + tw / 2, y - strikeFontSize * 0.3);
       ctx.stroke();
     });
     ctx.restore();
-    cursor += strikeLines.length * strikeLineH + scalePx(28, w);
+    cursor += strikeLines.length * strikeLineH + scalePx(32, w);
   }
 
-  // Draw main body
+  // ── Draw main body ────────────────────────────────────────────────────────
   ctx.save();
   ctx.font = bodyFont;
   ctx.fillStyle = entryType === 'identity_swap' ? '#d4830a' : '#2c1e0f';
@@ -213,12 +222,13 @@ async function renderCardToCanvas(item, w, h) {
     ctx.fillText(line, centerX, cursor + i * lineHeight + bodyFontSize);
   });
   ctx.restore();
-  cursor += bodyLines.length * lineHeight + scalePx(20, w);
+  cursor += bodyLines.length * lineHeight;
 
-  // Draw attribution
+  // ── Draw attribution ──────────────────────────────────────────────────────
   if (attrLines.length > 0) {
+    cursor += scalePx(24, w);
     ctx.save();
-    ctx.font = `${attrFontSize}px 'DM Sans', sans-serif`;
+    ctx.font = `400 ${attrFontSize}px 'DM Sans', sans-serif`;
     ctx.fillStyle = '#7a5c3a';
     ctx.textAlign = 'center';
     attrLines.forEach((line, i) => {
@@ -227,16 +237,14 @@ async function renderCardToCanvas(item, w, h) {
     ctx.restore();
   }
 
-  // ── Branding — bottom left + bottom right ───────────────────────────────
-  const brandY = h - scalePx(32, w);
-  const brandFontSize = scalePx(24, w);
+  // ── Branding footer ───────────────────────────────────────────────────────
   ctx.save();
-  ctx.font = `500 ${brandFontSize}px 'DM Sans', sans-serif`;
+  ctx.font = `500 ${BRAND_FONT}px 'DM Sans', sans-serif`;
   ctx.fillStyle = 'rgba(122,92,58,0.75)';
   ctx.textAlign = 'left';
-  ctx.fillText('Perk Up Daily', PAD, brandY);
+  ctx.fillText('Perk Up Daily', EDGE_PAD, brandY);
   ctx.textAlign = 'right';
-  ctx.fillText('perkupdaily.app', w - PAD, brandY);
+  ctx.fillText('perkupdaily.app', w - EDGE_PAD, brandY);
   ctx.restore();
 
   return canvas;
