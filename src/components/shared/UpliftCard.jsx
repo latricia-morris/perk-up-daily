@@ -3,6 +3,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { getCategoryLabel } from '@/lib/constants';
 import { getSchema, getDisplayLabel } from '@/lib/contentSchema';
 import { Sparkles, BookOpen, Quote, Heart, Star, Trophy } from 'lucide-react';
+
+const categoryColors = {
+  deep_faith:         { bg: '#37154A', color: '#FFFCF2' },
+  rich_relationships: { bg: '#C43911', color: '#FFFCF2' },
+  strong_body:        { bg: '#F78F00', color: '#2F2C29' },
+  clear_mind:         { bg: '#0F2459', color: '#FFFCF2' },
+  strong_business:    { bg: '#75003C', color: '#FFFCF2' },
+  sound_money:        { bg: '#E6A037', color: '#2F2C29' },
+};
 import ShareCard from '@/components/shared/ShareCard';
 import EntryDetailModal from '@/components/shared/EntryDetailModal';
 
@@ -63,7 +72,16 @@ function TileSubline({ fields, size = 'sm' }) {
     lines.push(<p key="date" className={`${textClass}`} style={{ color: '#c4a882' }}>{new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>);
   }
   if (!lines.length && category) {
-    lines.push(<p key="category" className={`${textClass}`} style={{ color: '#c4a882' }}>{getCategoryLabel(category)}</p>);
+    const catStyle = categoryColors[category] || { bg: '#E6A037', color: '#2F2C29' };
+    lines.push(
+      <span
+        key="category"
+        className={`${textClass} inline-flex items-center rounded-full font-medium px-2 py-0.5`}
+        style={{ backgroundColor: catStyle.bg, color: catStyle.color }}
+      >
+        {getCategoryLabel(category)}
+      </span>
+    );
   }
 
   if (!lines.length) return null;
