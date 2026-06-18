@@ -27,13 +27,13 @@ function ChipGroup({ options, value, onChange }) {
             onClick={() => onChange(selected ? '' : opt.slug)}
             className="h-11 px-4 rounded-full text-sm font-medium transition-all border"
             style={selected ? {
-              background: '#E8A838',
-              color: '#2c1e0f',
-              borderColor: '#E8A838',
+              background: '#D39A3B',
+              color: '#2E2924',
+              borderColor: '#D39A3B',
             } : {
-              background: '#FDF8F0',
-              color: '#7a5c3a',
-              borderColor: '#e2d5c0',
+              background: '#FFFCF2',
+              color: '#6F655A',
+              borderColor: '#E2D2B8',
             }}
           >
             {opt.label}
@@ -202,9 +202,9 @@ export default function AddEntry() {
           transition={{ duration: 0.3 }}
         >
           {isFirst && (
-            <div className="mb-6 p-4 rounded-xl" style={{ background: 'linear-gradient(135deg, #fde8c0 0%, #fffdf8 60%)', border: '1px solid #f5d680' }}>
-              <p className="font-display text-base font-semibold" style={{ color: '#2c1e0f' }}>You're in. Add your first entry.</p>
-              <p className="text-sm mt-1" style={{ color: '#7a5c3a' }}>Log a win, a blessing, a memory — anything good. It'll be waiting for you tomorrow morning.</p>
+            <div             className="mb-6 p-4 rounded-xl" style={{ background: 'linear-gradient(135deg, #F6E9D2 0%, #FFFCF2 60%)', border: '1px solid #E6C27A' }}>
+              <p className="font-display text-base font-semibold"               style={{ color: '#2E2924' }}>You're in. Add your first entry.</p>
+              <p className="text-sm mt-1"               style={{ color: '#6F655A' }}>Log a win, a blessing, a memory — anything good. It'll be waiting for you tomorrow morning.</p>
             </div>
           )}
           <h1 className="font-display text-2xl font-semibold text-foreground mb-6">Add an entry</h1>
