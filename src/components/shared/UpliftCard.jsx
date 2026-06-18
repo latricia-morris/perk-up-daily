@@ -8,24 +8,26 @@ import { Sparkles, BookOpen, Quote, Heart, Star, Trophy } from 'lucide-react';
 import ShareCard from '@/components/shared/ShareCard';
 import EntryDetailModal from '@/components/shared/EntryDetailModal';
 
-// accent = icon color, text = label text color (slightly darkened for orange/honey on light bg)
+// accent = icon color, text = label text color
+// For filled chips: use accent as bg fill, text/icon = #FFFCF2 (or #2F2C29 for light fills like gold)
 const typeConfig = {
-  // Power Ups (strong_body quotes) → orange #F78F00, text darkened
-  quote:              { icon: Quote,    accent: '#F78F00', text: '#C97F0E' },
-  // Encouragement (notes, blessings, memories, life wins) → ember red
+  // Power Ups → ember red
+  quote:              { icon: Quote,    accent: '#C43911', text: '#C43911' },
+  // Life Wins → deep navy
+  life_win:           { icon: Trophy,   accent: '#0F2459', text: '#0F2459' },
+  accomplishment:     { icon: Trophy,   accent: '#0F2459', text: '#0F2459' },
+  milestone:          { icon: Trophy,   accent: '#0F2459', text: '#0F2459' },
+  // Affirmations → warm gold (icon gold, text slightly darker for light-bg contrast)
+  affirmation:        { icon: Sparkles, accent: '#C97F0E', text: '#A86A0A' },
+  // Scripture → deep plum
+  scripture:          { icon: BookOpen, accent: '#37154A', text: '#37154A' },
+  // Encouragement types — unchanged
   personal_note:      { icon: Quote,    accent: '#C43911', text: '#C43911' },
   encouragement_note: { icon: Heart,    accent: '#C43911', text: '#C43911' },
   experience:         { icon: Star,     accent: '#C43911', text: '#C43911' },
   blessing:           { icon: Heart,    accent: '#C43911', text: '#C43911' },
-  life_win:           { icon: Trophy,   accent: '#C43911', text: '#C43911' },
-  accomplishment:     { icon: Trophy,   accent: '#C43911', text: '#C43911' },
-  milestone:          { icon: Trophy,   accent: '#C43911', text: '#C43911' },
-  // Prayer / Identity → deep burgundy
+  // Identity / Prayer — unchanged
   identity_swap:      { icon: Sparkles, accent: '#75003C', text: '#75003C' },
-  // Mindset / Affirmation → deep plum
-  affirmation:        { icon: Sparkles, accent: '#37154A', text: '#37154A' },
-  // Scripture / Truth → deep navy
-  scripture:          { icon: BookOpen, accent: '#0F2459', text: '#0F2459' },
 };
 
 const fallback = { icon: Sparkles, accent: '#D0902D', text: '#D0902D' };
