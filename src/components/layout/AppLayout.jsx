@@ -60,12 +60,9 @@ function SidebarContent({ user, onNavClick }) {
 
   return (
     <>
-      <Link to="/dashboard" onClick={onNavClick} className="mb-10 flex items-center gap-3">
-      <img src="https://media.base44.com/images/public/6a312911bcddb0806c388af8/4bab27c09_lightbird.png" alt="Perk Up Daily" className="w-8 h-8 object-contain" />
-      <div>
-        <h1 className="font-body text-xl font-semibold text-foreground tracking-tight">Perk Up Daily</h1>
+      <Link to="/dashboard" onClick={onNavClick} className="mb-10 block">
+        <h1 className="font-display text-xl font-semibold text-foreground">Perk Up Daily</h1>
         <p className="text-xs text-muted-foreground mt-0.5">Your daily dose of good</p>
-      </div>
       </Link>
 
       <div className="space-y-1 flex-1 overflow-y-auto">
@@ -139,8 +136,8 @@ export default function AppLayout() {
       <header className="md:hidden fixed top-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <div className="flex items-center justify-between px-4 py-3">
           <Link to="/dashboard" className="flex items-center gap-2">
-            <img src="https://media.base44.com/images/public/6a312911bcddb0806c388af8/4bab27c09_lightbird.png" alt="Perk Up Daily" className="w-7 h-7 object-contain" />
-            <span className="font-body text-base font-semibold text-foreground tracking-tight">Perk Up Daily</span>
+            <img src="https://media.base44.com/images/public/6a312911bcddb0806c388af8/03f4f7e79_suntwist.png" alt="Perk Up Daily" width="26" height="26" className="w-6 h-6" />
+            <span className="font-display text-base font-semibold text-foreground">Perk Up Daily</span>
           </Link>
           <button
             onClick={() => setMenuOpen(o => !o)}

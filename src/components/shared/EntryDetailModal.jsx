@@ -36,8 +36,8 @@ export default function EntryDetailModal({ item, onClose }) {
         onClick={e => e.stopPropagation()}
         className="bg-card rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative"
         style={{
-          background: 'linear-gradient(135deg, rgba(211,154,59,0.08) 0%, #FFFCF2 60%)',
-          border: '1px solid rgba(211,154,59,0.15)',
+          background: 'linear-gradient(135deg, rgba(212,131,10,0.08) 0%, #fffdf8 60%)',
+          border: '1px solid rgba(212,131,10,0.15)',
         }}
       >
         {/* Close button */}
@@ -51,7 +51,7 @@ export default function EntryDetailModal({ item, onClose }) {
         {/* Content */}
         <div className="p-8 md:p-12 flex flex-col items-center text-center">
           {/* Type label */}
-          <p className="text-xs font-bold uppercase tracking-widest mb-4"           style={{ color: '#D39A3B' }}>
+          <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: '#d4830a' }}>
             {cfg.label}
           </p>
 
@@ -78,7 +78,7 @@ export default function EntryDetailModal({ item, onClose }) {
                 </div>
               )}
               <div>
-                <p className="text-xs font-semibold uppercase tracking-widest mb-2"           style={{ color: '#D39A3B' }}>
+                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: '#d4830a' }}>
                   My True Identity
                 </p>
                 <p className="text-xl font-display italic leading-relaxed" style={{ color: '#2c1e0f' }}>
@@ -89,7 +89,7 @@ export default function EntryDetailModal({ item, onClose }) {
           ) : (
             <p
               className="text-base font-display italic leading-relaxed max-w-xl"
-              style={{ color: '#2E2924', fontSize: '16px' }}
+              style={{ color: '#2c1e0f', fontSize: '16px' }}
             >
               {item.body}
             </p>
@@ -98,13 +98,13 @@ export default function EntryDetailModal({ item, onClose }) {
           {/* Attribution/metadata */}
           <div className="mt-8 space-y-2 text-sm">
             {contentType === 'quote' && (item.title || item.author) && (
-              <p             style={{ color: '#6F655A' }}>— {item.title || item.author}</p>
+              <p style={{ color: '#7a5c3a' }}>— {item.title || item.author}</p>
             )}
             {contentType === 'scripture' && (item.title || item.author) && (
-              <p             style={{ color: '#6F655A' }}>{item.title || item.author}</p>
+              <p style={{ color: '#7a5c3a' }}>{item.title || item.author}</p>
             )}
             {(contentType === 'life_win' || contentType === 'accomplishment' || contentType === 'milestone') && item.entry_date && (
-              <p             style={{ color: '#A1907C' }}>
+              <p style={{ color: '#c4a882' }}>
                 {new Date(item.entry_date).toLocaleDateString('en-US', {
                   month: 'long',
                   day: 'numeric',
@@ -113,7 +113,7 @@ export default function EntryDetailModal({ item, onClose }) {
               </p>
             )}
             {contentType === 'experience' && (
-              <div             style={{ color: '#A1907C' }}>
+              <div style={{ color: '#c4a882' }}>
                 {item.location && item.entry_date && (
                   <p>
                     {item.location} • {new Date(item.entry_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
@@ -126,7 +126,7 @@ export default function EntryDetailModal({ item, onClose }) {
               </div>
             )}
             {item.category && (
-              <p             style={{ color: '#A1907C' }}>{getCategoryLabel(item.category)}</p>
+              <p style={{ color: '#c4a882' }}>{getCategoryLabel(item.category)}</p>
             )}
           </div>
 

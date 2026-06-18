@@ -6,28 +6,28 @@
 
 @layer base {
   :root {
-    --background: 46 100% 97%;       /* #FFFCF2 */
-    --foreground: 30 11% 16%;        /* #2E2924 */
-    --card: 40 100% 97%;             /* #FFF8EC */
-    --card-foreground: 30 11% 16%;
-    --popover: 40 100% 97%;
-    --popover-foreground: 30 11% 16%;
-    --primary: 36 62% 52%;           /* #D39A3B */
-    --primary-foreground: 46 100% 97%;
-    --secondary: 38 67% 69%;         /* #E6C27A */
-    --secondary-foreground: 30 11% 16%;
-    --muted: 35 43% 86%;             /* #EFE1CA */
-    --muted-foreground: 27 10% 40%;  /* #6F655A */
-    --accent: 35 43% 86%;
-    --accent-foreground: 30 11% 16%;
+    --background: 36 60% 96%;
+    --foreground: 34 30% 12%;
+    --card: 40 100% 99%;
+    --card-foreground: 34 30% 12%;
+    --popover: 40 100% 99%;
+    --popover-foreground: 34 30% 12%;
+    --primary: 36 78% 56%;
+    --primary-foreground: 40 100% 99%;
+    --secondary: 120 22% 58%;
+    --secondary-foreground: 40 100% 99%;
+    --muted: 34 30% 92%;
+    --muted-foreground: 30 15% 48%;
+    --accent: 34 30% 92%;
+    --accent-foreground: 34 30% 12%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 35 33% 80%;            /* #E2D2B8 */
-    --input: 35 33% 80%;
-    --ring: 36 62% 52%;
-    --chart-1: 36 62% 52%;
-    --chart-2: 38 67% 69%;
-    --chart-3: 30 10% 55%;
+    --border: 33 28% 85%;
+    --input: 33 28% 85%;
+    --ring: 36 78% 56%;
+    --chart-1: 36 78% 56%;
+    --chart-2: 120 22% 58%;
+    --chart-3: 34 30% 48%;
     --chart-4: 30 50% 70%;
     --chart-5: 20 60% 55%;
     --radius: 0.75rem;
@@ -35,17 +35,17 @@
     --font-body: 'DM Sans', system-ui, sans-serif;
     --font-display: 'Playfair Display', Georgia, serif;
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    --sidebar-background: 46 100% 97%;
-    --sidebar-foreground: 30 11% 16%;
-    --sidebar-primary: 36 62% 52%;
-    --sidebar-primary-foreground: 46 100% 97%;
-    --sidebar-accent: 35 43% 86%;
-    --sidebar-accent-foreground: 30 11% 16%;
-    --sidebar-border: 35 33% 80%;
-    --sidebar-ring: 36 62% 52%;
+    --sidebar-background: 36 60% 96%;
+    --sidebar-foreground: 34 30% 12%;
+    --sidebar-primary: 36 78% 56%;
+    --sidebar-primary-foreground: 40 100% 99%;
+    --sidebar-accent: 34 30% 92%;
+    --sidebar-accent-foreground: 34 30% 12%;
+    --sidebar-border: 33 28% 85%;
+    --sidebar-ring: 36 78% 56%;
 
-    --surface-offset: 36 46% 91%;    /* #F6E9D2 */
-    --text-faint: 28 17% 56%;        /* #A1907C */
+    --surface-offset: 34 30% 92%;
+    --text-faint: 30 15% 72%;
   }
 
   .dark {

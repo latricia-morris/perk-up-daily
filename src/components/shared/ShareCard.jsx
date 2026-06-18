@@ -35,11 +35,10 @@ async function renderCardToCanvas(item, w, h) {
   canvas.height = h;
   const ctx = canvas.getContext('2d');
 
-  // Background gradient — new palette (#FFFCF2 → #FFF8EC → #F6E3BA tint)
+  // Background gradient
   const grad = ctx.createLinearGradient(0, 0, w, h);
-  grad.addColorStop(0, '#FFF8EC');
-  grad.addColorStop(0.6, '#FFFCF2');
-  grad.addColorStop(1, 'rgba(211,154,59,0.12)');
+  grad.addColorStop(0, 'rgba(212,131,10,0.18)');
+  grad.addColorStop(0.6, '#fffdf8');
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, w, h);
 
@@ -217,7 +216,7 @@ async function renderCardToCanvas(item, w, h) {
   // ── Draw main body ────────────────────────────────────────────────────────
   ctx.save();
   ctx.font = bodyFont;
-  ctx.fillStyle = entryType === 'identity_swap' ? '#D39A3B' : '#2E2924';
+  ctx.fillStyle = entryType === 'identity_swap' ? '#d4830a' : '#2c1e0f';
   ctx.textAlign = 'center';
   bodyLines.forEach((line, i) => {
     ctx.fillText(line, centerX, cursor + i * lineHeight + bodyFontSize);
@@ -230,7 +229,7 @@ async function renderCardToCanvas(item, w, h) {
     cursor += scalePx(24, w);
     ctx.save();
     ctx.font = `400 ${attrFontSize}px 'DM Sans', sans-serif`;
-    ctx.fillStyle = '#6F655A';
+    ctx.fillStyle = '#7a5c3a';
     ctx.textAlign = 'center';
     attrLines.forEach((line, i) => {
       ctx.fillText(line, centerX, cursor + i * attrLineH + attrFontSize);
@@ -241,7 +240,7 @@ async function renderCardToCanvas(item, w, h) {
   // ── Branding footer ───────────────────────────────────────────────────────
   ctx.save();
   ctx.font = `500 ${BRAND_FONT}px 'DM Sans', sans-serif`;
-  ctx.fillStyle = 'rgba(161,144,124,0.85)'; /* #A1907C */
+  ctx.fillStyle = 'rgba(122,92,58,0.75)';
   ctx.textAlign = 'left';
   ctx.fillText('Perk Up Daily', EDGE_PAD, brandY);
   ctx.textAlign = 'right';

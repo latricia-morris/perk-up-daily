@@ -132,7 +132,7 @@ export default function VaultEntryCard({ entry, index, christianEnabled, isLibra
                 onClick={() => updateMutation.mutate(form)}
                 disabled={updateMutation.isPending}
                 className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg text-primary-foreground transition-colors"
-                style={{ background: '#D39A3B' }}
+                style={{ background: '#d4830a' }}
               >
                 {updateMutation.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : <Check className="w-3 h-3" />}
                 Save
@@ -154,7 +154,7 @@ export default function VaultEntryCard({ entry, index, christianEnabled, isLibra
                     </div>
                   )}
                   <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-widest mb-0.5" style={{ color: '#D39A3B' }}>My True Identity</p>
+                    <p className="text-[10px] font-semibold uppercase tracking-widest mb-0.5" style={{ color: '#d4830a' }}>My True Identity</p>
                     <p className="text-sm font-semibold text-foreground leading-relaxed">{displayBody}</p>
                   </div>
                 </div>
