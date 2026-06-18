@@ -4,32 +4,31 @@ import { getCategoryLabel } from '@/lib/constants';
 import { getSchema, getDisplayLabel } from '@/lib/contentSchema';
 import { Sparkles, BookOpen, Quote, Heart, Star, Trophy } from 'lucide-react';
 
-const categoryColors = {
-  deep_faith:         { bg: '#37154A', color: '#FFFCF2' },
-  rich_relationships: { bg: '#C43911', color: '#FFFCF2' },
-  strong_body:        { bg: '#F78F00', color: '#2F2C29' },
-  clear_mind:         { bg: '#0F2459', color: '#FFFCF2' },
-  strong_business:    { bg: '#75003C', color: '#FFFCF2' },
-  sound_money:        { bg: '#E6A037', color: '#2F2C29' },
-};
+
 import ShareCard from '@/components/shared/ShareCard';
 import EntryDetailModal from '@/components/shared/EntryDetailModal';
 
+// accent = icon color, text = label text color (slightly darkened for orange/honey on light bg)
 const typeConfig = {
-  quote:              { icon: Quote,    accent: '#D0902D', bg: 'rgba(208,144,45,0.08)' },
-  affirmation:        { icon: Sparkles, accent: '#E6A037', bg: 'rgba(230,160,55,0.08)' },
-  scripture:          { icon: BookOpen, accent: '#D0902D', bg: 'rgba(208,144,45,0.08)' },
-  encouragement_note: { icon: Heart,    accent: '#E6A037', bg: 'rgba(230,160,55,0.08)' },
-  personal_note:      { icon: Quote,    accent: '#D0902D', bg: 'rgba(208,144,45,0.08)' },
-  experience:         { icon: Star,     accent: '#E6A037', bg: 'rgba(230,160,55,0.08)' },
-  blessing:           { icon: Heart,    accent: '#D0902D', bg: 'rgba(208,144,45,0.08)' },
-  life_win:           { icon: Trophy,   accent: '#E6A037', bg: 'rgba(230,160,55,0.08)' },
-  accomplishment:     { icon: Trophy,   accent: '#E6A037', bg: 'rgba(230,160,55,0.08)' },
-  milestone:          { icon: Trophy,   accent: '#D0902D', bg: 'rgba(208,144,45,0.08)' },
-  identity_swap:      { icon: Sparkles, accent: '#E6A037', bg: 'rgba(230,160,55,0.08)' },
+  // Power Ups (strong_body quotes) → orange #F78F00, text darkened
+  quote:              { icon: Quote,    accent: '#F78F00', text: '#C97F0E' },
+  // Encouragement (notes, blessings, memories, life wins) → ember red
+  personal_note:      { icon: Quote,    accent: '#C43911', text: '#C43911' },
+  encouragement_note: { icon: Heart,    accent: '#C43911', text: '#C43911' },
+  experience:         { icon: Star,     accent: '#C43911', text: '#C43911' },
+  blessing:           { icon: Heart,    accent: '#C43911', text: '#C43911' },
+  life_win:           { icon: Trophy,   accent: '#C43911', text: '#C43911' },
+  accomplishment:     { icon: Trophy,   accent: '#C43911', text: '#C43911' },
+  milestone:          { icon: Trophy,   accent: '#C43911', text: '#C43911' },
+  // Prayer / Identity → deep burgundy
+  identity_swap:      { icon: Sparkles, accent: '#75003C', text: '#75003C' },
+  // Mindset / Affirmation → deep plum
+  affirmation:        { icon: Sparkles, accent: '#37154A', text: '#37154A' },
+  // Scripture / Truth → deep navy
+  scripture:          { icon: BookOpen, accent: '#0F2459', text: '#0F2459' },
 };
 
-const fallback = { icon: Sparkles, accent: '#d4830a', bg: 'rgba(212,131,10,0.08)' };
+const fallback = { icon: Sparkles, accent: '#D0902D', text: '#D0902D' };
 
 /**
  * Canonical field resolver — reads from the correct field per content type.
@@ -72,16 +71,7 @@ function TileSubline({ fields, size = 'sm' }) {
     lines.push(<p key="date" className={`${textClass}`} style={{ color: '#c4a882' }}>{new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>);
   }
   if (!lines.length && category) {
-    const catStyle = categoryColors[category] || { bg: '#E6A037', color: '#2F2C29' };
-    lines.push(
-      <span
-        key="category"
-        className={`${textClass} inline-flex items-center rounded-full font-medium px-2 py-0.5`}
-        style={{ backgroundColor: catStyle.bg, color: catStyle.color }}
-      >
-        {getCategoryLabel(category)}
-      </span>
-    );
+    lines.push(<p key="category" className={`${textClass}`} style={{ color: '#c4a882' }}>{getCategoryLabel(category)}</p>);
   }
 
   if (!lines.length) return null;
@@ -93,7 +83,7 @@ export default function UpliftCard({ item, featured = false }) {
   const fields = resolveDisplayFields(item);
   const { entryType, label, body, photo } = fields;
   const cfg = typeConfig[entryType] || fallback;
-  const { icon: Icon, accent } = cfg;
+  const { icon: Icon, accent, text: textColor } = cfg;
 
   if (featured) {
     return (
@@ -129,7 +119,7 @@ export default function UpliftCard({ item, featured = false }) {
             <div className="relative">
               <div className="flex items-center gap-2 mb-4">
                 <Icon className="w-3.5 h-3.5" style={{ color: accent }} />
-                <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: accent }}>{label}</span>
+                <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: textColor }}>{label}</span>
               </div>
 
               {entryType === 'identity_swap' && fields.old_belief ? (
@@ -179,7 +169,7 @@ export default function UpliftCard({ item, featured = false }) {
 
         <div className="flex items-center gap-1.5 mb-2.5">
           <Icon className="w-3 h-3" style={{ color: accent }} />
-          <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: accent }}>{label}</span>
+          <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: textColor }}>{label}</span>
         </div>
 
         {entryType === 'identity_swap' && fields.old_belief ? (
