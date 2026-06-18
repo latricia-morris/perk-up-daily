@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Share2, Copy, Check, Download, X, ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { getSchema } from '@/lib/contentSchema';
+
 
 const FORMATS = [
   { id: 'post',  label: 'Instagram Post',  sub: '1080 × 1080',  w: 1080, h: 1080 },
