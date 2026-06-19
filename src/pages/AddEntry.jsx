@@ -247,26 +247,28 @@ export default function AddEntry() {
                     onPhotoUpload={handlePhotoUpload}
                   />
 
-                  <div>
-                    <Label className="text-sm font-medium mb-3 block">Category</Label>
-                    <div className="hidden md:block">
-                      <ChipGroup
-                        options={categories}
-                        value={form.category}
-                        onChange={v => setForm(prev => ({ ...prev, category: v }))}
-                      />
+                  {entryType !== 'reflection' && (
+                    <div>
+                      <Label className="text-sm font-medium mb-3 block">Category</Label>
+                      <div className="hidden md:block">
+                        <ChipGroup
+                          options={categories}
+                          value={form.category}
+                          onChange={v => setForm(prev => ({ ...prev, category: v }))}
+                        />
+                      </div>
+                      <div className="md:hidden">
+                        <MobileSelect
+                          value={form.category}
+                          onValueChange={v => setForm(prev => ({ ...prev, category: v }))}
+                        >
+                          {categories.map(cat => (
+                            <SelectItem key={cat.slug} value={cat.slug}>{cat.label}</SelectItem>
+                          ))}
+                        </MobileSelect>
+                      </div>
                     </div>
-                    <div className="md:hidden">
-                      <MobileSelect
-                        value={form.category}
-                        onValueChange={v => setForm(prev => ({ ...prev, category: v }))}
-                      >
-                        {categories.map(cat => (
-                          <SelectItem key={cat.slug} value={cat.slug}>{cat.label}</SelectItem>
-                        ))}
-                      </MobileSelect>
-                    </div>
-                  </div>
+                  )}
 
                   <Button
                     onClick={checkAndSave}
@@ -374,16 +376,10 @@ export function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUp
   );
 
   if (entryType === 'reflection') return (
-    <>
-      <div>
-        <Label className="text-sm font-medium mb-1.5 block">Reflection prompt <span className="text-muted-foreground">(optional)</span></Label>
-        <LTA fieldKey="title" placeholder="What question are you sitting with?" className="min-h-[80px]" />
-      </div>
-      <div>
-        <Label className="text-sm font-medium mb-1.5 block">Your answer</Label>
-        <LTA fieldKey="body" placeholder="Write your honest answer..." className="min-h-[140px]" />
-      </div>
-    </>
+    <div>
+      <Label className="text-sm font-medium mb-1.5 block">Your answer</Label>
+      <LTA fieldKey="body" placeholder="Write your honest answer..." className="min-h-[140px]" />
+    </div>
   );
 
   // Memory, Blessing, Life Win, Note
