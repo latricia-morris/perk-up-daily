@@ -5,8 +5,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 
 
 const FORMATS = [
-  { id: 'post',  label: 'Instagram Post',  sub: '1080 × 1080',  w: 1080, h: 1080 },
-  { id: 'story', label: 'Instagram Story', sub: '1080 × 1920',  w: 1080, h: 1920 },
+  { id: 'post',  label: 'Post',  sub: '1080 × 1080',  w: 1080, h: 1080 },
+  { id: 'story', label: 'Story', sub: '1080 × 1920',  w: 1080, h: 1920 },
 ];
 
 function resolveFields(item) {
@@ -560,9 +560,8 @@ export default function ShareCard({ item, isDetailView = false }) {
                     onClick={() => handleSelectFormat(fmt)}
                     className="flex items-center gap-4 p-4 rounded-xl border border-border hover:border-primary/40 hover:bg-muted/50 transition-colors text-left"
                   >
-                    <div className="flex-shrink-0 flex items-center justify-center rounded-lg bg-muted"
-                      style={{ width: fmt.id === 'post' ? 40 : 28, height: fmt.id === 'post' ? 40 : 48 }}>
-                      <ImageIcon className="w-4 h-4 text-muted-foreground" />
+                    <div className="flex-shrink-0 w-10 flex items-center justify-center rounded-lg bg-muted" style={{ height: 48 }}>
+                      <ImageIcon className="w-4 h-4 text-muted-foreground" style={{ aspectRatio: fmt.id === 'post' ? '1/1' : '9/16' }} />
                     </div>
                     <div>
                       <p className="font-medium text-sm">{fmt.label}</p>
