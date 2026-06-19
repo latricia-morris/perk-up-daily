@@ -4,6 +4,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Check } from 'lucide-react';
 import { CATEGORIES } from '@/lib/constants';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 const TIME_OPTIONS = {
   morning: [
@@ -69,6 +78,7 @@ export default function Onboarding() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [countryCode, setCountryCode] = useState('US');
   const [deliveryMethod, setDeliveryMethod] = useState(null);
+  const [showNoneConfirm, setShowNoneConfirm] = useState(false);
   const [times, setTimes] = useState({
     morning: '07:00',
     midday: '12:00',
@@ -367,7 +377,13 @@ export default function Onboarding() {
                 ].map(opt => (
                   <button
                     key={opt.value}
-                    onClick={() => setDeliveryMethod(opt.value)}
+                    onClick={() => {
+                      if (opt.value === 'none') {
+                        setShowNoneConfirm(true);
+                      } else {
+                        setDeliveryMethod(opt.value);
+                      }
+                    }}
                     className={`w-full p-4 rounded-xl border text-left transition-all ${
                       deliveryMethod === opt.value
                         ? 'bg-primary/10 border-primary/40'
@@ -379,6 +395,28 @@ export default function Onboarding() {
                   </button>
                 ))}
               </div>
+
+              <AlertDialog open={showNoneConfirm} onOpenChange={setShowNoneConfirm}>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                    <AlertDialogDescription className="text-sm leading-relaxed">
+                      We've found that the best results come through consistent, daily repetition. You can always change this later in your settings.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <div className="flex gap-3 justify-end">
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => {
+                        setDeliveryMethod('none');
+                        setShowNoneConfirm(false);
+                      }}
+                    >
+                      I'm sure
+                    </AlertDialogAction>
+                  </div>
+                </AlertDialogContent>
+              </AlertDialog>
 
               <div className="flex gap-3">
                 <Button

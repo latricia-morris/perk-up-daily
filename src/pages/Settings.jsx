@@ -34,7 +34,11 @@ export default function Settings() {
    morning_time: '07:00',
    midday_time: '12:00',
    evening_time: '19:00',
+   delivery_method: 'email',
+   phone_number: '',
+   country_code: 'US',
   });
+  const [validationError, setValidationError] = useState('');
 
   useEffect(() => {
     base44.auth.me().then(u => {
@@ -47,6 +51,9 @@ export default function Settings() {
          morning_time: u.morning_time || '07:00',
          midday_time: u.midday_time || '12:00',
          evening_time: u.evening_time || '19:00',
+         delivery_method: u.delivery_method || 'email',
+         phone_number: u.phone_number || '',
+         country_code: u.country_code || 'US',
        });
       if (u.theme) setTheme(u.theme);
     });
@@ -62,6 +69,14 @@ export default function Settings() {
   };
 
   const handleSave = async () => {
+    setValidationError('');
+    
+    // Validate SMS delivery method
+    if (prefs.delivery_method === 'sms' && !prefs.phone_number) {
+      setValidationError('Phone number is required for SMS delivery');
+      return;
+    }
+
     setSaving(true);
     await base44.auth.updateMe({
       ...prefs,
@@ -164,7 +179,79 @@ export default function Settings() {
             </div>
           </section>
 
-          {/* Delivery */}
+          {/* Delivery Method */}
+           <section>
+             <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4">Delivery method</h2>
+             <div className="space-y-3">
+               {[
+                 { label: 'Email', value: 'email' },
+                 { label: 'Text (SMS)', value: 'sms' },
+                 { label: 'None', value: 'none' },
+               ].map(opt => (
+                 <button
+                   key={opt.value}
+                   onClick={() => setPrefs(prev => ({ ...prev, delivery_method: opt.value }))}
+                   className={`w-full p-3 rounded-lg border text-left text-sm transition-all ${
+                     prefs.delivery_method === opt.value
+                       ? 'bg-primary/10 border-primary/40'
+                       : 'bg-card border-border hover:border-primary/30'
+                   }`}
+                 >
+                   <p className="font-medium text-foreground">{opt.label}</p>
+                 </button>
+               ))}
+             </div>
+           </section>
+
+           {/* Phone Number (if SMS selected) */}
+           {prefs.delivery_method === 'sms' && (
+             <section>
+               <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4">Phone number</h2>
+               <div className="space-y-4">
+                 <div>
+                   <Label className="text-sm font-medium text-foreground mb-1.5 block">Country</Label>
+                   <select
+                     value={prefs.country_code}
+                     onChange={(e) => setPrefs(prev => ({ ...prev, country_code: e.target.value }))}
+                     className="w-full h-10 px-3 rounded-md border border-input bg-card text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                   >
+                     <option value="US">🇺🇸 United States (+1)</option>
+                     <option value="CA">🇨🇦 Canada (+1)</option>
+                     <option value="GB">🇬🇧 United Kingdom (+44)</option>
+                     <option value="AU">🇦🇺 Australia (+61)</option>
+                     <option value="NZ">🇳🇿 New Zealand (+64)</option>
+                     <option value="IE">🇮🇪 Ireland (+353)</option>
+                     <option value="ZA">🇿🇦 South Africa (+27)</option>
+                     <option value="MX">🇲🇽 Mexico (+52)</option>
+                     <option value="BR">🇧🇷 Brazil (+55)</option>
+                     <option value="DE">🇩🇪 Germany (+49)</option>
+                     <option value="FR">🇫🇷 France (+33)</option>
+                     <option value="IT">🇮🇹 Italy (+39)</option>
+                     <option value="ES">🇪🇸 Spain (+34)</option>
+                     <option value="NL">🇳🇱 Netherlands (+31)</option>
+                     <option value="SG">🇸🇬 Singapore (+65)</option>
+                     <option value="HK">🇭🇰 Hong Kong (+852)</option>
+                     <option value="JP">🇯🇵 Japan (+81)</option>
+                     <option value="KR">🇰🇷 South Korea (+82)</option>
+                     <option value="IN">🇮🇳 India (+91)</option>
+                     <option value="AE">🇦🇪 United Arab Emirates (+971)</option>
+                   </select>
+                 </div>
+                 <div>
+                   <Label className="text-sm font-medium text-foreground mb-1.5 block">Phone Number</Label>
+                   <Input
+                     type="tel"
+                     value={prefs.phone_number}
+                     onChange={(e) => setPrefs(prev => ({ ...prev, phone_number: e.target.value.replace(/\D/g, '') }))}
+                     placeholder="5551234567"
+                   />
+                   <p className="text-xs text-muted-foreground mt-1.5">Enter just the number (no country code needed)</p>
+                 </div>
+               </div>
+             </section>
+           )}
+
+          {/* Delivery Times */}
            <section>
              <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4">Delivery times</h2>
              <div className="space-y-4">
@@ -285,6 +372,13 @@ export default function Settings() {
               </AlertDialogContent>
             </AlertDialog>
           </section>
+
+          {/* Validation Error */}
+          {validationError && (
+            <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/30 text-sm text-destructive">
+              {validationError}
+            </div>
+          )}
 
           {/* Save */}
           <Button
