@@ -1,0 +1,63 @@
+{
+  "name": "SentUplifts",
+  "type": "object",
+  "properties": {
+    "sender_id": {
+      "type": "string",
+      "description": "ID of the user who sent the uplift"
+    },
+    "recipient_name": {
+      "type": "string",
+      "description": "Display name of the recipient"
+    },
+    "recipient_contact": {
+      "type": "string",
+      "description": "Phone number or email of the recipient"
+    },
+    "contact_method": {
+      "type": "string",
+      "enum": [
+        "sms",
+        "email"
+      ],
+      "description": "How the uplift was delivered"
+    },
+    "card_source": {
+      "type": "string",
+      "enum": [
+        "library",
+        "user_entry"
+      ],
+      "description": "Whether the shared card came from AppLibrary or UserEntry"
+    },
+    "card_id": {
+      "type": "string",
+      "description": "ID of the AppLibrary or UserEntry item shared"
+    },
+    "card_body": {
+      "type": "string",
+      "description": "Snapshot of the card body text at time of sending"
+    },
+    "personal_note": {
+      "type": "string",
+      "description": "Custom message the sender attached"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "sent",
+        "failed"
+      ],
+      "default": "pending",
+      "description": "Delivery status"
+    }
+  },
+  "required": [
+    "sender_id",
+    "recipient_contact",
+    "contact_method",
+    "card_source",
+    "card_id"
+  ]
+}

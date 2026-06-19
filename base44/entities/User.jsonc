@@ -24,30 +24,39 @@
       "default": true,
       "description": "Whether AI content guard is active"
     },
-    "email_delivery": {
-      "type": "boolean",
-      "default": true,
-      "description": "Whether email deliveries are enabled"
+    "delivery_method": {
+      "type": "string",
+      "enum": [
+        "email",
+        "sms",
+        "none"
+      ],
+      "default": "email",
+      "description": "How daily positivity is delivered: Email, SMS, or None"
     },
-    "push_notifications": {
-      "type": "boolean",
-      "default": true,
-      "description": "Whether push notifications are enabled"
+    "phone_number": {
+      "type": "string",
+      "description": "User phone number for SMS delivery"
     },
     "morning_time": {
       "type": "string",
       "default": "07:00",
-      "description": "Morning delivery time"
+      "description": "Morning delivery time (user local)"
     },
     "midday_time": {
       "type": "string",
       "default": "12:00",
-      "description": "Midday delivery time"
+      "description": "Midday delivery time (user local)"
     },
     "evening_time": {
       "type": "string",
       "default": "19:00",
-      "description": "Evening delivery time"
+      "description": "Evening delivery time (user local)"
+    },
+    "timezone": {
+      "type": "string",
+      "default": "America/New_York",
+      "description": "User IANA timezone for personalized delivery scheduling"
     },
     "birthday": {
       "type": "string",
