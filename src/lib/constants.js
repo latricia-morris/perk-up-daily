@@ -2,7 +2,7 @@ export const CATEGORIES = [
   { slug: 'deep_faith', label: 'Deep Faith', emoji: '✝️', requiresChristian: true },
   { slug: 'rich_relationships', label: 'Rich Relationships', emoji: '💛' },
   { slug: 'strong_body', label: 'Healthy Body', emoji: '💪' },
-  { slug: 'clear_mind', label: 'Sound Mind', emoji: '🧠' },
+  { slug: 'clear_mind', label: 'Healthy Mind', emoji: '🧠' },
   { slug: 'strong_business', label: 'Legacy Business', emoji: '🚀' },
   { slug: 'sound_money', label: 'Financial Freedom', emoji: '💰' },
 ];
