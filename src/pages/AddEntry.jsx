@@ -234,7 +234,8 @@ export default function AddEntry() {
               <p className="text-sm mt-1" style={{ color: '#7a5c3a' }}>Log a win, a blessing, a memory — anything good. It'll be waiting for you tomorrow morning.</p>
             </div>
           )}
-          <h1 className="font-display text-2xl font-semibold text-foreground mb-6">Add an entry</h1>
+          <h1 className="font-display text-2xl font-semibold text-foreground mb-2">Let's get Perky</h1>
+          <p className="text-sm text-muted-foreground mb-6">What would you like to add to your sweet stash?</p>
 
           <div className="space-y-6">
             <div>
