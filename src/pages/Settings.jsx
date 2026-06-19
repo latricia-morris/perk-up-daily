@@ -29,14 +29,11 @@ export default function Settings() {
   const { theme, setTheme } = useTheme();
 
   const [prefs, setPrefs] = useState({
-    christian_content: false,
-    selected_categories: [],
-    ai_guard_enabled: true,
-    email_delivery: true,
-    push_notifications: true,
-    morning_time: '07:00',
-    midday_time: '12:00',
-    evening_time: '19:00',
+   christian_content: false,
+   selected_categories: [],
+   morning_time: '07:00',
+   midday_time: '12:00',
+   evening_time: '19:00',
   });
 
   useEffect(() => {
@@ -45,15 +42,12 @@ export default function Settings() {
       let cats = [];
       try { cats = JSON.parse(u.selected_categories || '[]'); } catch {}
       setPrefs({
-        christian_content: u.christian_content || false,
-        selected_categories: cats,
-        ai_guard_enabled: u.ai_guard_enabled !== false,
-        email_delivery: u.email_delivery !== false,
-        push_notifications: u.push_notifications !== false,
-        morning_time: u.morning_time || '07:00',
-        midday_time: u.midday_time || '12:00',
-        evening_time: u.evening_time || '19:00',
-      });
+         christian_content: u.christian_content || false,
+         selected_categories: cats,
+         morning_time: u.morning_time || '07:00',
+         midday_time: u.midday_time || '12:00',
+         evening_time: u.evening_time || '19:00',
+       });
       if (u.theme) setTheme(u.theme);
     });
   }, []);
@@ -129,30 +123,20 @@ export default function Settings() {
             <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4">Content</h2>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <Label className="text-sm">Faith-Based Content</Label>
-                <Switch
-                  checked={prefs.christian_content}
-                  onCheckedChange={v => {
-                    setPrefs(prev => ({
-                      ...prev,
-                      christian_content: v,
-                      selected_categories: v
-                        ? prev.selected_categories
-                        : prev.selected_categories.filter(c => c !== 'deep_faith'),
-                    }));
-                  }}
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label className="text-sm">AI content guard</Label>
-                  <p className="text-xs text-muted-foreground mt-0.5">Gently check entries for negativity before saving</p>
-                </div>
-                <Switch
-                  checked={prefs.ai_guard_enabled}
-                  onCheckedChange={v => setPrefs(prev => ({ ...prev, ai_guard_enabled: v }))}
-                />
-              </div>
+                 <Label className="text-sm">Faith-Based Content</Label>
+                 <Switch
+                   checked={prefs.christian_content}
+                   onCheckedChange={v => {
+                     setPrefs(prev => ({
+                       ...prev,
+                       christian_content: v,
+                       selected_categories: v
+                         ? prev.selected_categories
+                         : prev.selected_categories.filter(c => c !== 'deep_faith'),
+                     }));
+                   }}
+                 />
+               </div>
             </div>
           </section>
 
@@ -181,39 +165,25 @@ export default function Settings() {
           </section>
 
           {/* Delivery */}
-          <section>
-            <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4">Delivery</h2>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <Label className="text-sm">Email delivery</Label>
-                <Switch
-                  checked={prefs.email_delivery}
-                  onCheckedChange={v => setPrefs(prev => ({ ...prev, email_delivery: v }))}
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <Label className="text-sm">Push notifications</Label>
-                <Switch
-                  checked={prefs.push_notifications}
-                  onCheckedChange={v => setPrefs(prev => ({ ...prev, push_notifications: v }))}
-                />
-              </div>
-              <div className="grid grid-cols-3 gap-3">
-                <div>
-                  <Label className="text-xs text-muted-foreground mb-1 block">Morning</Label>
-                  <Input type="time" value={prefs.morning_time} onChange={e => setPrefs(prev => ({ ...prev, morning_time: e.target.value }))} />
-                </div>
-                <div>
-                  <Label className="text-xs text-muted-foreground mb-1 block">Midday</Label>
-                  <Input type="time" value={prefs.midday_time} onChange={e => setPrefs(prev => ({ ...prev, midday_time: e.target.value }))} />
-                </div>
-                <div>
-                  <Label className="text-xs text-muted-foreground mb-1 block">Evening</Label>
-                  <Input type="time" value={prefs.evening_time} onChange={e => setPrefs(prev => ({ ...prev, evening_time: e.target.value }))} />
-                </div>
-              </div>
-            </div>
-          </section>
+           <section>
+             <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4">Delivery times</h2>
+             <div className="space-y-4">
+               <div className="grid grid-cols-3 gap-3">
+                 <div>
+                   <Label className="text-xs text-muted-foreground mb-1 block">Morning</Label>
+                   <Input type="time" value={prefs.morning_time} onChange={e => setPrefs(prev => ({ ...prev, morning_time: e.target.value }))} />
+                 </div>
+                 <div>
+                   <Label className="text-xs text-muted-foreground mb-1 block">Midday</Label>
+                   <Input type="time" value={prefs.midday_time} onChange={e => setPrefs(prev => ({ ...prev, midday_time: e.target.value }))} />
+                 </div>
+                 <div>
+                   <Label className="text-xs text-muted-foreground mb-1 block">Evening</Label>
+                   <Input type="time" value={prefs.evening_time} onChange={e => setPrefs(prev => ({ ...prev, evening_time: e.target.value }))} />
+                 </div>
+               </div>
+             </div>
+           </section>
 
           {/* Appearance */}
           <section>

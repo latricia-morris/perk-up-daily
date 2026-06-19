@@ -66,6 +66,9 @@ export default function Onboarding() {
   const [christianContent, setChristianContent] = useState(null);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [birthday, setBirthday] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [countryCode, setCountryCode] = useState('US');
+  const [deliveryMethod, setDeliveryMethod] = useState(null);
   const [times, setTimes] = useState({
     morning: '07:00',
     midday: '12:00',
@@ -89,11 +92,14 @@ export default function Onboarding() {
       selectedCategories: cats,
       notificationTimes: times,
       birthday: birthday || null,
+      phoneNumber: phoneNumber || null,
+      countryCode,
+      deliveryMethod: deliveryMethod || 'email',
     }));
     navigate('/register');
   };
 
-  const TOTAL_STEPS = 5;
+  const TOTAL_STEPS = 7;
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-6">
@@ -337,8 +343,149 @@ export default function Onboarding() {
             </motion.div>
           )}
 
-          {/* Step 5: Create account */}
+          {/* Step 5: Delivery method */}
           {step === 5 && (
+            <motion.div
+              key="step5"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <h2 className="font-display text-2xl font-semibold text-foreground mb-3">
+                How do you want your perk-ups?
+              </h2>
+              <p className="text-sm text-muted-foreground mb-8">
+                Choose how you'd like to receive your daily encouragement.
+              </p>
+
+              <div className="space-y-3 mb-8">
+                {[
+                  { label: 'Email', value: 'email', sub: 'Delivered to your inbox' },
+                  { label: 'Text (SMS)', value: 'sms', sub: 'Sent to your phone' },
+                  { label: 'None', value: 'none', sub: 'Access them in the app anytime' },
+                ].map(opt => (
+                  <button
+                    key={opt.value}
+                    onClick={() => setDeliveryMethod(opt.value)}
+                    className={`w-full p-4 rounded-xl border text-left transition-all ${
+                      deliveryMethod === opt.value
+                        ? 'bg-primary/10 border-primary/40'
+                        : 'bg-card border-border hover:border-primary/30'
+                    }`}
+                  >
+                    <p className="font-medium text-foreground">{opt.label}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{opt.sub}</p>
+                  </button>
+                ))}
+              </div>
+
+              <div className="flex gap-3">
+                <Button
+                  onClick={() => setStep(4)}
+                  variant="outline"
+                  className="flex-1"
+                >
+                  Back
+                </Button>
+                <Button
+                  onClick={() => setStep(6)}
+                  disabled={deliveryMethod === null}
+                  className="flex-1 bg-primary hover:bg-primary/90"
+                >
+                  Continue <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Step 6: Phone number (if SMS selected) */}
+          {step === 6 && (
+            <motion.div
+              key="step6"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <h2 className="font-display text-2xl font-semibold text-foreground mb-3">
+                {deliveryMethod === 'sms' ? "What's your phone number?" : "You're almost in"}
+              </h2>
+              {deliveryMethod === 'sms' ? (
+                <>
+                  <p className="text-sm text-muted-foreground mb-6">
+                    We'll send your daily perk-ups to this number.
+                  </p>
+                  <div className="space-y-4 mb-8">
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-1.5 block">Country</label>
+                      <select
+                        value={countryCode}
+                        onChange={(e) => setCountryCode(e.target.value)}
+                        className="w-full h-10 px-3 rounded-md border border-input bg-card text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                      >
+                        <option value="US">🇺🇸 United States (+1)</option>
+                        <option value="CA">🇨🇦 Canada (+1)</option>
+                        <option value="GB">🇬🇧 United Kingdom (+44)</option>
+                        <option value="AU">🇦🇺 Australia (+61)</option>
+                        <option value="NZ">🇳🇿 New Zealand (+64)</option>
+                        <option value="IE">🇮🇪 Ireland (+353)</option>
+                        <option value="ZA">🇿🇦 South Africa (+27)</option>
+                        <option value="MX">🇲🇽 Mexico (+52)</option>
+                        <option value="BR">🇧🇷 Brazil (+55)</option>
+                        <option value="DE">🇩🇪 Germany (+49)</option>
+                        <option value="FR">🇫🇷 France (+33)</option>
+                        <option value="IT">🇮🇹 Italy (+39)</option>
+                        <option value="ES">🇪🇸 Spain (+34)</option>
+                        <option value="NL">🇳🇱 Netherlands (+31)</option>
+                        <option value="SG">🇸🇬 Singapore (+65)</option>
+                        <option value="HK">🇭🇰 Hong Kong (+852)</option>
+                        <option value="JP">🇯🇵 Japan (+81)</option>
+                        <option value="KR">🇰🇷 South Korea (+82)</option>
+                        <option value="IN">🇮🇳 India (+91)</option>
+                        <option value="AE">🇦🇪 United Arab Emirates (+971)</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-1.5 block">Phone Number</label>
+                      <input
+                        type="tel"
+                        value={phoneNumber}
+                        onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, ''))}
+                        placeholder="5551234567"
+                        className="w-full h-10 px-3 rounded-md border border-input bg-transparent text-foreground placeholder-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                      />
+                      <p className="text-xs text-muted-foreground mt-1.5">Enter just the number (no country code needed)</p>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <p className="text-muted-foreground leading-relaxed mb-8">
+                  Create your account to start capturing the good stuff.
+                </p>
+              )}
+
+              <div className="flex gap-3">
+                <Button
+                  onClick={() => setStep(5)}
+                  variant="outline"
+                  className="flex-1"
+                >
+                  Back
+                </Button>
+                <Button
+                  onClick={() => setStep(7)}
+                  disabled={deliveryMethod === 'sms' && !phoneNumber}
+                  className="flex-1 bg-primary hover:bg-primary/90"
+                >
+                  Continue <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Step 7: Create account */}
+          {step === 7 && (
             <motion.div
               key="step5"
               initial={{ opacity: 0, x: 20 }}
