@@ -159,7 +159,7 @@ export default function AppLayout() {
       {menuOpen && (
         <div className="md:hidden fixed top-[53px] left-0 right-0 bottom-0 z-40 flex flex-col"
           style={{ background: 'linear-gradient(160deg, rgba(212,131,10,0.10) 0%, rgba(253,248,240,0.88) 50%)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}>
-          <div className="flex-1 overflow-y-auto p-5 pb-8">
+          <div className="flex-1 overflow-y-auto p-5 pb-24">
             <SidebarContent user={user} onNavClick={() => setMenuOpen(false)} />
           </div>
         </div>
