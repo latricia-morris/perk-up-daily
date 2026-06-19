@@ -189,11 +189,11 @@ export default function Onboarding() {
 
               <div className="mb-8 p-4 rounded-xl bg-muted/40 border border-border">
                 <p className="text-sm font-medium text-foreground mb-3">
-                  Would you like to include Christian content?
-                </p>
-                <p className="text-xs text-muted-foreground mb-3">
-                  This adds scriptures and faith-based encouragement to your deliveries.
-                </p>
+                   Would you like to include Faith-Based content?
+                 </p>
+                 <p className="text-xs text-muted-foreground mb-3">
+                   This adds Bible verses and faith-based encouragement to your deliveries.
+                 </p>
                 <div className="flex gap-3">
                   {[
                     { label: 'Yes', value: true },
