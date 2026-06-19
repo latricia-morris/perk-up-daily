@@ -292,7 +292,7 @@ export default function Landing() {
             <p>As worthless as I felt, I would too readily discard how blessed I really am and how much I have actually accomplished and experienced.</p>
             <p>It is easy to forget the cool things you have accomplished, the blessings you have watched unfold, victories, life wins, and the many things that make life good.</p>
             <p>The path back was not found in substances or self-help books. It was in learning the art of reframing, refocusing and remembering the many reasons we have to smile.</p>
-            <p>I created Perk Up Daily because sometimes you just need to be reminded of how awesome you really are. It is easy to forget the cool things you have accomplished, the blessings you have watched unfold, victories, life wins, and the many things that make life good. I want to make sure you cherish all the good stuff as often as possible.</p>
+            <p>I created Perk Up Daily because sometimes you just need to be reminded of how awesome you really are and of the people, places, and experiences that make your life special.</p>
             <p>The future is bright. It is time to Perk Up.</p>
           </div>
 
@@ -427,7 +427,7 @@ export default function Landing() {
       <section className="py-12 md:py-16">
         <div className="max-w-6xl mx-auto px-6">
           <h3 className="font-display text-2xl md:text-3xl font-semibold text-center mb-3" style={{ color: '#2c1e0f' }}>
-            What makes Perk Up different
+            How Perk Up picks you up.
           </h3>
           <p className="text-center mb-10 max-w-lg mx-auto text-sm" style={{ color: '#7a5c3a' }}>
             This is not a journal and it is not a habit tracker. It is something built entirely around bringing your best self back to you throughout your day.
