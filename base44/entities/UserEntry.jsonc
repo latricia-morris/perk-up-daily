@@ -56,6 +56,10 @@
       "type": "string",
       "description": "Optional photo URL"
     },
+    "prompt_id": {
+      "type": "string",
+      "description": "For reflections: ID of the ReflectionPrompt this entry answers"
+    },
     "status": {
       "type": "string",
       "enum": [

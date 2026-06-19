@@ -107,7 +107,8 @@ export default function Reflections() {
         title: currentPrompt?.prompt || '',
         body: answer.trim(),
         category: currentPrompt?.category === 'general' ? 'clear_mind' : (currentPrompt?.category || 'clear_mind'),
-        status: 'draft', // reflections are private by default
+        prompt_id: currentPrompt?.id || null,
+        status: 'active',
       }),
     onSuccess: () => {
       setSaved(true);

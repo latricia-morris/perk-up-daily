@@ -7,6 +7,7 @@ import { Sparkles, BookOpen, Quote, Heart, Star, Trophy } from 'lucide-react';
 
 import ShareCard from '@/components/shared/ShareCard';
 import EntryDetailModal from '@/components/shared/EntryDetailModal';
+import ReflectionCard from '@/components/shared/ReflectionCard';
 
 // accent = icon color, text = label text color
 // For filled chips: use accent as bg fill, text/icon = #FFFCF2 (or #2F2C29 for light fills like gold)
@@ -82,6 +83,12 @@ function TileSubline({ fields, size = 'sm' }) {
 
 export default function UpliftCard({ item, featured = false }) {
   const [detailOpen, setDetailOpen] = useState(false);
+
+  // Reflections use their own dedicated card
+  if ((item.entry_type || item.content_type) === 'reflection') {
+    return <ReflectionCard item={item} featured={featured} />;
+  }
+
   const fields = resolveDisplayFields(item);
   const { entryType, label, body, photo } = fields;
   const cfg = typeConfig[entryType] || fallback;

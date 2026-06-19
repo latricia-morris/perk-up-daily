@@ -33,6 +33,7 @@ import Search from '@/pages/Search';
 import Settings from '@/pages/Settings';
 import Admin from '@/pages/Admin';
 import Reflections from '@/pages/Reflections';
+import ElevateReflection from '@/pages/ElevateReflection';
 import AppLayout from '@/components/layout/AppLayout';
 
 const AuthenticatedApp = () => {
@@ -84,6 +85,7 @@ const AuthenticatedApp = () => {
           <Route path="/settings" element={<Settings />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/reflections" element={<Reflections />} />
+          <Route path="/elevate-reflection" element={<ElevateReflection />} />
         </Route>
       </Route>
 
