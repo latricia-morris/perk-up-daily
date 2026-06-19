@@ -148,7 +148,8 @@ export default function AddEntry() {
   };
 
   const canSave = entryType && form.category &&
-    (entryType === 'identity_swap' ? (form.body && form.old_belief) : form.body);
+    (entryType === 'identity_swap' ? (form.body && form.old_belief) : form.body)  &&
+    (entryType !== 'reflection' || form.body);
 
   const checkAndSave = async () => {
     if (!canSave) return;
@@ -370,6 +371,19 @@ export function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUp
       <Label className="text-sm font-medium mb-1.5 block">Affirmation</Label>
       <LTA fieldKey="body" placeholder="I am..." />
     </div>
+  );
+
+  if (entryType === 'reflection') return (
+    <>
+      <div>
+        <Label className="text-sm font-medium mb-1.5 block">Reflection prompt <span className="text-muted-foreground">(optional)</span></Label>
+        <LTA fieldKey="title" placeholder="What question are you sitting with?" className="min-h-[80px]" />
+      </div>
+      <div>
+        <Label className="text-sm font-medium mb-1.5 block">Your answer</Label>
+        <LTA fieldKey="body" placeholder="Write your honest answer..." className="min-h-[140px]" />
+      </div>
+    </>
   );
 
   // Memory, Blessing, Life Win, Note

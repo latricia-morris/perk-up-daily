@@ -90,6 +90,17 @@ export const CONTENT_SCHEMA = {
       category:   { show: { form: true,  edit: true,  tile: false, social: false } },
     },
   },
+  reflection: {
+    label: 'Reflection',
+    slug: 'reflection',
+    allowPhoto: false,
+    requiresChristian: false,
+    fields: {
+      title:    { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Reflection prompt', placeholder: 'What question are you sitting with?' },
+      body:     { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Your answer',        placeholder: 'Write your honest answer...' },
+      category: { show: { form: true,  edit: true,  tile: false, social: false } },
+    },
+  },
   scripture: {
     label: 'Scripture',
     slug: 'scripture',
@@ -160,9 +171,9 @@ export function serializeEntry(entryType, form) {
     else if (form[f] !== undefined && form[f] !== '') payload[f] = form[f];
   });
 
-  // Ensure title is never used as a surrogate for author/reference
-  // author and reference live in their own canonical fields only
-  payload.title = null;
+  // For reflections, title stores the prompt — preserve it.
+  // For all other types, title is never used as a surrogate.
+  if (entryType !== 'reflection') payload.title = null;
   return payload;
 }
 
