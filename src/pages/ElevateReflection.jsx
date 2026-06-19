@@ -20,7 +20,7 @@ export default function ElevateReflection() {
     const state = window.history.state?.usr;
     if (state?.entry) {
       setEntry(state.entry);
-      setAnswer(state.entry.body || '');
+      setAnswer('');
     } else {
       navigate('/reflections', { replace: true });
     }
@@ -43,7 +43,7 @@ export default function ElevateReflection() {
 
   if (!entry) return null;
 
-  const canSave = answer.trim().length >= 3 && answer.trim() !== entry.body && !saved;
+  const canSave = answer.trim().length >= 3 && !saved;
   const promptText = entry.title || 'Reflection';
 
   return (
@@ -97,12 +97,23 @@ export default function ElevateReflection() {
           </p>
         </div>
 
+        {/* Original answer */}
+        <div className="px-6 py-4" style={{ background: 'rgba(44,30,15,0.03)', borderBottom: '1px solid rgba(212,131,10,0.1)' }}>
+          <p className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: '#c4a882' }}>
+            Your original answer:
+          </p>
+          <p className="font-display text-sm italic leading-relaxed" style={{ color: '#7a5c3a' }}>
+            "{entry.body}"
+          </p>
+        </div>
+
         {/* Elevate answer */}
         <div className="px-6 py-5" style={{ background: '#fffdf8' }}>
           <p className="text-[10px] font-bold uppercase tracking-widest mb-3" style={{ color: '#7a5c3a' }}>
-            Your answer:
+            Your elevated answer:
           </p>
           <textarea
+            placeholder="Write your elevated answer here…"
             value={answer}
             onChange={e => setAnswer(e.target.value)}
             rows={6}

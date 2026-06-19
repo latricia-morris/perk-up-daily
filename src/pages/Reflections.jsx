@@ -53,8 +53,24 @@ function PastReflectionCard({ entry }) {
         <div className="flex-1 min-w-0">
           <p className="text-[11px] font-bold uppercase tracking-widest mb-1" style={{ color: '#C97F0E' }}>We asked:</p>
           <p className="text-sm italic leading-relaxed" style={{ color: '#7a5c3a' }}>"{promptText}"</p>
-          {!expanded && entry.body && (
+          {entry.body && (
             <p className="text-sm leading-snug mt-1.5 line-clamp-2" style={{ color: '#2c1e0f' }}>"{entry.body}"</p>
+          )}
+          {!expanded && (
+            <div className="flex items-center gap-2 mt-3">
+              <button
+                onClick={(e) => { e.stopPropagation(); navigate('/elevate-reflection', { state: { entry } }); }}
+                className="flex items-center gap-1.5 text-xs font-semibold transition-opacity hover:opacity-70"
+                style={{ color: '#A86A0A' }}
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                Elevate
+              </button>
+              <span style={{ color: '#e0cbb0' }}>·</span>
+              <div onClick={e => e.stopPropagation()}>
+                <ShareCard item={entry} />
+              </div>
+            </div>
           )}
         </div>
         <div className="flex items-center gap-2 shrink-0 mt-0.5">
