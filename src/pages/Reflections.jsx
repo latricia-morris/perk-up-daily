@@ -124,7 +124,7 @@ export default function Reflections() {
   const canSave = answer.trim().length >= 3 && !saved;
 
   return (
-    <div className="min-h-screen p-4 md:p-8 max-w-2xl mx-auto">
+    <div className="min-h-screen p-4 md:p-8 max-w-2xl mx-auto pb-[env(safe-area-inset-bottom,40px)]">
 
       {/* Header */}
       <div className="mb-8">

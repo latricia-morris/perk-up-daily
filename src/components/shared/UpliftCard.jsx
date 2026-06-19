@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getCategoryLabel } from '@/lib/constants';
 import { getSchema, getDisplayLabel } from '@/lib/contentSchema';
-import { Sparkles, BookOpen, Quote, Heart, Star, Trophy } from 'lucide-react';
+import { Sparkles, BookOpen, Quote, Heart, Star, Trophy, ArrowLeftRight } from 'lucide-react';
 
 
 import ShareCard from '@/components/shared/ShareCard';
@@ -28,7 +28,7 @@ const typeConfig = {
   experience:         { icon: Star,     accent: '#C43911', text: '#C43911' },
   blessing:           { icon: Heart,    accent: '#C43911', text: '#C43911' },
   // Identity / Prayer — unchanged
-  identity_swap:      { icon: Sparkles, accent: '#75003C', text: '#75003C' },
+  identity_swap:      { icon: ArrowLeftRight, accent: '#75003C', text: '#75003C' },
 };
 
 const fallback = { icon: Sparkles, accent: '#D0902D', text: '#D0902D' };

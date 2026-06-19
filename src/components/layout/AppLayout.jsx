@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Home, PlusCircle, Sparkles, Trophy, Settings,
   ShieldCheck, Zap, BookOpen, Menu, X, LogOut,
-  Heart, Image, Quote, FileText, Star, Search, PenLine
+  Heart, Image, Quote, FileText, Star, Search, PenLine, ArrowLeftRight
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
@@ -14,18 +14,18 @@ const mainNav = [
   { path: '/dashboard', icon: Home, label: 'Home' },
   { path: '/add-entry', icon: PlusCircle, label: 'Add Entry' },
   { path: '/vault', icon: Sparkles, label: 'Perk Ups' },
-  { path: '/reflections', icon: PenLine, label: 'Reflections' },
   { path: '/search', icon: Search, label: 'Search' },
 ];
 
 const libraryNav = [
+  { path: '/reflections', icon: PenLine, label: 'Reflections' },
   { path: '/memories', icon: Image, label: 'Memories' },
   { path: '/blessings', icon: Heart, label: 'Blessings' },
   { path: '/milestones', icon: Trophy, label: 'Life Wins' },
   { path: '/affirmations', icon: Zap, label: 'Affirmations' },
   { path: '/quotes', icon: Quote, label: 'Quotes' },
   { path: '/notes', icon: FileText, label: 'Notes' },
-  { path: '/identity-upgrades', icon: Star, label: 'Identity Upgrades' },
+  { path: '/identity-upgrades', icon: ArrowLeftRight, label: 'Identity Upgrades' },
 ];
 
 const scriptureNav = { path: '/scriptures', icon: BookOpen, label: 'Scriptures' };
