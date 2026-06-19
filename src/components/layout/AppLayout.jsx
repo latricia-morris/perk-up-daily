@@ -61,7 +61,7 @@ function SidebarContent({ user, onNavClick }) {
   const christianEnabled = user?.christian_content;
 
   return (
-    <>
+    <div className="flex flex-col min-h-full">
       <Link to="/dashboard" onClick={onNavClick} className="mb-10 flex items-center gap-3">
         <img src="https://media.base44.com/images/public/6a312911bcddb0806c388af8/11e411456_bird2.png" alt="Perk Up Daily" className="w-8 h-8 object-contain shrink-0" />
         <div>
@@ -100,7 +100,7 @@ function SidebarContent({ user, onNavClick }) {
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
@@ -157,9 +157,11 @@ export default function AppLayout() {
 
       {/* Mobile slide-down menu overlay */}
       {menuOpen && (
-        <div className="md:hidden fixed top-[53px] left-0 right-0 bottom-0 z-40 overflow-y-auto p-5"
+        <div className="md:hidden fixed top-[53px] left-0 right-0 bottom-0 z-40 flex flex-col"
           style={{ background: 'linear-gradient(160deg, rgba(212,131,10,0.10) 0%, rgba(253,248,240,0.88) 50%)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}>
-          <SidebarContent user={user} onNavClick={() => setMenuOpen(false)} />
+          <div className="flex-1 overflow-y-auto p-5 pb-8">
+            <SidebarContent user={user} onNavClick={() => setMenuOpen(false)} />
+          </div>
         </div>
       )}
 
