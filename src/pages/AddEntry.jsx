@@ -394,20 +394,17 @@ export function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUp
   if (entryType === 'reflection') return (
     <>
       <div>
-        <Label className="text-sm font-medium mb-1.5 block">Today's reflection</Label>
         {currentPrompt ? (
-          <div className="bg-accent/50 rounded-lg p-4 mb-4">
-            <p className="text-sm italic leading-relaxed text-foreground">"{currentPrompt.prompt}"</p>
-          </div>
+          <p className="font-display text-lg italic leading-relaxed mb-4" style={{ color: '#2c1e0f' }}>
+            {currentPrompt.prompt}
+          </p>
         ) : (
-          <div className="bg-accent/50 rounded-lg p-4 mb-4">
-            <p className="text-sm text-muted-foreground">Loading prompt...</p>
-          </div>
+          <p className="text-sm text-muted-foreground mb-4">Loading prompt...</p>
         )}
       </div>
       <div>
-        <Label className="text-sm font-medium mb-1.5 block">Your answer</Label>
-        <LTA fieldKey="body" placeholder="Write your honest answer..." className="min-h-[140px]" />
+        <Label className="text-sm font-medium mb-1.5 block">Your knee-jerk response</Label>
+        <LTA fieldKey="body" placeholder="Write your response..." className="min-h-[140px]" />
       </div>
     </>
   );
