@@ -139,7 +139,7 @@ export default function AppLayout() {
     <div className="min-h-screen bg-background">
 
       {/* Mobile/Tablet top header */}
-      <header className="md:hidden fixed top-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+      <header className="md:hidden fixed top-0 left-0 right-0 z-50 border-b border-border/60" style={{ paddingTop: 'env(safe-area-inset-top)', background: 'linear-gradient(135deg, rgba(212,131,10,0.12) 0%, rgba(253,248,240,0.82) 60%)', backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)' }}>
         <div className="flex items-center justify-between px-4 py-3">
           <Link to="/dashboard" className="flex items-center gap-2">
             <img src="https://media.base44.com/images/public/6a312911bcddb0806c388af8/11e411456_bird2.png" alt="Perk Up Daily" className="w-7 h-7 object-contain" />
@@ -158,18 +158,18 @@ export default function AppLayout() {
       {/* Mobile slide-down menu overlay */}
       {menuOpen && (
         <div className="md:hidden fixed top-[53px] left-0 right-0 bottom-0 z-40 overflow-y-auto p-5"
-          style={{ background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(16px)' }}>
+          style={{ background: 'linear-gradient(160deg, rgba(212,131,10,0.10) 0%, rgba(253,248,240,0.88) 50%)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}>
           <SidebarContent user={user} onNavClick={() => setMenuOpen(false)} />
         </div>
       )}
 
       {/* Desktop sidebar */}
-      <nav className="hidden md:flex fixed left-0 top-0 bottom-0 w-64 bg-card border-r border-border flex-col p-6 z-40">
+      <nav className="hidden md:flex fixed left-0 top-0 bottom-0 w-64 flex-col p-6 z-40 border-r border-border/60" style={{ background: 'linear-gradient(160deg, rgba(212,131,10,0.10) 0%, rgba(253,248,240,0.85) 55%)', backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)' }}>
         <SidebarContent user={user} onNavClick={null} />
       </nav>
 
       {/* Mobile bottom tab bar */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-sm border-t border-border z-50">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 border-t border-border/60 z-50" style={{ background: 'linear-gradient(135deg, rgba(212,131,10,0.10) 0%, rgba(253,248,240,0.85) 60%)', backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)' }}>
         <div className="flex items-center justify-around py-2 px-2 pb-[env(safe-area-inset-bottom,8px)]">
           {bottomTabNav.map(({ path, icon: Icon, label }) => {
             const active = location.pathname === path || location.pathname.startsWith(path + '/');
