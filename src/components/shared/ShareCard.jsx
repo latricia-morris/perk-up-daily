@@ -48,6 +48,124 @@ async function renderCardToCanvas(item, w, h) {
   const FOOTER_ZONE = scalePx(96, w);   // protected footer band height
   const BRAND_FONT  = Math.max(scalePx(30, w), scalePx(26, w)); // 28–30px target, 26px min
   const centerX     = w / 2;
+  const footerTopGlobal = h - FOOTER_ZONE;
+  const brandY = footerTopGlobal + FOOTER_ZONE / 2 + BRAND_FONT * 0.35;
+
+  // ── Reflection: special two-pane layout ─────────────────────────────────
+  if (entryType === 'reflection') {
+    const promptText = item.title || '';
+    const answerText = body;
+
+    const PROMPT_FONT = scalePx(36, w);
+    const ANSWER_FONT_START = scalePx(60, w);
+    const ANSWER_FONT_MIN = scalePx(38, w);
+    const LABEL_FONT = scalePx(24, w);
+    const labelGap = scalePx(18, w);
+    const sectionGap = scalePx(48, w);
+    const dividerH = scalePx(2, w);
+
+    // Draw background accent strip at top
+    const stripH = Math.round(h * 0.38);
+    const stripGrad = ctx.createLinearGradient(0, 0, w, stripH);
+    stripGrad.addColorStop(0, 'rgba(212,131,10,0.22)');
+    stripGrad.addColorStop(1, 'rgba(212,131,10,0.04)');
+    ctx.fillStyle = stripGrad;
+    ctx.fillRect(0, 0, w, stripH);
+
+    const usableW = w - EDGE_PAD * 2;
+    const topY = INNER_PAD * 2;
+
+    // "WE ASKED" label
+    ctx.save();
+    ctx.font = `700 ${LABEL_FONT}px 'DM Sans', sans-serif`;
+    ctx.fillStyle = '#C97F0E';
+    ctx.textAlign = 'left';
+    ctx.fillText('WE ASKED:', EDGE_PAD, topY + LABEL_FONT);
+    ctx.restore();
+
+    // Prompt text
+    ctx.save();
+    ctx.font = `italic ${PROMPT_FONT}px 'Playfair Display', Georgia, serif`;
+    ctx.fillStyle = '#5a3e22';
+    ctx.textAlign = 'left';
+    const promptLines = wrapText(ctx, `"${promptText}"`, usableW, PROMPT_FONT);
+    const maxPromptLines = 3;
+    const shownPromptLines = promptLines.slice(0, maxPromptLines);
+    if (promptLines.length > maxPromptLines) {
+      let last = shownPromptLines[maxPromptLines - 1].trimEnd();
+      while (ctx.measureText(last + '…"').width > usableW && last.length > 1) last = last.slice(0, -1).trimEnd();
+      shownPromptLines[maxPromptLines - 1] = last + '…"';
+    }
+    const promptLH = PROMPT_FONT * 1.5;
+    shownPromptLines.forEach((line, i) => {
+      ctx.fillText(line, EDGE_PAD, topY + LABEL_FONT + labelGap + (i + 1) * promptLH);
+    });
+    ctx.restore();
+
+    // Divider
+    const dividerY = topY + LABEL_FONT + labelGap + shownPromptLines.length * promptLH + sectionGap * 0.6;
+    ctx.save();
+    ctx.strokeStyle = 'rgba(212,131,10,0.25)';
+    ctx.lineWidth = dividerH;
+    ctx.beginPath();
+    ctx.moveTo(EDGE_PAD, dividerY);
+    ctx.lineTo(w - EDGE_PAD, dividerY);
+    ctx.stroke();
+    ctx.restore();
+
+    // "YOU SAID" label
+    const youSaidLabelY = dividerY + sectionGap * 0.6;
+    ctx.save();
+    ctx.font = `700 ${LABEL_FONT}px 'DM Sans', sans-serif`;
+    ctx.fillStyle = '#7a5c3a';
+    ctx.textAlign = 'left';
+    ctx.fillText('YOU SAID:', EDGE_PAD, youSaidLabelY + LABEL_FONT);
+    ctx.restore();
+
+    // Answer text — scale down to fit
+    const answerAreaTop = youSaidLabelY + LABEL_FONT + labelGap;
+    const answerAreaBottom = h - FOOTER_ZONE - INNER_PAD;
+    const answerAreaH = answerAreaBottom - answerAreaTop;
+    let answerFS = ANSWER_FONT_START;
+    let answerLines;
+    ctx.save();
+    while (answerFS >= ANSWER_FONT_MIN) {
+      ctx.font = `italic 500 ${answerFS}px 'Playfair Display', Georgia, serif`;
+      answerLines = wrapText(ctx, `"${answerText}"`, usableW, answerFS);
+      const needed = answerLines.length * answerFS * 1.5;
+      if (needed <= answerAreaH) break;
+      answerFS = Math.max(answerFS - scalePx(2, w), ANSWER_FONT_MIN);
+    }
+    // Truncate if still overflowing
+    const answerLH = answerFS * 1.5;
+    const maxAnswerLines = Math.max(1, Math.floor(answerAreaH / answerLH));
+    if (answerLines.length > maxAnswerLines) {
+      answerLines = answerLines.slice(0, maxAnswerLines);
+      let last = answerLines[maxAnswerLines - 1].trimEnd();
+      ctx.font = `italic 500 ${answerFS}px 'Playfair Display', Georgia, serif`;
+      while (ctx.measureText(last + '…"').width > usableW && last.length > 1) last = last.slice(0, -1).trimEnd();
+      answerLines[maxAnswerLines - 1] = last + '…"';
+    }
+    ctx.font = `italic 500 ${answerFS}px 'Playfair Display', Georgia, serif`;
+    ctx.fillStyle = '#2c1e0f';
+    ctx.textAlign = 'left';
+    answerLines.forEach((line, i) => {
+      ctx.fillText(line, EDGE_PAD, answerAreaTop + (i + 1) * answerLH);
+    });
+    ctx.restore();
+
+    // Footer branding
+    ctx.save();
+    ctx.font = `500 ${BRAND_FONT}px 'DM Sans', sans-serif`;
+    ctx.fillStyle = 'rgba(122,92,58,0.75)';
+    ctx.textAlign = 'left';
+    ctx.fillText('Perk Up Daily', EDGE_PAD, brandY);
+    ctx.textAlign = 'right';
+    ctx.fillText('perkupdaily.app', w - EDGE_PAD, brandY);
+    ctx.restore();
+
+    return canvas;
+  }
 
   // ── Photo (top 50%, cover-cropped) ──────────────────────────────────────
   let photoDrawnH = 0;
@@ -77,9 +195,7 @@ async function renderCardToCanvas(item, w, h) {
 
   // ── Branding footer (drawn last but zone reserved now) ───────────────────
   // Footer zone: bottom FOOTER_ZONE px of card.
-  // Brand text sits vertically centered within the footer zone.
-  const footerTop  = h - FOOTER_ZONE;
-  const brandY     = footerTop + FOOTER_ZONE / 2 + BRAND_FONT * 0.35; // baseline center
+  const footerTop  = footerTopGlobal;
 
   // ── Usable text area ─────────────────────────────────────────────────────
   // Top: below image (or card top) + inner pad

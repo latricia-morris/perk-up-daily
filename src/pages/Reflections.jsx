@@ -1,10 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { RefreshCw, Check, ChevronDown, ChevronUp, Pencil } from 'lucide-react';
+import { RefreshCw, Check, ChevronDown, ChevronUp, Pencil, Sparkles, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { getCategoryLabel } from '@/lib/constants';
+import { useNavigate } from 'react-router-dom';
+import ShareCard from '@/components/shared/ShareCard';
 
 // Fallback prompts if no library prompts exist yet
 const FALLBACK_PROMPTS = [
@@ -33,6 +34,7 @@ function pickRandom(arr, excluding = null) {
 
 function PastReflectionCard({ entry }) {
   const [expanded, setExpanded] = useState(false);
+  const navigate = useNavigate();
   const promptText = entry.title || 'Reflection';
   const dateStr = entry.created_date
     ? new Date(entry.created_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
@@ -40,17 +42,24 @@ function PastReflectionCard({ entry }) {
 
   return (
     <div
-      className="rounded-xl p-4 cursor-pointer transition-all"
+      className="rounded-xl overflow-hidden"
       style={{ background: '#fffdf8', border: '1px solid rgba(44,30,15,0.07)', boxShadow: '0 1px 4px rgba(44,30,15,0.05)' }}
-      onClick={() => setExpanded(e => !e)}
     >
-      <div className="flex items-start justify-between gap-3">
-        <p className="text-xs italic leading-relaxed flex-1" style={{ color: '#7a5c3a' }}>"{promptText}"</p>
-        <div className="flex items-center gap-2 shrink-0">
+      {/* Header row — tappable to expand */}
+      <div
+        className="flex items-start justify-between gap-3 p-4 cursor-pointer"
+        onClick={() => setExpanded(e => !e)}
+      >
+        <div className="flex-1 min-w-0">
+          <p className="text-[11px] font-bold uppercase tracking-widest mb-1" style={{ color: '#C97F0E' }}>We asked:</p>
+          <p className="text-sm italic leading-relaxed" style={{ color: '#7a5c3a' }}>"{promptText}"</p>
+        </div>
+        <div className="flex items-center gap-2 shrink-0 mt-0.5">
           {dateStr && <span className="text-[10px]" style={{ color: '#c4a882' }}>{dateStr}</span>}
           {expanded ? <ChevronUp className="w-3.5 h-3.5" style={{ color: '#c4a882' }} /> : <ChevronDown className="w-3.5 h-3.5" style={{ color: '#c4a882' }} />}
         </div>
       </div>
+
       <AnimatePresence>
         {expanded && (
           <motion.div
@@ -60,7 +69,21 @@ function PastReflectionCard({ entry }) {
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <p className="text-sm mt-3 leading-relaxed" style={{ color: '#2c1e0f' }}>{entry.body}</p>
+            <div className="px-4 pb-4" style={{ borderTop: '1px solid rgba(44,30,15,0.06)' }}>
+              <p className="text-[11px] font-bold uppercase tracking-widest mt-3 mb-2" style={{ color: '#7a5c3a' }}>You said:</p>
+              <p className="font-display text-base italic leading-relaxed" style={{ color: '#2c1e0f' }}>"{entry.body}"</p>
+              <div className="flex items-center gap-3 mt-4">
+                <button
+                  onClick={() => navigate('/elevate-reflection', { state: { entry } })}
+                  className="flex items-center gap-1.5 text-xs font-semibold transition-opacity hover:opacity-70"
+                  style={{ color: '#A86A0A' }}
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  Elevate my answer
+                </button>
+                <ShareCard item={entry} />
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -134,7 +157,7 @@ export default function Reflections() {
   const canSave = answer.trim().length >= 3 && !saved;
 
   return (
-    <div className="min-h-screen p-4 md:p-8 max-w-2xl mx-auto" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 16px), 120px)' }}>
+    <div className="min-h-screen p-4 md:p-8 w-full max-w-2xl mx-auto overflow-x-hidden" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 16px), 120px)' }}>
 
       {/* Header */}
       <div className="mb-8">
