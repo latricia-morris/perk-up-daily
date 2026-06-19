@@ -64,6 +64,7 @@ export default function AddEntry() {
   const [form, setForm] = useState({});
   const [uploading, setUploading] = useState(false);
   const [guardOpen, setGuardOpen] = useState(false);
+  const [currentPrompt, setCurrentPrompt] = useState(null);
 
   const createEntryMutation = useMutation({
     mutationFn: (payload) => base44.entities.UserEntry.create(payload),
@@ -108,13 +109,27 @@ export default function AddEntry() {
   const entryTypes = getSchemaEntryTypes(christianEnabled);
   const categories = getFilteredCategories(christianEnabled);
 
-  const handleTypeChange = (slug) => {
+  const handleTypeChange = async (slug) => {
     setEntryType(slug);
     const today = new Date().toISOString().split('T')[0];
     const blank = buildEmptyForm(slug);
     // Default date for types that support it
     if (blank.hasOwnProperty('entry_date')) blank.entry_date = today;
     setForm(blank);
+
+    // Fetch a reflection prompt if reflection type is selected
+    if (slug === 'reflection') {
+      try {
+        const prompts = await base44.entities.ReflectionPrompt.filter({ status: 'active' }, '-created_date', 50);
+        if (prompts.length > 0) {
+          const randomPrompt = prompts[Math.floor(Math.random() * prompts.length)];
+          setCurrentPrompt(randomPrompt);
+          setForm(prev => ({ ...prev, prompt_id: randomPrompt.id }));
+        }
+      } catch (err) {
+        console.error('Failed to fetch reflection prompt:', err);
+      }
+    }
   };
 
   const resizeImage = (file, maxPx = 1200) => {
@@ -245,6 +260,7 @@ export default function AddEntry() {
                     setForm={setForm}
                     uploading={uploading}
                     onPhotoUpload={handlePhotoUpload}
+                    currentPrompt={currentPrompt}
                   />
 
                   {entryType !== 'reflection' && (
@@ -292,7 +308,7 @@ export default function AddEntry() {
 }
 
 /** Shared form fields component — driven entirely by the schema */
-export function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUpload }) {
+export function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUpload, currentPrompt }) {
   const f = (key) => form[key] ?? '';
   const set = (key) => (e) => setForm(prev => ({ ...prev, [key]: e.target.value }));
 
@@ -376,10 +392,24 @@ export function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUp
   );
 
   if (entryType === 'reflection') return (
-    <div>
-      <Label className="text-sm font-medium mb-1.5 block">Your answer</Label>
-      <LTA fieldKey="body" placeholder="Write your honest answer..." className="min-h-[140px]" />
-    </div>
+    <>
+      <div>
+        <Label className="text-sm font-medium mb-1.5 block">Today's reflection</Label>
+        {currentPrompt ? (
+          <div className="bg-accent/50 rounded-lg p-4 mb-4">
+            <p className="text-sm italic leading-relaxed text-foreground">"{currentPrompt.prompt}"</p>
+          </div>
+        ) : (
+          <div className="bg-accent/50 rounded-lg p-4 mb-4">
+            <p className="text-sm text-muted-foreground">Loading prompt...</p>
+          </div>
+        )}
+      </div>
+      <div>
+        <Label className="text-sm font-medium mb-1.5 block">Your answer</Label>
+        <LTA fieldKey="body" placeholder="Write your honest answer..." className="min-h-[140px]" />
+      </div>
+    </>
   );
 
   // Memory, Blessing, Life Win, Note
