@@ -12,23 +12,17 @@ import ReflectionCard from '@/components/shared/ReflectionCard';
 // accent = icon color, text = label text color
 // For filled chips: use accent as bg fill, text/icon = #FFFCF2 (or #2F2C29 for light fills like gold)
 const typeConfig = {
-  // Power Ups → ember red
-  quote:              { icon: Quote,    accent: '#C43911', text: '#C43911' },
-  // Life Wins → deep navy
-  life_win:           { icon: Trophy,   accent: '#0F2459', text: '#0F2459' },
-  accomplishment:     { icon: Trophy,   accent: '#0F2459', text: '#0F2459' },
-  milestone:          { icon: Trophy,   accent: '#0F2459', text: '#0F2459' },
-  // Affirmations → warm gold (icon gold, text slightly darker for light-bg contrast)
-  affirmation:        { icon: Sparkles, accent: '#C97F0E', text: '#A86A0A' },
-  // Scripture → deep plum
-  scripture:          { icon: BookOpen, accent: '#37154A', text: '#37154A' },
-  // Encouragement types — unchanged
-  personal_note:      { icon: Quote,    accent: '#C43911', text: '#C43911' },
-  encouragement_note: { icon: Heart,    accent: '#C43911', text: '#C43911' },
-  experience:         { icon: Star,     accent: '#C43911', text: '#C43911' },
-  blessing:           { icon: Heart,    accent: '#C43911', text: '#C43911' },
-  // Identity / Prayer — unchanged
-  identity_swap:      { icon: ArrowLeftRight, accent: '#75003C', text: '#75003C' },
+  // Sea and Sunrise Palette
+  quote:              { icon: Quote,    accent: '#8ECAE6', text: '#8ECAE6' },
+  life_win:           { icon: Trophy,   accent: '#FFAD09', text: '#FFAD09' },
+  accomplishment:     { icon: Trophy,   accent: '#FFAD09', text: '#FFAD09' },
+  milestone:          { icon: Trophy,   accent: '#FFAD09', text: '#FFAD09' },
+  affirmation:        { icon: Sparkles, accent: '#219EBC', text: '#219EBC' },
+  scripture:          { icon: BookOpen, accent: '#5C3B8F', text: '#5C3B8F' },
+  experience:         { icon: Star,     accent: '#F95826', text: '#F95826' },
+  blessing:           { icon: Heart,    accent: '#BA1650', text: '#BA1650' },
+  reflection:         { icon: Sparkles, accent: '#BA1650', text: '#BA1650' },
+  identity_swap:      { icon: ArrowLeftRight, accent: '#5C3B8F', text: '#5C3B8F' },
 };
 
 const fallback = { icon: Sparkles, accent: '#D0902D', text: '#D0902D' };
@@ -70,7 +64,7 @@ function TileSubline({ fields, size = 'sm' }) {
     if (date) parts.push(new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }));
     if (parts.length) lines.push(<p key="meta" className={`${textClass}`} style={{ color: '#c4a882' }}>{parts.join(' • ')}</p>);
   }
-  if (['life_win', 'milestone', 'blessing', 'personal_note'].includes(entryType) && date) {
+  if (['life_win', 'milestone', 'blessing'].includes(entryType) && date) {
     lines.push(<p key="date" className={`${textClass}`} style={{ color: '#c4a882' }}>{new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>);
   }
   if (!lines.length && category) {

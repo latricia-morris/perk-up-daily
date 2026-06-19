@@ -75,12 +75,12 @@ async function renderCardToCanvas(item, w, h) {
     const usableW = w - EDGE_PAD * 2;
     const topY = INNER_PAD * 2;
 
-    // "WE ASKED" label
+    // "PERK UP ASKED" label
     ctx.save();
     ctx.font = `700 ${LABEL_FONT}px 'DM Sans', sans-serif`;
-    ctx.fillStyle = '#C97F0E';
+    ctx.fillStyle = '#BA1650';
     ctx.textAlign = 'left';
-    ctx.fillText('WE ASKED:', EDGE_PAD, topY + LABEL_FONT);
+    ctx.fillText('PERK UP ASKED:', EDGE_PAD, topY + LABEL_FONT);
     ctx.restore();
 
     // Prompt text
@@ -113,13 +113,13 @@ async function renderCardToCanvas(item, w, h) {
     ctx.stroke();
     ctx.restore();
 
-    // "YOU SAID" label
+    // "MY RESPONSE" label
     const youSaidLabelY = dividerY + sectionGap * 0.6;
     ctx.save();
     ctx.font = `700 ${LABEL_FONT}px 'DM Sans', sans-serif`;
-    ctx.fillStyle = '#7a5c3a';
+    ctx.fillStyle = '#BA1650';
     ctx.textAlign = 'left';
-    ctx.fillText('YOU SAID:', EDGE_PAD, youSaidLabelY + LABEL_FONT);
+    ctx.fillText('MY RESPONSE:', EDGE_PAD, youSaidLabelY + LABEL_FONT);
     ctx.restore();
 
     // Answer text — scale down to fit
@@ -229,7 +229,7 @@ async function renderCardToCanvas(item, w, h) {
   const attrLines = [];
   if (entryType === 'quote' && author) attrLines.push(`— ${author}`);
   if (entryType === 'scripture' && reference) attrLines.push(reference);
-  if (['experience', 'blessing', 'life_win', 'personal_note'].includes(entryType)) {
+  if (['experience', 'blessing', 'life_win'].includes(entryType)) {
     const parts = [];
     if (location) parts.push(location);
     if (date) parts.push(new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }));

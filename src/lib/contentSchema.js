@@ -14,6 +14,7 @@ export const CONTENT_SCHEMA = {
     slug: 'experience',
     allowPhoto: true,
     requiresChristian: false,
+    color: '#F95826',
     descriptor: 'Something you saw or experienced cracked you up, caught you by surprise, or just hit you in all the right ways. Let\'s capture that story.',
     fields: {
       body:     { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'What happened?',      placeholder: 'Tell the story...' },
@@ -28,6 +29,7 @@ export const CONTENT_SCHEMA = {
     slug: 'blessing',
     allowPhoto: true,
     requiresChristian: false,
+    color: '#BA1650',
     descriptor: 'What was something good that came your way? Name it.',
     fields: {
       body:     { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Describe the blessing', placeholder: 'What are you grateful for?' },
@@ -41,6 +43,7 @@ export const CONTENT_SCHEMA = {
     slug: 'life_win',
     allowPhoto: true,
     requiresChristian: false,
+    color: '#FFAD09',
     descriptor: 'Be it a goal hit, a habit kept, a fear faced, your wins deserve to be celebrated.',
     fields: {
       body:     { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'What was the win?', placeholder: 'Describe your win...' },
@@ -54,6 +57,7 @@ export const CONTENT_SCHEMA = {
     slug: 'affirmation',
     allowPhoto: false,
     requiresChristian: false,
+    color: '#219EBC',
     descriptor: 'Choose what you\'re going to believe about yourself today. Say it with your chest.',
     fields: {
       body:     { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Affirmation', placeholder: 'I am...' },
@@ -65,6 +69,7 @@ export const CONTENT_SCHEMA = {
     slug: 'quote',
     allowPhoto: false,
     requiresChristian: false,
+    color: '#8ECAE6',
     descriptor: 'Someone said it and you needed to hear it. Let\'s hold onto that.',
     fields: {
       body:     { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Quote',  placeholder: 'The quote text...' },
@@ -78,6 +83,7 @@ export const CONTENT_SCHEMA = {
     slug: 'identity_swap',
     allowPhoto: false,
     requiresChristian: false,
+    color: '#5C3B8F',
     descriptor: 'Who are you? Who will you choose to be?',
     fields: {
       old_belief: { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'My Old Lie-dentity', placeholder: 'I used to believe that I...' },
@@ -90,6 +96,7 @@ export const CONTENT_SCHEMA = {
     slug: 'reflection',
     allowPhoto: false,
     requiresChristian: false,
+    color: '#BA1650',
     descriptor: 'Growth lives in the pause. Take a brief moment to process, then drop your straightest answer here.',
     fields: {
       title:    { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Reflection prompt', placeholder: 'What question are you sitting with?' },
@@ -102,6 +109,7 @@ export const CONTENT_SCHEMA = {
     slug: 'scripture',
     allowPhoto: false,
     requiresChristian: true,
+    color: '#5C3B8F',
     descriptor: 'Drop the verse that\'s speaking to you right now so we can add it to your daily dose.',
     fields: {
       body:      { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Scripture',  placeholder: 'The scripture text...' },

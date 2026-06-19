@@ -61,7 +61,7 @@ function PastReflectionCard({ entry }) {
               <button
                 onClick={(e) => { e.stopPropagation(); navigate('/elevate-reflection', { state: { entry } }); }}
                 className="flex items-center gap-1.5 text-xs font-semibold transition-opacity hover:opacity-70"
-                style={{ color: '#A86A0A' }}
+                style={{ color: '#BA1650' }}
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 Elevate
@@ -95,7 +95,7 @@ function PastReflectionCard({ entry }) {
                 <button
                   onClick={() => navigate('/elevate-reflection', { state: { entry } })}
                   className="flex items-center gap-1.5 text-xs font-semibold transition-opacity hover:opacity-70"
-                  style={{ color: '#A86A0A' }}
+                  style={{ color: '#BA1650' }}
                 >
                   <Sparkles className="w-3.5 h-3.5" />
                   Elevate my answer

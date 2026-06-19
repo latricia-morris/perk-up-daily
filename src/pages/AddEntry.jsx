@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ArrowLeft, Upload, Loader2 } from 'lucide-react';
 import { getFilteredCategories } from '@/lib/constants';
-import { getSchemaEntryTypes, buildEmptyForm, serializeEntry } from '@/lib/contentSchema';
+import { getSchemaEntryTypes, buildEmptyForm, serializeEntry, getSchema } from '@/lib/contentSchema';
 import LimitedTextarea from '@/components/ui/limited-textarea';
 import { getLimit } from '@/lib/storageLimits';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -29,24 +29,32 @@ function ChipGroup({ options, value, onChange }) {
     <div className="flex flex-wrap gap-2">
       {options.map(opt => {
         const selected = value === opt.slug;
+        const schema = getSchema(opt.slug);
+        const typeColor = schema?.color;
         return (
-          <button
-            key={opt.slug}
-            type="button"
-            onClick={() => onChange(selected ? '' : opt.slug)}
-            className="h-11 px-4 rounded-full text-sm font-medium transition-all border"
-            style={selected ? {
-              background: catColors[opt.slug]?.bg || '#E6A037',
-              color: catColors[opt.slug]?.color || '#2F2C29',
-              borderColor: catColors[opt.slug]?.bg || '#E6A037',
-            } : {
-              background: '#FDF8F0',
-              color: '#2F2C29',
-              borderColor: '#e2d5c0',
-            }}
-          >
-            {opt.label}
-          </button>
+          <div key={opt.slug} className="flex flex-col items-start">
+            <button
+              type="button"
+              onClick={() => onChange(selected ? '' : opt.slug)}
+              className="h-11 px-4 rounded-full text-sm font-medium transition-all border"
+              style={selected ? {
+                background: typeColor || '#E6A037',
+                color: '#fff',
+                borderColor: typeColor || '#E6A037',
+              } : {
+                background: '#FDF8F0',
+                color: '#2F2C29',
+                borderColor: '#e2d5c0',
+              }}
+            >
+              {opt.label}
+            </button>
+            {selected && (
+              <p className="text-xs leading-snug mt-2 max-w-xs" style={{ color: '#7a5c3a' }}>
+                {schema?.descriptor}
+              </p>
+            )}
+          </div>
         );
       })}
     </div>

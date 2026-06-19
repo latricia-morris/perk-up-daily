@@ -1,10 +1,10 @@
 export const CATEGORIES = [
-  { slug: 'deep_faith', label: 'Deep Faith', emoji: '✝️', requiresChristian: true },
-  { slug: 'rich_relationships', label: 'Rich Relationships', emoji: '💛' },
-  { slug: 'strong_body', label: 'Healthy Body', emoji: '💪' },
-  { slug: 'clear_mind', label: 'Healthy Mind', emoji: '🧠' },
-  { slug: 'strong_business', label: 'Legacy Business', emoji: '🚀' },
-  { slug: 'sound_money', label: 'Financial Freedom', emoji: '💰' },
+  { slug: 'deep_faith', label: 'Deep Faith', emoji: '✝️', color: '#5C3B8F', requiresChristian: true },
+  { slug: 'rich_relationships', label: 'Rich Relationships', emoji: '💛', color: '#BA1650' },
+  { slug: 'strong_body', label: 'Strong Body', emoji: '💪', color: '#F95826' },
+  { slug: 'clear_mind', label: 'Healthy Mind', emoji: '🧠', color: '#219EBC' },
+  { slug: 'strong_business', label: 'Legacy Business', emoji: '🚀', color: '#FFAD09' },
+  { slug: 'sound_money', label: 'Financial Freedom', emoji: '💰', color: '#8ECAE6' },
 ];
 
 // ENTRY_TYPES is kept for legacy callers. The canonical source is lib/contentSchema.js
