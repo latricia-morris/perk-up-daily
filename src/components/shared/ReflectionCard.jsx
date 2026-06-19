@@ -47,9 +47,9 @@ export default function ReflectionCard({ item, featured = false }) {
         {/* You said */}
         <div className="px-6 py-5">
           <p className="text-[10px] font-bold uppercase tracking-widest mb-3" style={{ color: '#C97F0E' }}>You said:</p>
-          <p className="font-display text-lg md:text-xl italic leading-relaxed text-center" style={{ color: '#2c1e0f' }}>
-            "{answerText}"
-          </p>
+           <p className="font-display text-lg md:text-xl italic leading-relaxed" style={{ color: '#2c1e0f' }}>
+             "{answerText}"
+           </p>
 
           <div className="mt-5 flex items-center justify-center gap-3 absolute bottom-6 right-6">
             <Button
