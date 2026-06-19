@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { Image } from 'lucide-react';
+import { getSchema } from '@/lib/contentSchema';
 import CategoryBadge from '@/components/shared/CategoryBadge';
 import EntryTypePageShell from '@/components/vault/EntryTypePageShell';
 
@@ -17,6 +18,6 @@ export default function MicroStories() {
   });
 
   return (
-    <EntryTypePageShell title="Micro-Stories" icon={Image} entries={entries} user={user} emptyText="No micro-stories yet. Log your first one." queryKey="entries-micro-stories" />
+    <EntryTypePageShell title="Micro-Stories" icon={Image} entries={entries} user={user} emptyText="No micro-stories yet. Log your first one." queryKey="entries-micro-stories" descriptor={getSchema('experience')?.descriptor} />
   );
 }

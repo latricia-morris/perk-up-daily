@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { ArrowLeftRight } from 'lucide-react';
+import { getSchema } from '@/lib/contentSchema';
 import EntryTypePageShell from '@/components/vault/EntryTypePageShell';
 
 export default function IdentityUpgrades() {
@@ -14,6 +15,6 @@ export default function IdentityUpgrades() {
   });
 
   return (
-    <EntryTypePageShell title="Identity Upgrades" icon={ArrowLeftRight} entries={entries} user={user} emptyText="No identity upgrades yet. Release a lie, step into your truth." queryKey="entries-identity-upgrades" />
+    <EntryTypePageShell title="Identity Upgrades" icon={ArrowLeftRight} entries={entries} user={user} emptyText="No identity upgrades yet. Release a lie, step into your truth." queryKey="entries-identity-upgrades" descriptor={getSchema('identity_swap')?.descriptor} />
   );
 }

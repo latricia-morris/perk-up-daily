@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Navigate } from 'react-router-dom';
 import { BookOpen } from 'lucide-react';
+import { getSchema } from '@/lib/contentSchema';
 import VaultEntryCard from '@/components/vault/VaultEntryCard';
 import UpliftCard from '@/components/shared/UpliftCard';
 import SourceToggle from '@/components/shared/SourceToggle';
@@ -37,10 +38,11 @@ export default function Scriptures() {
   return (
     <div>
       <div className="max-w-2xl mx-auto px-6 py-8">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-2">
           <h1 className="font-display text-2xl font-semibold text-foreground">Scriptures</h1>
           <SourceToggle value={source} onChange={setSource} />
         </div>
+        <p className="text-sm mb-6" style={{ color: '#7a5c3a' }}>{getSchema('scripture')?.descriptor}</p>
 
         {allScriptures.length === 0 ? (
           <div className="text-center py-16 text-muted-foreground">

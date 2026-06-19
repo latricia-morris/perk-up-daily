@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { Award } from 'lucide-react';
+import { getSchema } from '@/lib/contentSchema';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { getFilteredCategories } from '@/lib/constants';
 import VaultEntryCard from '@/components/vault/VaultEntryCard';
@@ -30,7 +31,7 @@ export default function Accomplishments() {
   return (
     <div className="md:ml-64">
       <div className="max-w-2xl mx-auto px-6 py-8">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-2">
           <h1 className="font-display text-2xl font-semibold text-foreground">Accomplishments</h1>
           <Select value={catFilter} onValueChange={setCatFilter}>
             <SelectTrigger className="w-44">
@@ -44,6 +45,7 @@ export default function Accomplishments() {
             </SelectContent>
           </Select>
         </div>
+        <p className="text-sm mb-6" style={{ color: '#7a5c3a' }}>{getSchema('life_win')?.descriptor}</p>
 
         {filtered.length === 0 ? (
           <div className="text-center py-16 text-muted-foreground">

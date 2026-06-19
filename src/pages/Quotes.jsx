@@ -5,6 +5,7 @@ import { Quote as QuoteIcon } from 'lucide-react';
 import VaultEntryCard from '@/components/vault/VaultEntryCard';
 import UpliftCard from '@/components/shared/UpliftCard';
 import SourceToggle from '@/components/shared/SourceToggle';
+import { getSchema } from '@/lib/contentSchema';
 
 export default function Quotes() {
   const [user, setUser] = useState(null);
@@ -32,10 +33,11 @@ export default function Quotes() {
   return (
     <div>
       <div className="max-w-2xl mx-auto px-6 py-8">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-2">
           <h1 className="font-display text-2xl font-semibold text-foreground">Quotes</h1>
           <SourceToggle value={source} onChange={setSource} />
         </div>
+        <p className="text-sm mb-6" style={{ color: '#7a5c3a' }}>{getSchema('quote')?.descriptor}</p>
 
         {allQuotes.length === 0 ? (
           <div className="text-center py-16 text-muted-foreground">

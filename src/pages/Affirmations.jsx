@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Sparkles } from 'lucide-react';
 import { getFilteredCategories } from '@/lib/constants';
+import { getSchema } from '@/lib/contentSchema';
 import VaultEntryCard from '@/components/vault/VaultEntryCard';
 import UpliftCard from '@/components/shared/UpliftCard';
 import SourceToggle from '@/components/shared/SourceToggle';
@@ -33,10 +34,11 @@ export default function Affirmations() {
   return (
     <div>
       <div className="max-w-2xl mx-auto px-6 py-8">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-2">
           <h1 className="font-display text-2xl font-semibold text-foreground">Affirmations</h1>
           <SourceToggle value={source} onChange={setSource} />
         </div>
+        <p className="text-sm mb-6" style={{ color: '#7a5c3a' }}>{getSchema('affirmation')?.descriptor}</p>
 
         {allAffirmations.length === 0 ? (
           <div className="text-center py-16 text-muted-foreground">

@@ -122,16 +122,17 @@ function EntryCard({ entry, index, queryKey }) {
   );
 }
 
-export default function EntryTypePageShell({ title, icon: Icon, entries, user, emptyText, queryKey }) {
+export default function EntryTypePageShell({ title, icon: Icon, entries, user, emptyText, queryKey, descriptor }) {
   return (
     <div>
       <div className="max-w-2xl mx-auto px-6 py-8">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-2">
           <h1 className="font-display text-2xl font-semibold text-foreground">{title}</h1>
           <Link to="/add-entry" className="flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary/80 transition-colors">
             <PlusCircle className="w-4 h-4" /> Add
           </Link>
         </div>
+        {descriptor && <p className="text-sm mb-6" style={{ color: '#7a5c3a' }}>{descriptor}</p>}
 
         {entries.length === 0 ? (
           <div className="text-center py-16 text-muted-foreground">

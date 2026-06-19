@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { FileText } from 'lucide-react';
+import { getSchema } from '@/lib/contentSchema';
 import EntryTypePageShell from '@/components/vault/EntryTypePageShell';
 
 export default function Notes() {
@@ -14,6 +15,6 @@ export default function Notes() {
   });
 
   return (
-    <EntryTypePageShell title="Notes" icon={FileText} entries={entries} user={user} emptyText="No notes yet. Write something worth remembering." queryKey="entries-notes" />
+    <EntryTypePageShell title="Notes" icon={FileText} entries={entries} user={user} emptyText="No notes yet. Write something worth remembering." queryKey="entries-notes" descriptor={getSchema('personal_note')?.descriptor} />
   );
 }

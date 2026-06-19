@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Heart } from 'lucide-react';
+import { getSchema } from '@/lib/contentSchema';
 import EntryTypePageShell from '@/components/vault/EntryTypePageShell';
 
 export default function Blessings() {
@@ -14,6 +15,6 @@ export default function Blessings() {
   });
 
   return (
-    <EntryTypePageShell title="Blessings" icon={Heart} entries={entries} user={user} emptyText="No blessings logged yet. Start capturing what you're grateful for." queryKey="entries-blessings" />
+    <EntryTypePageShell title="Blessings" icon={Heart} entries={entries} user={user} emptyText="No blessings logged yet. Start capturing what you're grateful for." queryKey="entries-blessings" descriptor={getSchema('blessing')?.descriptor} />
   );
 }
