@@ -23,7 +23,7 @@ export default function Admin() {
     );
   }
 
-  if (user?.role !== 'admin') {
+  if (user?.role !== 'admin' || user?.email !== 'latricia@thebrandrevivalist.com') {
     return <Navigate to="/dashboard" replace />;
   }
 

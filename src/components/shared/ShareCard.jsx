@@ -35,10 +35,12 @@ async function renderCardToCanvas(item, w, h) {
   canvas.height = h;
   const ctx = canvas.getContext('2d');
 
-  // Background gradient
+  // Background gradient - fluid warm gradient for all card types
   const grad = ctx.createLinearGradient(0, 0, w, h);
-  grad.addColorStop(0, 'rgba(212,131,10,0.18)');
-  grad.addColorStop(0.6, '#fffdf8');
+  grad.addColorStop(0, '#ffffff');
+  grad.addColorStop(0.3, '#fff2de');
+  grad.addColorStop(0.65, '#faf3ec');
+  grad.addColorStop(1, '#fff0c5');
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, w, h);
 
@@ -64,11 +66,11 @@ async function renderCardToCanvas(item, w, h) {
     const sectionGap = scalePx(48, w);
     const dividerH = scalePx(2, w);
 
-    // Draw background accent strip at top
+    // Draw background accent strip at top - fluid gradient
     const stripH = Math.round(h * 0.38);
     const stripGrad = ctx.createLinearGradient(0, 0, w, stripH);
-    stripGrad.addColorStop(0, 'rgba(212,131,10,0.18)');
-    stripGrad.addColorStop(1, 'rgba(212,131,10,0.04)');
+    stripGrad.addColorStop(0, '#fff2de');
+    stripGrad.addColorStop(1, '#faf3ec');
     ctx.fillStyle = stripGrad;
     ctx.fillRect(0, 0, w, stripH);
 
@@ -206,7 +208,7 @@ async function renderCardToCanvas(item, w, h) {
   const textWidth      = w - EDGE_PAD * 2;
 
   // ── Starting font size by character count ────────────────────────────────
-  const isQuoteStyle = ['quote', 'scripture', 'affirmation'].includes(entryType);
+  const isQuoteStyle = ['quote', 'scripture', 'affirmation', 'power_up'].includes(entryType);
   const displayBody  = isQuoteStyle ? `"${body}"` : body;
   const charCount    = displayBody.length;
 
@@ -229,6 +231,7 @@ async function renderCardToCanvas(item, w, h) {
   const attrLines = [];
   if (entryType === 'quote' && author) attrLines.push(`— ${author}`);
   if (entryType === 'scripture' && reference) attrLines.push(reference);
+  if (entryType === 'power_up' && author) attrLines.push(`— ${author}`);
   if (['experience', 'blessing', 'life_win'].includes(entryType)) {
     const parts = [];
     if (location) parts.push(location);
@@ -332,7 +335,7 @@ async function renderCardToCanvas(item, w, h) {
   // ── Draw main body ────────────────────────────────────────────────────────
   ctx.save();
   ctx.font = bodyFont;
-  ctx.fillStyle = entryType === 'identity_swap' ? '#d4830a' : '#2c1e0f';
+  ctx.fillStyle = entryType === 'identity_swap' ? '#d4830a' : (entryType === 'power_up' ? '#F98426' : '#2c1e0f');
   ctx.textAlign = 'center';
   bodyLines.forEach((line, i) => {
     ctx.fillText(line, centerX, cursor + i * lineHeight + bodyFontSize);

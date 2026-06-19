@@ -117,13 +117,27 @@ export const CONTENT_SCHEMA = {
       category:  { show: { form: true,  edit: true,  tile: false, social: false } },
     },
   },
+  power_up: {
+    label: 'Power-Up',
+    slug: 'power_up',
+    allowPhoto: false,
+    requiresChristian: false,
+    color: '#F98426',
+    descriptor: 'A curated collection of wisdom, encouragement, and insight. These are here to help you power up your day and level up your life.',
+    fields: {
+      body:     { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Power-Up', placeholder: 'The insight...' },
+      author:   { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Author',   placeholder: 'Who shared this?', optional: true },
+      category: { show: { form: true,  edit: true,  tile: false, social: false } },
+    },
+  },
 };
 
 /** Get schema for a single entry type */
 export function getSchema(entryType) {
   // Legacy slug mapping
   if (entryType === 'accomplishment' || entryType === 'milestone') return CONTENT_SCHEMA['life_win'];
-  if (entryType === 'encouragement_note') return CONTENT_SCHEMA['personal_note'];
+  if (entryType === 'encouragement_note') return CONTENT_SCHEMA['power_up'];
+  if (entryType === 'personal_note') return CONTENT_SCHEMA['power_up'];
   return CONTENT_SCHEMA[entryType] || null;
 }
 
@@ -198,6 +212,7 @@ export function fieldVisible(entryType, fieldKey, surface) {
 export function getDisplayLabel(entryType, category) {
   const normalized = entryType || '';
   const legacy = normalized === 'accomplishment' || normalized === 'milestone' ? 'life_win'
+    : (normalized === 'encouragement_note' || normalized === 'personal_note') ? 'power_up'
     : normalized;
   if (legacy === 'quote' && category === 'strong_body') return 'Power Ups';
   return getSchema(legacy)?.label || legacy;

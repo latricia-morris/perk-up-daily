@@ -85,12 +85,12 @@ export default function ReflectionCard({ item, featured = false }) {
         </div>
 
         {/* We asked */}
-        <p className="text-[10px] italic mb-1" style={{ color: '#c4a882' }}>
+        <p className="text-[10px] italic mb-2" style={{ color: '#c4a882' }}>
           We asked: {promptText}
         </p>
 
         {/* You said */}
-        <p className="font-display text-sm italic leading-relaxed line-clamp-3" style={{ color: '#2c1e0f' }}>
+        <p className="font-display text-sm italic leading-relaxed line-clamp-2" style={{ color: '#2c1e0f' }}>
           "{answerText}"
         </p>
 

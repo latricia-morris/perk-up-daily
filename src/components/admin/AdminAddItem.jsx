@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,7 @@ import { Check, Loader2 } from 'lucide-react';
 
 export default function AdminAddItem() {
   const queryClient = useQueryClient();
+  const [user, setUser] = useState(null);
   const [form, setForm] = useState({
     content_type: '',
     body: '',
@@ -22,11 +23,22 @@ export default function AdminAddItem() {
   });
   const [saved, setSaved] = useState(false);
 
+  useEffect(() => {
+    base44.auth.me().then(u => setUser(u));
+  }, []);
+
   const mutation = useMutation({
     mutationFn: (data) => base44.entities.AppLibrary.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-library'] });
-      setForm({ content_type: '', body: '', author: '', category: '', is_christian: false, status: 'active' });
+      setForm({ 
+        content_type: '', 
+        body: '', 
+        author: user?.full_name || '', 
+        category: '', 
+        is_christian: false, 
+        status: 'active' 
+      });
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     },
@@ -60,6 +72,9 @@ export default function AdminAddItem() {
               {CATEGORIES.map(c => <SelectItem key={c.slug} value={c.slug}>{c.label}</SelectItem>)}
             </SelectContent>
           </Select>
+          {form.content_type === 'power_up' && (
+            <p className="text-xs text-muted-foreground mt-1">Power-Ups should not receive more than one daily unless users shuffle to it.</p>
+          )}
         </div>
 
         <div>
@@ -76,15 +91,23 @@ export default function AdminAddItem() {
           <Label className="text-sm font-medium mb-1.5 block">
             Author / Attribution
             {form.content_type === 'quote' && <span className="text-destructive ml-1">*</span>}
-            {form.content_type !== 'quote' && <span className="text-muted-foreground ml-1">(optional)</span>}
+            {form.content_type === 'power_up' && <span className="text-muted-foreground ml-1">(auto-filled with your name)</span>}
+            {form.content_type !== 'quote' && form.content_type !== 'power_up' && <span className="text-muted-foreground ml-1">(optional)</span>}
           </Label>
           <Input
             value={form.author}
             onChange={e => setForm(prev => ({ ...prev, author: e.target.value }))}
-            placeholder={form.content_type === 'scripture' ? 'e.g. Jeremiah 29:11 NIV' : 'Author name'}
+            placeholder={
+              form.content_type === 'scripture' ? 'e.g. Jeremiah 29:11 NIV' : 
+              form.content_type === 'power_up' ? user?.full_name || 'Author name' :
+              'Author name'
+            }
           />
           {form.content_type === 'scripture' && (
             <p className="text-xs text-muted-foreground mt-1">Use the Bible reference as the author (e.g. John 3:16 NIV)</p>
+          )}
+          {form.content_type === 'power_up' && (
+            <p className="text-xs text-muted-foreground mt-1">Leave blank to exclude author attribution on the card.</p>
           )}
         </div>
 
