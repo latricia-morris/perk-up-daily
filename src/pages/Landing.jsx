@@ -327,6 +327,36 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* ── SECTION 3.5: PERK UP PLAYS IT BACK ────────────────────────── */}
+      <section className="py-12 md:py-16">
+        <div className="max-w-3xl mx-auto px-6">
+          <p className="font-semibold text-sm mb-3" style={{ color: '#E8A838' }}>Your best moments deserve more than a box in the basement.</p>
+          <h3 className="font-display text-2xl md:text-3xl font-semibold mb-6" style={{ color: '#2c1e0f' }}>
+            Perk Up plays it back.
+          </h3>
+          <div className="space-y-4 text-sm leading-relaxed" style={{ color: '#4a3520' }}>
+            <p>Journaling is great, until it isn't. Traditional journals leave your best moments collecting dust—on a physical shelf or in an endless digital log. They're forgotten by everyone except those who make a practice of digging through the pile to find the "worthwhile" moment.</p>
+            <p>Perk Up finds them for you. We add your best moments into your daily rotation, mixing them in with our curated wisdom. Each entry you store makes its way into the mix, so you don't just get a bunch of generic positive quotes; you get to relive the moments that have actually meant the most to you.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── SECTION 3.6: THE ENGINE FOR YOUR EVOLUTION ────────────────── */}
+      <section className="py-12 md:py-16">
+        <div className="max-w-3xl mx-auto px-6">
+          <p className="font-semibold text-sm mb-3" style={{ color: '#E8A838' }}>The Engine for Your Evolution</p>
+          <h3 className="font-display text-2xl md:text-3xl font-semibold mb-6" style={{ color: '#2c1e0f' }}>
+            Perk Up celebrates &amp; elevates YOU.
+          </h3>
+          <div className="space-y-4 text-sm leading-relaxed" style={{ color: '#4a3520' }}>
+            <p><strong>We don't just track your milestones; we help you build momentum toward bigger life wins.</strong></p>
+            <p>There is a common thread among many of today's most successful, adored, and influential people. They have learned the art of mindset shifts that propel them toward a brighter future.</p>
+            <p>This isn't just positive thinking—it's allowing yourself to process the world through distinct filters, choosing for yourself the kind of life you want and how you will define your own experience.</p>
+            <p>We guide you through your growth with intentional questions and prompts that give you room to identify opportunities to elevate your thinking and choose who you want to be.</p>
+          </div>
+        </div>
+      </section>
+
       {/* ── SECTION 4: MORE SOCIAL PROOF ─────────────────────────────── */}
       <section className="py-12 md:py-16">
         <div className="max-w-3xl mx-auto px-6">
