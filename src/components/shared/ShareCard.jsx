@@ -67,7 +67,7 @@ async function renderCardToCanvas(item, w, h) {
     // Draw background accent strip at top
     const stripH = Math.round(h * 0.38);
     const stripGrad = ctx.createLinearGradient(0, 0, w, stripH);
-    stripGrad.addColorStop(0, 'rgba(212,131,10,0.22)');
+    stripGrad.addColorStop(0, 'rgba(212,131,10,0.18)');
     stripGrad.addColorStop(1, 'rgba(212,131,10,0.04)');
     ctx.fillStyle = stripGrad;
     ctx.fillRect(0, 0, w, stripH);
@@ -105,7 +105,7 @@ async function renderCardToCanvas(item, w, h) {
     // Divider
     const dividerY = topY + LABEL_FONT + labelGap + shownPromptLines.length * promptLH + sectionGap * 0.6;
     ctx.save();
-    ctx.strokeStyle = 'rgba(212,131,10,0.25)';
+    ctx.strokeStyle = 'rgba(212,131,10,0.15)';
     ctx.lineWidth = dividerH;
     ctx.beginPath();
     ctx.moveTo(EDGE_PAD, dividerY);
