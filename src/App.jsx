@@ -24,7 +24,7 @@ import Milestones from '@/pages/Milestones';
 import Accomplishments from '@/pages/Accomplishments';
 import Affirmations from '@/pages/Affirmations';
 import Scriptures from '@/pages/Scriptures';
-import Memories from '@/pages/Memories';
+import MicroStories from '@/pages/MicroStories';
 import Blessings from '@/pages/Blessings';
 import Quotes from '@/pages/Quotes';
 import Notes from '@/pages/Notes';
@@ -76,7 +76,7 @@ const AuthenticatedApp = () => {
           <Route path="/accomplishments" element={<Accomplishments />} />
           <Route path="/affirmations" element={<Affirmations />} />
           <Route path="/scriptures" element={<Scriptures />} />
-          <Route path="/memories" element={<Memories />} />
+          <Route path="/micro-stories" element={<MicroStories />} />
           <Route path="/blessings" element={<Blessings />} />
           <Route path="/quotes" element={<Quotes />} />
           <Route path="/notes" element={<Notes />} />

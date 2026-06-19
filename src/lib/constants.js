@@ -9,12 +9,11 @@ export const CATEGORIES = [
 
 // ENTRY_TYPES is kept for legacy callers. The canonical source is lib/contentSchema.js
 export const ENTRY_TYPES = [
-  { slug: 'experience', label: 'Memory', allowPhoto: true },
+  { slug: 'experience', label: 'Micro-Story', allowPhoto: true },
   { slug: 'blessing', label: 'Blessing', allowPhoto: true },
   { slug: 'life_win', label: 'Life Win', allowPhoto: true },
   { slug: 'affirmation', label: 'Affirmation', allowPhoto: false },
   { slug: 'quote', label: 'Quote', allowPhoto: false },
-  { slug: 'personal_note', label: 'Note', allowPhoto: false },
   { slug: 'identity_swap', label: 'Identity Upgrade', allowPhoto: false },
   { slug: 'scripture', label: 'Scripture', requiresChristian: true, allowPhoto: false },
 ];
@@ -23,7 +22,6 @@ export const CONTENT_TYPES = [
   { slug: 'quote', label: 'Quote' },
   { slug: 'affirmation', label: 'Affirmation' },
   { slug: 'scripture', label: 'Scripture', requiresChristian: true },
-  { slug: 'encouragement_note', label: 'Encouragement Note' },
 ];
 
 export function getCategoryLabel(slug) {

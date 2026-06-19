@@ -19,12 +19,11 @@ const mainNav = [
 
 const libraryNav = [
   { path: '/reflections', icon: PenLine, label: 'Reflections' },
-  { path: '/memories', icon: Image, label: 'Memories' },
+  { path: '/micro-stories', icon: Image, label: 'Micro-Stories' },
   { path: '/blessings', icon: Heart, label: 'Blessings' },
   { path: '/milestones', icon: Trophy, label: 'Life Wins' },
   { path: '/affirmations', icon: Zap, label: 'Affirmations' },
   { path: '/quotes', icon: Quote, label: 'Quotes' },
-  { path: '/notes', icon: FileText, label: 'Notes' },
   { path: '/identity-upgrades', icon: ArrowLeftRight, label: 'Identity Upgrades' },
 ];
 
@@ -63,7 +62,7 @@ function SidebarContent({ user, onNavClick }) {
   return (
     <div className="flex flex-col min-h-full">
       <Link to="/dashboard" onClick={onNavClick} className="mb-10 flex items-center gap-3">
-        <img src="https://media.base44.com/images/public/6a312911bcddb0806c388af8/11e411456_bird2.png" alt="Perk Up Daily" className="w-8 h-8 object-contain shrink-0" />
+        <img src="https://media.base44.com/images/public/6a312911bcddb0806c388af8/ad5333c2c_PerkUpKingfisher.png" alt="Perk Up Daily" className="w-8 h-8 object-contain shrink-0" />
         <div>
           <h1 style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 600, fontSize: '14px', letterSpacing: '0.2em', textTransform: 'uppercase', lineHeight: 1.1 }} className="text-foreground">Perk Up Daily</h1>
           <p className="text-xs text-muted-foreground mt-0.5">Your daily dose of good</p>
@@ -142,7 +141,7 @@ export default function AppLayout() {
       <header className="md:hidden fixed top-0 left-0 right-0 z-50 border-b border-border/60" style={{ paddingTop: 'env(safe-area-inset-top)', background: 'linear-gradient(135deg, rgba(212,131,10,0.12) 0%, rgba(253,248,240,0.82) 60%)', backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)' }}>
         <div className="flex items-center justify-between px-4 py-3">
           <Link to="/dashboard" className="flex items-center gap-2">
-            <img src="https://media.base44.com/images/public/6a312911bcddb0806c388af8/11e411456_bird2.png" alt="Perk Up Daily" className="w-7 h-7 object-contain" />
+            <img src="https://media.base44.com/images/public/6a312911bcddb0806c388af8/ad5333c2c_PerkUpKingfisher.png" alt="Perk Up Daily" className="w-7 h-7 object-contain" />
             <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 600, fontSize: '13px', letterSpacing: '0.2em', textTransform: 'uppercase', lineHeight: 1.1 }} className="text-foreground">Perk Up Daily</span>
           </Link>
           <button

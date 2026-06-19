@@ -10,10 +10,11 @@
 
 export const CONTENT_SCHEMA = {
   experience: {
-    label: 'Memory',
+    label: 'Micro-Story',
     slug: 'experience',
     allowPhoto: true,
     requiresChristian: false,
+    descriptor: 'Something you saw or experienced cracked you up, caught you by surprise, or just hit you in all the right ways. Let\'s capture that story.',
     fields: {
       body:     { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'What happened?',      placeholder: 'Tell the story...' },
       location: { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Location',            placeholder: 'e.g. Yosemite, our kitchen', optional: true },
@@ -27,6 +28,7 @@ export const CONTENT_SCHEMA = {
     slug: 'blessing',
     allowPhoto: true,
     requiresChristian: false,
+    descriptor: 'What was something good that came your way? Name it.',
     fields: {
       body:     { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Describe the blessing', placeholder: 'What are you grateful for?' },
       date:     { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Date',                  optional: true },
@@ -39,6 +41,7 @@ export const CONTENT_SCHEMA = {
     slug: 'life_win',
     allowPhoto: true,
     requiresChristian: false,
+    descriptor: 'Be it a goal hit, a habit kept, a fear faced, your wins deserve to be celebrated.',
     fields: {
       body:     { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'What was the win?', placeholder: 'Describe your win...' },
       date:     { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Date',              optional: true },
@@ -51,6 +54,7 @@ export const CONTENT_SCHEMA = {
     slug: 'affirmation',
     allowPhoto: false,
     requiresChristian: false,
+    descriptor: 'Choose what you\'re going to believe about yourself today. Say it with your chest.',
     fields: {
       body:     { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Affirmation', placeholder: 'I am...' },
       category: { show: { form: true,  edit: true,  tile: false, social: false } },
@@ -61,29 +65,20 @@ export const CONTENT_SCHEMA = {
     slug: 'quote',
     allowPhoto: false,
     requiresChristian: false,
+    descriptor: 'Someone said it and you needed to hear it. Let\'s hold onto that.',
     fields: {
       body:     { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Quote',  placeholder: 'The quote text...' },
       author:   { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Author', placeholder: 'Who said it?', optional: true },
       category: { show: { form: true,  edit: true,  tile: false, social: false } },
     },
   },
-  personal_note: {
-    label: 'Note',
-    slug: 'personal_note',
-    allowPhoto: true,
-    requiresChristian: false,
-    fields: {
-      body:     { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Note',  placeholder: 'Write your note...' },
-      date:     { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Date',  optional: true },
-      photo:    { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Photo', optional: true },
-      category: { show: { form: true,  edit: true,  tile: false, social: false } },
-    },
-  },
+
   identity_swap: {
     label: 'Identity Upgrade',
     slug: 'identity_swap',
     allowPhoto: false,
     requiresChristian: false,
+    descriptor: 'Who are you? Who will you choose to be?',
     fields: {
       old_belief: { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'My Old Lie-dentity', placeholder: 'I used to believe that I...' },
       body:       { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'My True Identity',   placeholder: 'The truth is, I am...' },
@@ -95,6 +90,7 @@ export const CONTENT_SCHEMA = {
     slug: 'reflection',
     allowPhoto: false,
     requiresChristian: false,
+    descriptor: 'Growth lives in the pause. Take a brief moment to process, then drop your straightest answer here.',
     fields: {
       title:    { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Reflection prompt', placeholder: 'What question are you sitting with?' },
       body:     { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Your answer',        placeholder: 'Write your honest answer...' },
@@ -106,6 +102,7 @@ export const CONTENT_SCHEMA = {
     slug: 'scripture',
     allowPhoto: false,
     requiresChristian: true,
+    descriptor: 'Drop the verse that\'s speaking to you right now so we can add it to your daily dose.',
     fields: {
       body:      { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Scripture',  placeholder: 'The scripture text...' },
       reference: { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Reference',  placeholder: 'e.g. Jeremiah 29:11 NIV', optional: true },
@@ -193,7 +190,6 @@ export function fieldVisible(entryType, fieldKey, surface) {
 export function getDisplayLabel(entryType, category) {
   const normalized = entryType || '';
   const legacy = normalized === 'accomplishment' || normalized === 'milestone' ? 'life_win'
-    : normalized === 'encouragement_note' ? 'personal_note'
     : normalized;
   if (legacy === 'quote' && category === 'strong_body') return 'Power Ups';
   return getSchema(legacy)?.label || legacy;
