@@ -74,6 +74,16 @@ export default function Reflections() {
   const [answer, setAnswer] = useState('');
   const [saved, setSaved] = useState(false);
   const [showPast, setShowPast] = useState(false);
+  const textareaRef = useState(null);
+
+  const handleTextareaFocus = (e) => {
+    e.target.style.border = '1px solid rgba(212,131,10,0.5)';
+    e.target.style.background = '#fff';
+    // Scroll textarea into view after keyboard opens
+    setTimeout(() => {
+      e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 350);
+  };
 
   const { data: libraryPrompts = [] } = useQuery({
     queryKey: ['reflection-prompts'],
@@ -124,7 +134,7 @@ export default function Reflections() {
   const canSave = answer.trim().length >= 3 && !saved;
 
   return (
-    <div className="min-h-screen p-4 md:p-8 max-w-2xl mx-auto pb-[env(safe-area-inset-bottom,40px)]">
+    <div className="min-h-screen p-4 md:p-8 max-w-2xl mx-auto" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 16px), 120px)' }}>
 
       {/* Header */}
       <div className="mb-8">
@@ -183,7 +193,7 @@ export default function Reflections() {
                 color: '#2c1e0f',
                 fontFamily: 'var(--font-body)',
               }}
-              onFocus={e => { e.target.style.border = '1px solid rgba(212,131,10,0.5)'; e.target.style.background = '#fff'; }}
+              onFocus={handleTextareaFocus}
               onBlur={e => { e.target.style.border = '1px solid rgba(212,131,10,0.18)'; e.target.style.background = 'rgba(255,255,255,0.7)'; }}
             />
 
