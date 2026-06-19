@@ -198,14 +198,14 @@ export default function AppLayout() {
       </nav>
 
       {/* Main content with slide transitions */}
-      <main className="md:ml-64 pt-[53px] md:pt-0 pb-24 md:pb-6 overflow-hidden">
+      <main className="md:ml-64 pt-[53px] md:pt-0 pb-24 md:pb-6 min-h-screen">
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}
-            initial={{ opacity: 0, x: 100 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -100 }}
-            transition={{ duration: 0.25, ease: 'easeInOut' }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2, ease: 'easeInOut' }}
           >
             <Outlet />
           </motion.div>

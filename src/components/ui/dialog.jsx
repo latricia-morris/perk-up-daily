@@ -34,7 +34,7 @@ const DialogContent = React.forwardRef(({ className, children, ...props }, ref) 
         "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border border-amber-200/50 p-6 shadow-2xl duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] rounded-3xl",
         className
       )}
-      style={{ background: 'linear-gradient(160deg, rgba(255,253,248,0.88) 0%, rgba(254,243,220,0.80) 100%)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)' }}
+      style={{ background: 'linear-gradient(160deg, rgba(255,253,248,0.55) 0%, rgba(254,243,220,0.45) 100%)', backdropFilter: 'blur(28px)', WebkitBackdropFilter: 'blur(28px)', boxShadow: '0 8px 40px rgba(180,120,30,0.12), inset 0 1px 0 rgba(255,255,255,0.7)' }}
       {...props}>
       {children}
       <DialogPrimitive.Close
