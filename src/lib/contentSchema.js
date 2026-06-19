@@ -14,7 +14,7 @@ export const CONTENT_SCHEMA = {
     slug: 'experience',
     allowPhoto: true,
     requiresChristian: false,
-    color: '#F95826',
+    color: '#F2584D',
     descriptor: 'Something you saw or experienced cracked you up, caught you by surprise, or just hit you in all the right ways. Let\'s capture that story.',
     fields: {
       body:     { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'What happened?',      placeholder: 'Tell the story...' },
@@ -29,7 +29,7 @@ export const CONTENT_SCHEMA = {
     slug: 'blessing',
     allowPhoto: true,
     requiresChristian: false,
-    color: '#BA1650',
+    color: '#FF8559',
     descriptor: 'What was something good that came your way? Name it.',
     fields: {
       body:     { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Describe the blessing', placeholder: 'What are you grateful for?' },
@@ -109,7 +109,7 @@ export const CONTENT_SCHEMA = {
     slug: 'scripture',
     allowPhoto: false,
     requiresChristian: true,
-    color: '#5C3B8F',
+    color: '#006D5B',
     descriptor: 'Drop the verse that\'s speaking to you right now so we can add it to your daily dose.',
     fields: {
       body:      { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Scripture',  placeholder: 'The scripture text...' },

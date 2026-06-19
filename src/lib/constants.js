@@ -4,7 +4,7 @@ export const CATEGORIES = [
   { slug: 'strong_body', label: 'Strong Body', emoji: '💪', color: '#F95826' },
   { slug: 'clear_mind', label: 'Healthy Mind', emoji: '🧠', color: '#219EBC' },
   { slug: 'strong_business', label: 'Legacy Business', emoji: '🚀', color: '#FFAD09' },
-  { slug: 'sound_money', label: 'Financial Freedom', emoji: '💰', color: '#8ECAE6' },
+  { slug: 'sound_money', label: 'Financial Freedom', emoji: '💰', color: '#006D5B' },
 ];
 
 // ENTRY_TYPES is kept for legacy callers. The canonical source is lib/contentSchema.js
