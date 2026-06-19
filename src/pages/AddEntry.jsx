@@ -32,29 +32,23 @@ function ChipGroup({ options, value, onChange }) {
         const schema = getSchema(opt.slug);
         const typeColor = schema?.color;
         return (
-          <div key={opt.slug} className="flex flex-col items-start">
-            <button
-              type="button"
-              onClick={() => onChange(selected ? '' : opt.slug)}
-              className="h-11 px-4 rounded-full text-sm font-medium transition-all border"
-              style={selected ? {
-                background: typeColor || '#E6A037',
-                color: '#fff',
-                borderColor: typeColor || '#E6A037',
-              } : {
-                background: '#FDF8F0',
-                color: '#2F2C29',
-                borderColor: '#e2d5c0',
-              }}
-            >
-              {opt.label}
-            </button>
-            {selected && (
-              <p className="text-xs leading-snug mt-2 max-w-xs" style={{ color: '#7a5c3a' }}>
-                {schema?.descriptor}
-              </p>
-            )}
-          </div>
+          <button
+            key={opt.slug}
+            type="button"
+            onClick={() => onChange(selected ? '' : opt.slug)}
+            className="h-11 px-4 rounded-full text-sm font-medium transition-all border"
+            style={selected ? {
+              background: typeColor || '#E6A037',
+              color: '#fff',
+              borderColor: typeColor || '#E6A037',
+            } : {
+              background: '#FDF8F0',
+              color: '#2F2C29',
+              borderColor: '#e2d5c0',
+            }}
+          >
+            {opt.label}
+          </button>
         );
       })}
     </div>
@@ -269,6 +263,7 @@ export default function AddEntry() {
                     uploading={uploading}
                     onPhotoUpload={handlePhotoUpload}
                     currentPrompt={currentPrompt}
+                    descriptor={getSchema(entryType)?.descriptor}
                   />
 
                   {entryType !== 'reflection' && (
@@ -316,18 +311,19 @@ export default function AddEntry() {
 }
 
 /** Shared form fields component — driven entirely by the schema */
-export function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUpload, currentPrompt }) {
+export function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUpload, currentPrompt, descriptor }) {
   const f = (key) => form[key] ?? '';
   const set = (key) => (e) => setForm(prev => ({ ...prev, [key]: e.target.value }));
 
   // Helper: LimitedTextarea wired to a specific field
-  const LTA = ({ fieldKey, placeholder, className }) => {
+  const LTA = ({ fieldKey, placeholder, className, useDescriptor = false }) => {
     const lim = getLimit(entryType, fieldKey);
+    const finalPlaceholder = useDescriptor && descriptor ? descriptor : placeholder;
     return (
       <LimitedTextarea
         value={f(fieldKey)}
         onChange={set(fieldKey)}
-        placeholder={placeholder}
+        placeholder={finalPlaceholder}
         softLimit={lim.soft}
         hardLimit={lim.hard}
         className={className || 'min-h-[120px]'}
@@ -339,13 +335,11 @@ export function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUp
     <>
       <div>
         <Label className="text-sm font-medium mb-1.5 block">My Old Lie-dentity</Label>
-        <p className="text-xs text-muted-foreground mb-2">The false belief you're releasing</p>
-        <LTA fieldKey="old_belief" placeholder="I used to believe that I..." className="min-h-[100px]" />
+        <LTA fieldKey="old_belief" placeholder="I used to believe that I..." className="min-h-[100px]" useDescriptor={false} />
       </div>
       <div>
         <Label className="text-sm font-medium mb-1.5 block">My True Identity</Label>
-        <p className="text-xs text-muted-foreground mb-2">The truth you're stepping into</p>
-        <LTA fieldKey="body" placeholder="The truth is, I am..." className="min-h-[100px]" />
+        <LTA fieldKey="body" placeholder="The truth is, I am..." className="min-h-[100px]" useDescriptor={true} />
       </div>
     </>
   );
@@ -356,7 +350,7 @@ export function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUp
       <>
         <div>
           <Label className="text-sm font-medium mb-1.5 block">Quote</Label>
-          <LTA fieldKey="body" placeholder="The quote text..." />
+          <LTA fieldKey="body" placeholder="The quote text..." useDescriptor={true} />
         </div>
         <div>
           <Label className="text-sm font-medium mb-1.5 block">Author <span className="text-muted-foreground">(optional)</span></Label>
@@ -377,7 +371,7 @@ export function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUp
       <>
         <div>
           <Label className="text-sm font-medium mb-1.5 block">Scripture</Label>
-          <LTA fieldKey="body" placeholder="The scripture text..." />
+          <LTA fieldKey="body" placeholder="The scripture text..." useDescriptor={true} />
         </div>
         <div>
           <Label className="text-sm font-medium mb-1.5 block">Reference <span className="text-muted-foreground">(optional)</span></Label>
@@ -395,7 +389,7 @@ export function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUp
   if (entryType === 'affirmation') return (
     <div>
       <Label className="text-sm font-medium mb-1.5 block">Affirmation</Label>
-      <LTA fieldKey="body" placeholder="I am..." />
+      <LTA fieldKey="body" placeholder="I am..." useDescriptor={true} />
     </div>
   );
 
@@ -412,7 +406,7 @@ export function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUp
       </div>
       <div>
         <Label className="text-sm font-medium mb-1.5 block">Your knee-jerk response</Label>
-        <LTA fieldKey="body" placeholder="Write your response..." className="min-h-[140px]" />
+        <LTA fieldKey="body" placeholder="Write your response..." className="min-h-[140px]" useDescriptor={false} />
       </div>
     </>
   );
@@ -436,7 +430,7 @@ export function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUp
     <>
       <div>
         <Label className="text-sm font-medium mb-1.5 block">{labelMap[entryType] || 'Content'}</Label>
-        <LTA fieldKey="body" placeholder={placeholderMap[entryType] || ''} />
+        <LTA fieldKey="body" placeholder={placeholderMap[entryType] || ''} useDescriptor={true} />
       </div>
       {entryType === 'experience' && (
         <div>
