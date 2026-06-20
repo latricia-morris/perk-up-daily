@@ -202,7 +202,7 @@ export default function AppLayout() {
                 height: 56,
                 position: 'relative',
                 top: -18,
-                border: '12px solid #fef9f2',
+                border: '1px solid #fef9f2',
               }}
               aria-label="Add Entry"
             >
