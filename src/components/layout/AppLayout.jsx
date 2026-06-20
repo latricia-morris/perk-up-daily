@@ -193,7 +193,21 @@ export default function AppLayout() {
 
           {/* Center spacer for raised button */}
           <div className="w-16 flex justify-center">
-            
+          <Link
+              to="/add-entry"
+              className="flex flex-col items-center justify-center rounded-full shadow-lg active:scale-95 transition-transform"
+              style={{
+                background: 'linear-gradient(135deg, #E8A838 0%, #d4830a 100%)',
+                width: 56,
+                height: 56,
+                position: 'relative',
+                top: -18,
+                border: '1px solid #fef9f2',
+              }}
+              aria-label="Add Entry"
+            >
+              <PlusCircle className="w-7 h-7" style={{ color: '#fef9f2' }} strokeWidth={2} />
+            </Link>  
           </div>
 
           {/* Right tabs */}
