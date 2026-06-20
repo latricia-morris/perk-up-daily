@@ -42,6 +42,21 @@ export default function Dashboard() {
         return;
       }
 
+      // Grace period: 3 days after payment failure
+      if (u.subscription_status === 'grace_period' && u.grace_period_start) {
+        const graceStart = new Date(u.grace_period_start);
+        const daysInGrace = Math.floor((new Date() - graceStart) / (1000 * 60 * 60 * 24));
+        if (daysInGrace >= 3) {
+          // Grace period expired — cancel and redirect to paywall
+          base44.auth.updateMe({
+            subscription_status: 'cancelled',
+            cancelled_date: new Date().toISOString().split('T')[0],
+          });
+          window.location.href = '/paywall';
+          return;
+        }
+      }
+
       setUser(u);
 
       // Check if it's their birthday
@@ -56,6 +71,9 @@ export default function Dashboard() {
         base44.auth.updateMe({
           christian_content: christianContent || false,
           selected_categories: JSON.stringify(selectedCategories || []),
+          morning_enabled: u.morning_enabled !== false ? true : u.morning_enabled,
+          midday_enabled: u.midday_enabled !== false ? true : u.midday_enabled,
+          evening_enabled: u.evening_enabled !== false ? true : u.evening_enabled,
           onboarding_completed: true,
           subscription_status: u.subscription_status || 'trial',
           trial_start_date: u.trial_start_date || new Date().toISOString().split('T')[0],
@@ -106,6 +124,23 @@ export default function Dashboard() {
     </AnimatePresence>
     <PullToRefresh onRefresh={handleDashboardRefresh}>
       <div className="max-w-2xl mx-auto px-6 py-8 md:py-12">
+        {/* Grace period warning banner */}
+        {user?.subscription_status === 'grace_period' && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 p-4 rounded-2xl border border-primary/40 bg-primary/10"
+          >
+            <p className="text-sm font-semibold text-primary mb-1">
+              Payment failed — your account is in a grace period.
+            </p>
+            <p className="text-xs text-foreground/70">
+              You have limited time to update your payment info before access is removed.{' '}
+              <Link to="/settings" className="underline font-medium text-primary">Update now</Link>
+            </p>
+          </motion.div>
+        )}
+
         {/* Greeting */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}

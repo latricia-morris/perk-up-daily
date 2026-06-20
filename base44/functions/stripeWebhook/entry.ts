@@ -51,9 +51,33 @@ Deno.serve(async (req) => {
         subscription_status: status,
         stripe_customer_id: session.customer,
         stripe_subscription_id: subscriptionId,
+        grace_period_start: null,
+        cancelled_date: null,
       });
 
       console.log(`Updated user ${user.id} subscription_status to ${status}`);
+    }
+
+    if (event.type === 'invoice.payment_failed') {
+      const invoice = event.data.object;
+      const customerId = invoice.customer;
+
+      const users = await base44.asServiceRole.entities.User.filter({ stripe_customer_id: customerId });
+      if (!users || users.length === 0) {
+        console.error('No user found for Stripe customer:', customerId);
+        return Response.json({ received: true });
+      }
+
+      const user = users[0];
+
+      // Only enter grace period if currently active/trial (don't re-trigger for already cancelled)
+      if (user.subscription_status === 'active' || user.subscription_status === 'trial') {
+        await base44.asServiceRole.entities.User.update(user.id, {
+          subscription_status: 'grace_period',
+          grace_period_start: new Date().toISOString(),
+        });
+        console.log(`User ${user.id} entered grace period due to payment failure`);
+      }
     }
 
     if (event.type === 'customer.subscription.updated' || event.type === 'customer.subscription.deleted') {
@@ -69,21 +93,37 @@ Deno.serve(async (req) => {
 
       const user = users[0];
       let newStatus;
+      let updateData = {};
 
       if (event.type === 'customer.subscription.deleted') {
         newStatus = 'cancelled';
+        updateData.cancelled_date = new Date().toISOString().split('T')[0];
       } else {
         const s = subscription.status;
-        if (s === 'active') newStatus = 'active';
-        else if (s === 'trialing') newStatus = 'trial';
-        else if (s === 'canceled' || s === 'cancelled') newStatus = 'cancelled';
-        else newStatus = 'expired';
+        if (s === 'active') {
+          newStatus = 'active';
+          updateData.grace_period_start = null;
+          updateData.cancelled_date = null;
+        } else if (s === 'trialing') {
+          newStatus = 'trial';
+          updateData.grace_period_start = null;
+        } else if (s === 'canceled' || s === 'cancelled') {
+          newStatus = 'cancelled';
+          updateData.cancelled_date = new Date().toISOString().split('T')[0];
+        } else if (s === 'past_due' || s === 'unpaid') {
+          // Keep in grace period if already there, otherwise set it
+          newStatus = user.subscription_status === 'grace_period' ? 'grace_period' : 'grace_period';
+          if (!user.grace_period_start) {
+            updateData.grace_period_start = new Date().toISOString();
+          }
+        } else {
+          newStatus = 'expired';
+        }
       }
 
-      await base44.asServiceRole.entities.User.update(user.id, {
-        subscription_status: newStatus,
-      });
+      updateData.subscription_status = newStatus;
 
+      await base44.asServiceRole.entities.User.update(user.id, updateData);
       console.log(`Updated user ${user.id} subscription_status to ${newStatus}`);
     }
   } catch (err) {

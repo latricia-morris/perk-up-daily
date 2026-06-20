@@ -79,9 +79,7 @@ export default function Onboarding() {
   const [birthday, setBirthday] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [countryCode, setCountryCode] = useState('US');
-  const [deliveryMethod, setDeliveryMethod] = useState(null);
   const [smsConsent, setSmsConsent] = useState(false);
-  const [showNoneConfirm, setShowNoneConfirm] = useState(false);
   const [times, setTimes] = useState({
     morning: '07:00',
     midday: '12:00',
@@ -107,13 +105,13 @@ export default function Onboarding() {
       birthday: birthday || null,
       phoneNumber: phoneNumber || null,
       countryCode,
-      deliveryMethod: deliveryMethod || 'email',
+      deliveryMethod: 'sms',
       smsConsent,
     }));
     navigate('/register');
   };
 
-  const TOTAL_STEPS = 7;
+  const TOTAL_STEPS = 6;
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-6">
@@ -357,7 +355,7 @@ export default function Onboarding() {
             </motion.div>
           )}
 
-          {/* Step 5: Delivery method */}
+          {/* Step 5: Phone number (SMS is the only delivery method) */}
           {step === 5 && (
             <motion.div
               key="step5"
@@ -367,61 +365,79 @@ export default function Onboarding() {
               transition={{ duration: 0.3 }}
             >
               <h2 className="font-display text-2xl font-semibold text-foreground mb-3">
-                How do you want your perk-ups?
+                What's your phone number?
               </h2>
-              <p className="text-sm text-muted-foreground mb-8">
-                Choose how you'd like to receive your daily encouragement.
+              <p className="text-sm text-muted-foreground mb-6">
+                We'll send your daily perk-ups via text message.
               </p>
-
-              <div className="space-y-3 mb-8">
-                {[
-                  { label: 'Email', value: 'email', sub: 'Delivered to your inbox' },
-                  { label: 'Text (SMS)', value: 'sms', sub: 'Sent to your phone' },
-                  { label: 'Push Notifications', value: 'push', sub: 'On-device alerts' },
-                  { label: 'None', value: 'none', sub: 'Access them in the app anytime' },
-                ].map(opt => (
-                  <button
-                    key={opt.value}
-                    onClick={() => {
-                      if (opt.value === 'none') {
-                        setShowNoneConfirm(true);
-                      } else {
-                        setDeliveryMethod(opt.value);
-                      }
-                    }}
-                    className={`w-full p-4 rounded-xl border text-left transition-all ${
-                      deliveryMethod === opt.value
-                        ? 'bg-primary/10 border-primary/40'
-                        : 'bg-card border-border hover:border-primary/30'
-                    }`}
+              <div className="space-y-4 mb-6">
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-1.5 block">Country</label>
+                  <select
+                    value={countryCode}
+                    onChange={(e) => setCountryCode(e.target.value)}
+                    className="w-full h-10 px-3 rounded-md border border-input bg-card text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
                   >
-                    <p className="font-medium text-foreground">{opt.label}</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">{opt.sub}</p>
-                  </button>
-                ))}
+                    <option value="US">🇺🇸 United States (+1)</option>
+                    <option value="CA">🇨🇦 Canada (+1)</option>
+                    <option value="GB">🇬🇧 United Kingdom (+44)</option>
+                    <option value="AU">🇦🇺 Australia (+61)</option>
+                    <option value="NZ">🇳🇿 New Zealand (+64)</option>
+                    <option value="IE">🇮🇪 Ireland (+353)</option>
+                    <option value="ZA">🇿🇦 South Africa (+27)</option>
+                    <option value="MX">🇲🇽 Mexico (+52)</option>
+                    <option value="BR">🇧🇷 Brazil (+55)</option>
+                    <option value="DE">🇩🇪 Germany (+49)</option>
+                    <option value="FR">🇫🇷 France (+33)</option>
+                    <option value="IT">🇮🇹 Italy (+39)</option>
+                    <option value="ES">🇪🇸 Spain (+34)</option>
+                    <option value="NL">🇳🇱 Netherlands (+31)</option>
+                    <option value="SG">🇸🇬 Singapore (+65)</option>
+                    <option value="HK">🇭🇰 Hong Kong (+852)</option>
+                    <option value="JP">🇯🇵 Japan (+81)</option>
+                    <option value="KR">🇰🇷 South Korea (+82)</option>
+                    <option value="IN">🇮🇳 India (+91)</option>
+                    <option value="AE">🇦🇪 United Arab Emirates (+971)</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-1.5 block">Phone Number</label>
+                  <input
+                    type="tel"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, ''))}
+                    placeholder="5551234567"
+                    className="w-full h-10 px-3 rounded-md border border-input bg-transparent text-foreground placeholder-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                  />
+                  <p className="text-xs text-muted-foreground mt-1.5">Enter just the number (no country code needed)</p>
+                </div>
               </div>
 
-              <AlertDialog open={showNoneConfirm} onOpenChange={setShowNoneConfirm}>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                    <AlertDialogDescription className="text-sm leading-relaxed">
-                      We've found that the best results come through consistent, daily repetition. You can always change this later in your settings.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <div className="flex gap-3 justify-end">
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={() => {
-                        setDeliveryMethod('none');
-                        setShowNoneConfirm(false);
-                      }}
-                    >
-                      I'm sure
-                    </AlertDialogAction>
-                  </div>
-                </AlertDialogContent>
-              </AlertDialog>
+              {/* SMS Consent */}
+              <div className="rounded-xl border border-border bg-card p-4 mb-6 space-y-3">
+                <label className="flex items-start gap-3 cursor-pointer">
+                  <Checkbox
+                    checked={smsConsent}
+                    onCheckedChange={setSmsConsent}
+                    className="mt-0.5"
+                  />
+                  <span className="text-xs text-foreground leading-relaxed">
+                    <strong>Yes, sign me up!</strong> I consent to receive recurring SMS messages from Perk Up
+                    Daily, including daily encouragement, reminders, and occasional updates about features or
+                    subscriptions.
+                  </span>
+                </label>
+                <div className="text-[11px] text-muted-foreground leading-relaxed space-y-1.5 pl-1">
+                  <p><strong>Message frequency:</strong> Varies based on your settings (typically 1–3 messages per day).</p>
+                  <p><strong>Message &amp; data rates may apply.</strong></p>
+                  <p>Reply <strong>STOP</strong> at any time to unsubscribe. Reply <strong>HELP</strong> for help.</p>
+                  <p>
+                    By checking the box you agree to our{' '}
+                    <a href="/terms" className="underline" style={{ color: '#E8A838' }}>Terms</a> and{' '}
+                    <a href="/privacy-policy" className="underline" style={{ color: '#E8A838' }}>Privacy Policy</a>.
+                  </p>
+                </div>
+              </div>
 
               <div className="flex gap-3">
                 <Button
@@ -433,7 +449,7 @@ export default function Onboarding() {
                 </Button>
                 <Button
                   onClick={() => setStep(6)}
-                  disabled={deliveryMethod === null}
+                  disabled={!phoneNumber || !smsConsent}
                   className="flex-1 bg-primary hover:bg-primary/90"
                 >
                   Continue <ArrowRight className="w-4 h-4 ml-2" />
@@ -442,121 +458,10 @@ export default function Onboarding() {
             </motion.div>
           )}
 
-          {/* Step 6: Phone number (if SMS selected) */}
+          {/* Step 6: Create account */}
           {step === 6 && (
             <motion.div
               key="step6"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              <h2 className="font-display text-2xl font-semibold text-foreground mb-3">
-                {deliveryMethod === 'sms' ? "What's your phone number?" : "You're almost in"}
-              </h2>
-              {deliveryMethod === 'sms' ? (
-                <>
-                  <p className="text-sm text-muted-foreground mb-6">
-                    We'll send your daily perk-ups to this number.
-                  </p>
-                  <div className="space-y-4 mb-6">
-                    <div>
-                      <label className="text-sm font-medium text-foreground mb-1.5 block">Country</label>
-                      <select
-                        value={countryCode}
-                        onChange={(e) => setCountryCode(e.target.value)}
-                        className="w-full h-10 px-3 rounded-md border border-input bg-card text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-                      >
-                        <option value="US">🇺🇸 United States (+1)</option>
-                        <option value="CA">🇨🇦 Canada (+1)</option>
-                        <option value="GB">🇬🇧 United Kingdom (+44)</option>
-                        <option value="AU">🇦🇺 Australia (+61)</option>
-                        <option value="NZ">🇳🇿 New Zealand (+64)</option>
-                        <option value="IE">🇮🇪 Ireland (+353)</option>
-                        <option value="ZA">🇿🇦 South Africa (+27)</option>
-                        <option value="MX">🇲🇽 Mexico (+52)</option>
-                        <option value="BR">🇧🇷 Brazil (+55)</option>
-                        <option value="DE">🇩🇪 Germany (+49)</option>
-                        <option value="FR">🇫🇷 France (+33)</option>
-                        <option value="IT">🇮🇹 Italy (+39)</option>
-                        <option value="ES">🇪🇸 Spain (+34)</option>
-                        <option value="NL">🇳🇱 Netherlands (+31)</option>
-                        <option value="SG">🇸🇬 Singapore (+65)</option>
-                        <option value="HK">🇭🇰 Hong Kong (+852)</option>
-                        <option value="JP">🇯🇵 Japan (+81)</option>
-                        <option value="KR">🇰🇷 South Korea (+82)</option>
-                        <option value="IN">🇮🇳 India (+91)</option>
-                        <option value="AE">🇦🇪 United Arab Emirates (+971)</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-foreground mb-1.5 block">Phone Number</label>
-                      <input
-                        type="tel"
-                        value={phoneNumber}
-                        onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, ''))}
-                        placeholder="5551234567"
-                        className="w-full h-10 px-3 rounded-md border border-input bg-transparent text-foreground placeholder-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-                      />
-                      <p className="text-xs text-muted-foreground mt-1.5">Enter just the number (no country code needed)</p>
-                    </div>
-                  </div>
-
-                  {/* SMS Consent */}
-                  <div className="rounded-xl border border-border bg-card p-4 mb-6 space-y-3">
-                    <label className="flex items-start gap-3 cursor-pointer">
-                      <Checkbox
-                        checked={smsConsent}
-                        onCheckedChange={setSmsConsent}
-                        className="mt-0.5"
-                      />
-                      <span className="text-xs text-foreground leading-relaxed">
-                        <strong>Yes, sign me up!</strong> I consent to receive recurring SMS messages from Perk Up
-                        Daily, including daily encouragement, reminders, and occasional updates about features or
-                        subscriptions.
-                      </span>
-                    </label>
-                    <div className="text-[11px] text-muted-foreground leading-relaxed space-y-1.5 pl-1">
-                      <p><strong>Message frequency:</strong> Varies based on your settings (typically 1–3 messages per day).</p>
-                      <p><strong>Message &amp; data rates may apply.</strong></p>
-                      <p>Reply <strong>STOP</strong> at any time to unsubscribe. Reply <strong>HELP</strong> for help.</p>
-                      <p>
-                        By checking the box you agree to our{' '}
-                        <a href="/terms" className="underline" style={{ color: '#E8A838' }}>Terms</a> and{' '}
-                        <a href="/privacy-policy" className="underline" style={{ color: '#E8A838' }}>Privacy Policy</a>.
-                      </p>
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <p className="text-muted-foreground leading-relaxed mb-8">
-                  Create your account to start capturing the good stuff.
-                </p>
-              )}
-
-              <div className="flex gap-3">
-                <Button
-                  onClick={() => setStep(5)}
-                  variant="outline"
-                  className="flex-1"
-                >
-                  Back
-                </Button>
-                <Button
-                  onClick={() => setStep(7)}
-                  disabled={deliveryMethod === 'sms' && (!phoneNumber || !smsConsent)}
-                  className="flex-1 bg-primary hover:bg-primary/90"
-                >
-                  Continue <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </div>
-            </motion.div>
-          )}
-
-          {/* Step 7: Create account */}
-          {step === 7 && (
-            <motion.div
-              key="step5"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}

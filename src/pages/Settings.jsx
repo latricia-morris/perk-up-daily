@@ -33,10 +33,12 @@ export default function Settings() {
   const [prefs, setPrefs] = useState({
    christian_content: false,
    selected_categories: [],
+   morning_enabled: true,
+   midday_enabled: true,
+   evening_enabled: true,
    morning_time: '07:00',
    midday_time: '12:00',
    evening_time: '19:00',
-   delivery_method: 'email',
    phone_number: '',
    country_code: 'US',
    sms_consent: false,
@@ -51,10 +53,12 @@ export default function Settings() {
       setPrefs({
          christian_content: u.christian_content || false,
          selected_categories: cats,
+         morning_enabled: u.morning_enabled !== false,
+         midday_enabled: u.midday_enabled !== false,
+         evening_enabled: u.evening_enabled !== false,
          morning_time: u.morning_time || '07:00',
          midday_time: u.midday_time || '12:00',
          evening_time: u.evening_time || '19:00',
-         delivery_method: u.delivery_method || 'email',
          phone_number: u.phone_number || '',
          country_code: u.country_code || 'US',
          sms_consent: u.sms_consent || false,
@@ -187,123 +191,109 @@ export default function Settings() {
             </div>
           </section>
 
-          {/* Delivery Method */}
-           <section>
-             <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4">Delivery method</h2>
-             <div className="space-y-3">
-               {[
-                 { label: 'Email', value: 'email' },
-                 { label: 'Text (SMS)', value: 'sms' },
-                 { label: 'Push Notifications', value: 'push' },
-                 { label: 'None', value: 'none' },
-               ].map(opt => (
-                 <button
-                   key={opt.value}
-                   onClick={() => setPrefs(prev => ({ ...prev, delivery_method: opt.value }))}
-                   className={`w-full p-3 rounded-lg border text-left text-sm transition-all ${
-                     prefs.delivery_method === opt.value
-                       ? 'bg-primary/10 border-primary/40'
-                       : 'bg-card border-border hover:border-primary/30'
-                   }`}
-                 >
-                   <p className="font-medium text-foreground">{opt.label}</p>
-                 </button>
-               ))}
-             </div>
-           </section>
+          {/* Phone Number (SMS is the only delivery method) */}
+          <section>
+            <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4">Phone number</h2>
+            <div className="space-y-4">
+              <div>
+                <Label className="text-sm font-medium text-foreground mb-1.5 block">Country</Label>
+                <select
+                  value={prefs.country_code}
+                  onChange={(e) => setPrefs(prev => ({ ...prev, country_code: e.target.value }))}
+                  className="w-full h-10 px-3 rounded-md border border-input bg-card text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                >
+                  <option value="US">🇺🇸 United States (+1)</option>
+                  <option value="CA">🇨🇦 Canada (+1)</option>
+                  <option value="GB">🇬🇧 United Kingdom (+44)</option>
+                  <option value="AU">🇦🇺 Australia (+61)</option>
+                  <option value="NZ">🇳🇿 New Zealand (+64)</option>
+                  <option value="IE">🇮🇪 Ireland (+353)</option>
+                  <option value="ZA">🇿🇦 South Africa (+27)</option>
+                  <option value="MX">🇲🇽 Mexico (+52)</option>
+                  <option value="BR">🇧🇷 Brazil (+55)</option>
+                  <option value="DE">🇩🇪 Germany (+49)</option>
+                  <option value="FR">🇫🇷 France (+33)</option>
+                  <option value="IT">🇮🇹 Italy (+39)</option>
+                  <option value="ES">🇪🇸 Spain (+34)</option>
+                  <option value="NL">🇳🇱 Netherlands (+31)</option>
+                  <option value="SG">🇸🇬 Singapore (+65)</option>
+                  <option value="HK">🇭🇰 Hong Kong (+852)</option>
+                  <option value="JP">🇯🇵 Japan (+81)</option>
+                  <option value="KR">🇰🇷 South Korea (+82)</option>
+                  <option value="IN">🇮🇳 India (+91)</option>
+                  <option value="AE">🇦🇪 United Arab Emirates (+971)</option>
+                </select>
+              </div>
+              <div>
+                <Label className="text-sm font-medium text-foreground mb-1.5 block">Phone Number</Label>
+                <Input
+                  type="tel"
+                  value={prefs.phone_number}
+                  onChange={(e) => setPrefs(prev => ({ ...prev, phone_number: e.target.value.replace(/\D/g, '') }))}
+                  placeholder="5551234567"
+                />
+                <p className="text-xs text-muted-foreground mt-1.5">Enter just the number (no country code needed)</p>
+              </div>
 
-           {/* Phone Number (if SMS selected) */}
-           {prefs.delivery_method === 'sms' && (
-             <section>
-               <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4">Phone number</h2>
-               <div className="space-y-4">
-                 <div>
-                   <Label className="text-sm font-medium text-foreground mb-1.5 block">Country</Label>
-                   <select
-                     value={prefs.country_code}
-                     onChange={(e) => setPrefs(prev => ({ ...prev, country_code: e.target.value }))}
-                     className="w-full h-10 px-3 rounded-md border border-input bg-card text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-                   >
-                     <option value="US">🇺🇸 United States (+1)</option>
-                     <option value="CA">🇨🇦 Canada (+1)</option>
-                     <option value="GB">🇬🇧 United Kingdom (+44)</option>
-                     <option value="AU">🇦🇺 Australia (+61)</option>
-                     <option value="NZ">🇳🇿 New Zealand (+64)</option>
-                     <option value="IE">🇮🇪 Ireland (+353)</option>
-                     <option value="ZA">🇿🇦 South Africa (+27)</option>
-                     <option value="MX">🇲🇽 Mexico (+52)</option>
-                     <option value="BR">🇧🇷 Brazil (+55)</option>
-                     <option value="DE">🇩🇪 Germany (+49)</option>
-                     <option value="FR">🇫🇷 France (+33)</option>
-                     <option value="IT">🇮🇹 Italy (+39)</option>
-                     <option value="ES">🇪🇸 Spain (+34)</option>
-                     <option value="NL">🇳🇱 Netherlands (+31)</option>
-                     <option value="SG">🇸🇬 Singapore (+65)</option>
-                     <option value="HK">🇭🇰 Hong Kong (+852)</option>
-                     <option value="JP">🇯🇵 Japan (+81)</option>
-                     <option value="KR">🇰🇷 South Korea (+82)</option>
-                     <option value="IN">🇮🇳 India (+91)</option>
-                     <option value="AE">🇦🇪 United Arab Emirates (+971)</option>
-                   </select>
-                 </div>
-                 <div>
-                   <Label className="text-sm font-medium text-foreground mb-1.5 block">Phone Number</Label>
-                   <Input
-                     type="tel"
-                     value={prefs.phone_number}
-                     onChange={(e) => setPrefs(prev => ({ ...prev, phone_number: e.target.value.replace(/\D/g, '') }))}
-                     placeholder="5551234567"
-                   />
-                   <p className="text-xs text-muted-foreground mt-1.5">Enter just the number (no country code needed)</p>
-                   </div>
+              {/* SMS Consent */}
+              <div className="rounded-xl border border-border bg-card p-4 space-y-3">
+                <label className="flex items-start gap-3 cursor-pointer">
+                  <Checkbox
+                    checked={prefs.sms_consent}
+                    onCheckedChange={v => setPrefs(prev => ({ ...prev, sms_consent: v }))}
+                    className="mt-0.5"
+                  />
+                  <span className="text-xs text-foreground leading-relaxed">
+                    <strong>Yes, sign me up!</strong> I consent to receive recurring SMS messages from Perk Up
+                    Daily, including daily encouragement, reminders, and occasional updates about features or
+                    subscriptions.
+                  </span>
+                </label>
+                <div className="text-[11px] text-muted-foreground leading-relaxed space-y-1.5 pl-1">
+                  <p><strong>Message frequency:</strong> Varies based on your settings (typically 1–3 messages per day).</p>
+                  <p><strong>Message &amp; data rates may apply.</strong></p>
+                  <p>Reply <strong>STOP</strong> at any time to unsubscribe. Reply <strong>HELP</strong> for help.</p>
+                  <div className="pt-1">
+                    <LegalLinks />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
 
-                   {/* SMS Consent */}
-                   <div className="rounded-xl border border-border bg-card p-4 space-y-3">
-                   <label className="flex items-start gap-3 cursor-pointer">
-                     <Checkbox
-                       checked={prefs.sms_consent}
-                       onCheckedChange={v => setPrefs(prev => ({ ...prev, sms_consent: v }))}
-                       className="mt-0.5"
-                     />
-                     <span className="text-xs text-foreground leading-relaxed">
-                       <strong>Yes, sign me up!</strong> I consent to receive recurring SMS messages from Perk Up
-                       Daily, including daily encouragement, reminders, and occasional updates about features or
-                       subscriptions.
-                     </span>
-                   </label>
-                   <div className="text-[11px] text-muted-foreground leading-relaxed space-y-1.5 pl-1">
-                     <p><strong>Message frequency:</strong> Varies based on your settings (typically 1–3 messages per day).</p>
-                     <p><strong>Message &amp; data rates may apply.</strong></p>
-                     <p>Reply <strong>STOP</strong> at any time to unsubscribe. Reply <strong>HELP</strong> for help.</p>
-                     <div className="pt-1">
-                       <LegalLinks />
-                     </div>
-                   </div>
-                   </div>
-                   </div>
-                   </section>
-                   )}
-
-          {/* Delivery Times */}
-           <section>
-             <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4">Delivery times</h2>
-             <div className="space-y-4">
-               <div className="grid grid-cols-3 gap-3">
-                 <div>
-                   <Label className="text-xs text-muted-foreground mb-1 block">Morning</Label>
-                   <Input type="time" value={prefs.morning_time} onChange={e => setPrefs(prev => ({ ...prev, morning_time: e.target.value }))} />
-                 </div>
-                 <div>
-                   <Label className="text-xs text-muted-foreground mb-1 block">Midday</Label>
-                   <Input type="time" value={prefs.midday_time} onChange={e => setPrefs(prev => ({ ...prev, midday_time: e.target.value }))} />
-                 </div>
-                 <div>
-                   <Label className="text-xs text-muted-foreground mb-1 block">Evening</Label>
-                   <Input type="time" value={prefs.evening_time} onChange={e => setPrefs(prev => ({ ...prev, evening_time: e.target.value }))} />
-                 </div>
-               </div>
-             </div>
-           </section>
+          {/* Delivery Times with enable/disable toggles */}
+          <section>
+            <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4">Delivery times</h2>
+            <div className="space-y-3">
+              {[
+                { key: 'morning', label: 'Morning', timeKey: 'morning_time', enabledKey: 'morning_enabled' },
+                { key: 'midday', label: 'Midday', timeKey: 'midday_time', enabledKey: 'midday_enabled' },
+                { key: 'evening', label: 'Evening', timeKey: 'evening_time', enabledKey: 'evening_enabled' },
+              ].map(slot => (
+                <div
+                  key={slot.key}
+                  className={`flex items-center gap-3 p-3 rounded-lg border transition-all ${
+                    prefs[slot.enabledKey]
+                      ? 'bg-card border-border'
+                      : 'bg-muted/30 border-border/50 opacity-60'
+                  }`}
+                >
+                  <Checkbox
+                    checked={prefs[slot.enabledKey]}
+                    onCheckedChange={v => setPrefs(prev => ({ ...prev, [slot.enabledKey]: v }))}
+                  />
+                  <Label className="text-sm font-medium text-foreground flex-1">{slot.label}</Label>
+                  <Input
+                    type="time"
+                    value={prefs[slot.timeKey]}
+                    onChange={e => setPrefs(prev => ({ ...prev, [slot.timeKey]: e.target.value }))}
+                    disabled={!prefs[slot.enabledKey]}
+                    className="w-32"
+                  />
+                </div>
+              ))}
+            </div>
+          </section>
 
           {/* Appearance */}
           <section>
