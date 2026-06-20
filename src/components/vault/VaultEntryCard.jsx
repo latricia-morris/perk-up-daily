@@ -11,7 +11,7 @@ import CategoryBadge from '@/components/shared/CategoryBadge';
 import ShareCard from '@/components/shared/ShareCard';
 import EntryDetailModal from '@/components/shared/EntryDetailModal';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { EntryFormFields } from '@/pages/AddEntry';
+import EntryFormFields from '@/components/entry/EntryFormFields';
 
 export default function VaultEntryCard({ entry, index, christianEnabled, isLibrary = false }) {
   const queryClient = useQueryClient();
