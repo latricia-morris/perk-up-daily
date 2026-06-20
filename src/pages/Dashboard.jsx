@@ -148,16 +148,7 @@ export default function Dashboard() {
          )}
 
         {/* Quick add */}
-        <div className="fixed bottom-24 right-6 md:bottom-8 md:right-8 z-40">
-          <Link to="/add-entry">
-            <Button
-              size="lg"
-              className="bg-primary hover:bg-primary/90 rounded-full w-14 h-14 shadow-lg"
-            >
-              <PlusCircle className="w-6 h-6" />
-            </Button>
-          </Link>
-        </div>
+        
       </div>
     </PullToRefresh>
     </>
