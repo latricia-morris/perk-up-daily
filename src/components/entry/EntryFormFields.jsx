@@ -5,6 +5,21 @@ import { Upload, Loader2 } from 'lucide-react';
 import LimitedTextarea from '@/components/ui/limited-textarea';
 import { getLimit } from '@/lib/storageLimits';
 
+/** Stable LimitedTextarea wrapper — defined OUTSIDE the parent so its identity
+ *  never changes between renders. This is what stops the keyboard from closing. */
+const LimitedField = memo(function LimitedField({ value, onChange, placeholder, softLimit, hardLimit, className }) {
+  return (
+    <LimitedTextarea
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      softLimit={softLimit}
+      hardLimit={hardLimit}
+      className={className}
+    />
+  );
+});
+
 /** Shared form fields component — driven entirely by the schema.
  *  Lives in its own file so it never gets re-created on parent re-renders,
  *  which prevents input focus loss (keyboard closing) on mobile. */
@@ -12,12 +27,12 @@ function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUpload, c
   const f = (key) => form[key] ?? '';
   const set = useCallback((key) => (e) => setForm(prev => ({ ...prev, [key]: e.target.value })), [setForm]);
 
-  // Helper: LimitedTextarea wired to a specific field
-  const LTA = ({ fieldKey, placeholder, className, useDescriptor = false }) => {
+  // Render a LimitedTextarea bound to a form field, without re-creating a component type
+  const renderField = (fieldKey, placeholder, className, useDescriptor = false) => {
     const lim = getLimit(entryType, fieldKey);
     const finalPlaceholder = useDescriptor && descriptor ? descriptor : placeholder;
     return (
-      <LimitedTextarea
+      <LimitedField
         value={f(fieldKey)}
         onChange={set(fieldKey)}
         placeholder={finalPlaceholder}
@@ -32,11 +47,11 @@ function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUpload, c
     <>
       <div>
         <Label className="text-sm font-medium mb-1.5 block">My Old Lie-dentity</Label>
-        <LTA fieldKey="old_belief" placeholder="I used to believe that I..." className="min-h-[100px]" useDescriptor={false} />
+        {renderField('old_belief', 'I used to believe that I...', 'min-h-[100px]', false)}
       </div>
       <div>
         <Label className="text-sm font-medium mb-1.5 block">My True Identity</Label>
-        <LTA fieldKey="body" placeholder="The truth is, I am..." className="min-h-[100px]" useDescriptor={true} />
+        {renderField('body', 'The truth is, I am...', 'min-h-[100px]', true)}
       </div>
     </>
   );
@@ -47,7 +62,7 @@ function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUpload, c
       <>
         <div>
           <Label className="text-sm font-medium mb-1.5 block">Quote</Label>
-          <LTA fieldKey="body" placeholder="The quote text..." useDescriptor={true} />
+          {renderField('body', 'The quote text...', undefined, true)}
         </div>
         <div>
           <Label className="text-sm font-medium mb-1.5 block">Author <span className="text-muted-foreground">(optional)</span></Label>
@@ -68,7 +83,7 @@ function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUpload, c
       <>
         <div>
           <Label className="text-sm font-medium mb-1.5 block">Scripture</Label>
-          <LTA fieldKey="body" placeholder="The scripture text..." useDescriptor={true} />
+          {renderField('body', 'The scripture text...', undefined, true)}
         </div>
         <div>
           <Label className="text-sm font-medium mb-1.5 block">Reference <span className="text-muted-foreground">(optional)</span></Label>
@@ -86,7 +101,7 @@ function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUpload, c
   if (entryType === 'affirmation') return (
     <div>
       <Label className="text-sm font-medium mb-1.5 block">Affirmation</Label>
-      <LTA fieldKey="body" placeholder="I am..." useDescriptor={true} />
+      {renderField('body', 'I am...', undefined, true)}
     </div>
   );
 
@@ -103,7 +118,7 @@ function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUpload, c
       </div>
       <div>
         <Label className="text-sm font-medium mb-1.5 block">Your knee-jerk response</Label>
-        <LTA fieldKey="body" placeholder="Write your response..." className="min-h-[140px]" useDescriptor={false} />
+        {renderField('body', 'Write your response...', 'min-h-[140px]', false)}
       </div>
     </>
   );
@@ -127,7 +142,7 @@ function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUpload, c
     <>
       <div>
         <Label className="text-sm font-medium mb-1.5 block">{labelMap[entryType] || 'Content'}</Label>
-        <LTA fieldKey="body" placeholder={placeholderMap[entryType] || ''} useDescriptor={true} />
+        {renderField('body', placeholderMap[entryType] || '', undefined, true)}
       </div>
       {entryType === 'experience' && (
         <div>
