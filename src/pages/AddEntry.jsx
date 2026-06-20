@@ -246,61 +246,52 @@ export default function AddEntry() {
               />
             </div>
 
-            <AnimatePresence>
-              {entryType && (
-                <motion.div
-                  key="fields"
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 8 }}
-                  transition={{ duration: 0.25 }}
-                  className="space-y-6"
-                >
-                  <EntryFormFields
-                    entryType={entryType}
-                    form={form}
-                    setForm={setForm}
-                    uploading={uploading}
-                    onPhotoUpload={handlePhotoUpload}
-                    currentPrompt={currentPrompt}
-                    descriptor={getSchema(entryType)?.descriptor}
-                  />
+            {entryType && (
+              <div className="space-y-6 animate-fade-up">
+                <EntryFormFields
+                  entryType={entryType}
+                  form={form}
+                  setForm={setForm}
+                  uploading={uploading}
+                  onPhotoUpload={handlePhotoUpload}
+                  currentPrompt={currentPrompt}
+                  descriptor={getSchema(entryType)?.descriptor}
+                />
 
-                  {entryType !== 'reflection' && (
-                    <div>
-                      <Label className="text-sm font-medium mb-3 block">Category</Label>
-                      <div className="hidden md:block">
-                        <ChipGroup
-                          options={categories}
-                          value={form.category}
-                          onChange={v => setForm(prev => ({ ...prev, category: v }))}
-                        />
-                      </div>
-                      <div className="md:hidden">
-                        <MobileSelect
-                          value={form.category}
-                          onValueChange={v => setForm(prev => ({ ...prev, category: v }))}
-                        >
-                          {categories.map(cat => (
-                            <SelectItem key={cat.slug} value={cat.slug}>{cat.label}</SelectItem>
-                          ))}
-                        </MobileSelect>
-                      </div>
+                {entryType !== 'reflection' && (
+                  <div>
+                    <Label className="text-sm font-medium mb-3 block">Category</Label>
+                    <div className="hidden md:block">
+                      <ChipGroup
+                        options={categories}
+                        value={form.category}
+                        onChange={v => setForm(prev => ({ ...prev, category: v }))}
+                      />
                     </div>
-                  )}
+                    <div className="md:hidden">
+                      <MobileSelect
+                        value={form.category}
+                        onValueChange={v => setForm(prev => ({ ...prev, category: v }))}
+                      >
+                        {categories.map(cat => (
+                          <SelectItem key={cat.slug} value={cat.slug}>{cat.label}</SelectItem>
+                        ))}
+                      </MobileSelect>
+                    </div>
+                  </div>
+                )}
 
-                  <Button
-                    onClick={checkAndSave}
-                    disabled={createEntryMutation.isPending || !canSave}
-                    className="w-full bg-primary hover:bg-primary/90"
-                    size="lg"
-                  >
-                    {createEntryMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                    Save entry
-                  </Button>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                <Button
+                  onClick={checkAndSave}
+                  disabled={createEntryMutation.isPending || !canSave}
+                  className="w-full bg-primary hover:bg-primary/90"
+                  size="lg"
+                >
+                  {createEntryMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                  Save entry
+                </Button>
+              </div>
+            )}
           </div>
         </motion.div>
 

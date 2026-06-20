@@ -1,3 +1,4 @@
+import { memo, useCallback } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Upload, Loader2 } from 'lucide-react';
@@ -7,9 +8,9 @@ import { getLimit } from '@/lib/storageLimits';
 /** Shared form fields component — driven entirely by the schema.
  *  Lives in its own file so it never gets re-created on parent re-renders,
  *  which prevents input focus loss (keyboard closing) on mobile. */
-export default function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUpload, currentPrompt, descriptor }) {
+function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUpload, currentPrompt, descriptor }) {
   const f = (key) => form[key] ?? '';
-  const set = (key) => (e) => setForm(prev => ({ ...prev, [key]: e.target.value }));
+  const set = useCallback((key) => (e) => setForm(prev => ({ ...prev, [key]: e.target.value })), [setForm]);
 
   // Helper: LimitedTextarea wired to a specific field
   const LTA = ({ fieldKey, placeholder, className, useDescriptor = false }) => {
@@ -162,3 +163,5 @@ export default function EntryFormFields({ entryType, form, setForm, uploading, o
     </>
   );
 }
+
+export default memo(EntryFormFields);
