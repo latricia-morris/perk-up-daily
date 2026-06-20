@@ -24,10 +24,11 @@
       "enum": [
         "email",
         "sms",
+        "push",
         "none"
       ],
       "default": "email",
-      "description": "How daily positivity is delivered: Email, SMS, or None"
+      "description": "How daily positivity is delivered: Email, SMS, Push Notifications, or None"
     },
     "phone_number": {
       "type": "string",
@@ -37,6 +38,11 @@
       "type": "string",
       "default": "US",
       "description": "Country code for phone number formatting"
+    },
+    "sms_consent": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether user has opted in to receive SMS messages"
     },
     "morning_time": {
       "type": "string",

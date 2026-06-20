@@ -609,9 +609,9 @@ export default function Landing() {
           <p className="text-sm" style={{ color: '#c4a882' }}>2025 Perk Up Daily. All rights reserved.</p>
           <div className="flex gap-6 text-sm" style={{ color: '#c4a882' }}>
             <Link to="/disclaimer" className="hover:text-foreground transition-colors">Disclaimer</Link>
-            <a href="#" className="hover:text-foreground transition-colors">Privacy</a>
-            <a href="#" className="hover:text-foreground transition-colors">Terms</a>
-            <a href="mailto:hello@perkupdaily.com" className="hover:text-foreground transition-colors">Contact</a>
+            <Link to="/privacy-policy" className="hover:text-foreground transition-colors">Privacy</Link>
+            <Link to="/terms" className="hover:text-foreground transition-colors">Terms</Link>
+            <a href="mailto:latriciamorris@gmail.com" className="hover:text-foreground transition-colors">Contact</a>
           </div>
         </div>
       </footer>

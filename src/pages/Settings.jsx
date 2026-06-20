@@ -5,7 +5,9 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Check, Loader2, Trash2, Download } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
 import { MobileSelect } from '@/components/ui/mobile-select';
+import LegalLinks from '@/components/shared/LegalLinks';
 import { CATEGORIES } from '@/lib/constants';
 import { useTheme } from '@/lib/useTheme';
 import { motion } from 'framer-motion';
@@ -37,7 +39,8 @@ export default function Settings() {
    delivery_method: 'email',
    phone_number: '',
    country_code: 'US',
-  });
+   sms_consent: false,
+   });
   const [validationError, setValidationError] = useState('');
 
   useEffect(() => {
@@ -54,6 +57,7 @@ export default function Settings() {
          delivery_method: u.delivery_method || 'email',
          phone_number: u.phone_number || '',
          country_code: u.country_code || 'US',
+         sms_consent: u.sms_consent || false,
        });
       if (u.theme) setTheme(u.theme);
     });
@@ -74,6 +78,10 @@ export default function Settings() {
     // Validate SMS delivery method
     if (prefs.delivery_method === 'sms' && !prefs.phone_number) {
       setValidationError('Phone number is required for SMS delivery');
+      return;
+    }
+    if (prefs.delivery_method === 'sms' && !prefs.sms_consent) {
+      setValidationError('Please check the consent box to opt in to SMS messages');
       return;
     }
 
@@ -186,6 +194,7 @@ export default function Settings() {
                {[
                  { label: 'Email', value: 'email' },
                  { label: 'Text (SMS)', value: 'sms' },
+                 { label: 'Push Notifications', value: 'push' },
                  { label: 'None', value: 'none' },
                ].map(opt => (
                  <button
@@ -246,10 +255,34 @@ export default function Settings() {
                      placeholder="5551234567"
                    />
                    <p className="text-xs text-muted-foreground mt-1.5">Enter just the number (no country code needed)</p>
-                 </div>
-               </div>
-             </section>
-           )}
+                   </div>
+
+                   {/* SMS Consent */}
+                   <div className="rounded-xl border border-border bg-card p-4 space-y-3">
+                   <label className="flex items-start gap-3 cursor-pointer">
+                     <Checkbox
+                       checked={prefs.sms_consent}
+                       onCheckedChange={v => setPrefs(prev => ({ ...prev, sms_consent: v }))}
+                       className="mt-0.5"
+                     />
+                     <span className="text-xs text-foreground leading-relaxed">
+                       <strong>Yes, sign me up!</strong> I consent to receive recurring SMS messages from Perk Up
+                       Daily, including daily encouragement, reminders, and occasional updates about features or
+                       subscriptions.
+                     </span>
+                   </label>
+                   <div className="text-[11px] text-muted-foreground leading-relaxed space-y-1.5 pl-1">
+                     <p><strong>Message frequency:</strong> Varies based on your settings (typically 1–3 messages per day).</p>
+                     <p><strong>Message &amp; data rates may apply.</strong></p>
+                     <p>Reply <strong>STOP</strong> at any time to unsubscribe. Reply <strong>HELP</strong> for help.</p>
+                     <div className="pt-1">
+                       <LegalLinks />
+                     </div>
+                   </div>
+                   </div>
+                   </div>
+                   </section>
+                   )}
 
           {/* Delivery Times */}
            <section>
@@ -372,6 +405,11 @@ export default function Settings() {
               </AlertDialogContent>
             </AlertDialog>
           </section>
+
+          {/* Legal links */}
+          <div className="pt-4">
+            <LegalLinks />
+          </div>
 
           {/* Validation Error */}
           {validationError && (

@@ -29,10 +29,9 @@ const libraryNav = [
 
 const scriptureNav = { path: '/scriptures', icon: BookOpen, label: 'Scriptures' };
 
-const bottomTabNav = [
+const sideTabNav = [
   { path: '/dashboard', icon: Home, label: 'Home' },
   { path: '/vault', icon: Sparkles, label: 'Perk Ups' },
-  { path: '/add-entry', icon: PlusCircle, label: 'Add' },
   { path: '/search', icon: Search, label: 'Search' },
   { path: '/settings', icon: Settings, label: 'Settings' },
 ];
@@ -169,26 +168,61 @@ export default function AppLayout() {
         <SidebarContent user={user} onNavClick={null} />
       </nav>
 
-      {/* Mobile bottom tab bar */}
+      {/* Mobile bottom tab bar with raised center Add button */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 border-t border-border/60 z-50" style={{ background: 'linear-gradient(135deg, rgba(212,131,10,0.10) 0%, rgba(253,248,240,0.85) 60%)', backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)' }}>
-        <div className="flex items-center justify-around py-2 px-2 pb-[env(safe-area-inset-bottom,8px)]">
-          {bottomTabNav.map(({ path, icon: Icon, label }) => {
+        <div className="flex items-center justify-around py-2 px-2 pb-[env(safe-area-inset-bottom,8px)] relative">
+          {/* Left tabs */}
+          {sideTabNav.slice(0, 2).map(({ path, icon: Icon, label }) => {
             const active = location.pathname === path || location.pathname.startsWith(path + '/');
             const handleTabClick = (e) => {
-              if (active) {
-                e.preventDefault();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }
+              if (active) { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
             };
             return (
               <Link
                 key={path}
                 to={path}
                 onClick={handleTabClick}
-                className={`flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-lg transition-all active:scale-95 ${
-                  active ? 'text-primary' : 'hover:text-foreground'
-                }`}
-              style={active ? {} : { color: '#2F2C29' }}
+                className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg transition-all active:scale-95 ${active ? 'text-primary' : 'hover:text-foreground'}`}
+                style={active ? {} : { color: '#2F2C29' }}
+              >
+                <Icon className="w-5 h-5" strokeWidth={active ? 2.5 : 1.5} />
+                <span className="text-[10px] font-medium">{label}</span>
+              </Link>
+            );
+          })}
+
+          {/* Center spacer for raised button */}
+          <div className="w-16 flex justify-center">
+            <Link
+              to="/add-entry"
+              className="flex flex-col items-center justify-center rounded-full shadow-lg active:scale-95 transition-transform"
+              style={{
+                background: 'linear-gradient(135deg, #E8A838 0%, #d4830a 100%)',
+                width: 56,
+                height: 56,
+                position: 'relative',
+                top: -18,
+                border: '3px solid #fef9f2',
+              }}
+              aria-label="Add Entry"
+            >
+              <PlusCircle className="w-7 h-7" style={{ color: '#fef9f2' }} strokeWidth={2} />
+            </Link>
+          </div>
+
+          {/* Right tabs */}
+          {sideTabNav.slice(2).map(({ path, icon: Icon, label }) => {
+            const active = location.pathname === path || location.pathname.startsWith(path + '/');
+            const handleTabClick = (e) => {
+              if (active) { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+            };
+            return (
+              <Link
+                key={path}
+                to={path}
+                onClick={handleTabClick}
+                className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg transition-all active:scale-95 ${active ? 'text-primary' : 'hover:text-foreground'}`}
+                style={active ? {} : { color: '#2F2C29' }}
               >
                 <Icon className="w-5 h-5" strokeWidth={active ? 2.5 : 1.5} />
                 <span className="text-[10px] font-medium">{label}</span>

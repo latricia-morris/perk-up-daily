@@ -54,6 +54,10 @@ export default function Register() {
             morning_time: onboardingData.notificationTimes?.morning || '07:00',
             midday_time: onboardingData.notificationTimes?.midday || '12:00',
             evening_time: onboardingData.notificationTimes?.evening || '19:00',
+            delivery_method: onboardingData.deliveryMethod || 'email',
+            phone_number: onboardingData.phoneNumber || '',
+            country_code: onboardingData.countryCode || 'US',
+            sms_consent: onboardingData.smsConsent || false,
           };
           if (onboardingData.birthday) {
             updateData.birthday = onboardingData.birthday;

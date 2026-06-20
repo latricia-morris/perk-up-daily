@@ -11,6 +11,8 @@ import ScrollToTop from './components/ScrollToTop';
 
 import Landing from '@/pages/Landing';
 import Disclaimer from '@/pages/Disclaimer';
+import PrivacyPolicy from '@/pages/PrivacyPolicy';
+import Terms from '@/pages/Terms';
 import Onboarding from '@/pages/Onboarding';
 import Paywall from '@/pages/Paywall';
 import Login from '@/pages/Login';
@@ -59,6 +61,8 @@ const AuthenticatedApp = () => {
         {/* Public routes */}
         <Route path="/" element={<Landing />} />
         <Route path="/disclaimer" element={<Disclaimer />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<Terms />} />
       <Route path="/onboarding" element={<Onboarding />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />

@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Check } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
+import LegalLinks from '@/components/shared/LegalLinks';
 import { CATEGORIES } from '@/lib/constants';
 import {
   AlertDialog,
@@ -78,6 +80,7 @@ export default function Onboarding() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [countryCode, setCountryCode] = useState('US');
   const [deliveryMethod, setDeliveryMethod] = useState(null);
+  const [smsConsent, setSmsConsent] = useState(false);
   const [showNoneConfirm, setShowNoneConfirm] = useState(false);
   const [times, setTimes] = useState({
     morning: '07:00',
@@ -105,6 +108,7 @@ export default function Onboarding() {
       phoneNumber: phoneNumber || null,
       countryCode,
       deliveryMethod: deliveryMethod || 'email',
+      smsConsent,
     }));
     navigate('/register');
   };
@@ -373,6 +377,7 @@ export default function Onboarding() {
                 {[
                   { label: 'Email', value: 'email', sub: 'Delivered to your inbox' },
                   { label: 'Text (SMS)', value: 'sms', sub: 'Sent to your phone' },
+                  { label: 'Push Notifications', value: 'push', sub: 'On-device alerts' },
                   { label: 'None', value: 'none', sub: 'Access them in the app anytime' },
                 ].map(opt => (
                   <button
@@ -454,7 +459,7 @@ export default function Onboarding() {
                   <p className="text-sm text-muted-foreground mb-6">
                     We'll send your daily perk-ups to this number.
                   </p>
-                  <div className="space-y-4 mb-8">
+                  <div className="space-y-4 mb-6">
                     <div>
                       <label className="text-sm font-medium text-foreground mb-1.5 block">Country</label>
                       <select
@@ -496,6 +501,32 @@ export default function Onboarding() {
                       <p className="text-xs text-muted-foreground mt-1.5">Enter just the number (no country code needed)</p>
                     </div>
                   </div>
+
+                  {/* SMS Consent */}
+                  <div className="rounded-xl border border-border bg-card p-4 mb-6 space-y-3">
+                    <label className="flex items-start gap-3 cursor-pointer">
+                      <Checkbox
+                        checked={smsConsent}
+                        onCheckedChange={setSmsConsent}
+                        className="mt-0.5"
+                      />
+                      <span className="text-xs text-foreground leading-relaxed">
+                        <strong>Yes, sign me up!</strong> I consent to receive recurring SMS messages from Perk Up
+                        Daily, including daily encouragement, reminders, and occasional updates about features or
+                        subscriptions.
+                      </span>
+                    </label>
+                    <div className="text-[11px] text-muted-foreground leading-relaxed space-y-1.5 pl-1">
+                      <p><strong>Message frequency:</strong> Varies based on your settings (typically 1–3 messages per day).</p>
+                      <p><strong>Message &amp; data rates may apply.</strong></p>
+                      <p>Reply <strong>STOP</strong> at any time to unsubscribe. Reply <strong>HELP</strong> for help.</p>
+                      <p>
+                        By checking the box you agree to our{' '}
+                        <a href="/terms" className="underline" style={{ color: '#E8A838' }}>Terms</a> and{' '}
+                        <a href="/privacy-policy" className="underline" style={{ color: '#E8A838' }}>Privacy Policy</a>.
+                      </p>
+                    </div>
+                  </div>
                 </>
               ) : (
                 <p className="text-muted-foreground leading-relaxed mb-8">
@@ -513,7 +544,7 @@ export default function Onboarding() {
                 </Button>
                 <Button
                   onClick={() => setStep(7)}
-                  disabled={deliveryMethod === 'sms' && !phoneNumber}
+                  disabled={deliveryMethod === 'sms' && (!phoneNumber || !smsConsent)}
                   className="flex-1 bg-primary hover:bg-primary/90"
                 >
                   Continue <ArrowRight className="w-4 h-4 ml-2" />
