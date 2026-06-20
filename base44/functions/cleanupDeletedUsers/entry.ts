@@ -4,10 +4,7 @@ const DELETION_THRESHOLD_DAYS = 14; // 7 days warning + 7 days buffer
 
 Deno.serve(async (req) => {
   try {
-    const base44 = createClient({
-      appId: Deno.env.get('BASE44_APP_ID'),
-      serviceToken: Deno.env.get('BASE44_SERVICE_TOKEN'),
-    });
+    const base44 = createClient({ appId: Deno.env.get('BASE44_APP_ID') });
 
     // Find all cancelled users
     const cancelledUsers = await base44.asServiceRole.entities.User.filter({ subscription_status: 'cancelled' });

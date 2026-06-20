@@ -2,10 +2,7 @@ import { createClient } from 'npm:@base44/sdk@0.8.31';
 
 Deno.serve(async (req) => {
   try {
-    const base44 = createClient({
-      appId: Deno.env.get('BASE44_APP_ID'),
-      serviceToken: Deno.env.get('BASE44_SERVICE_TOKEN'),
-    });
+    const base44 = createClient({ appId: Deno.env.get('BASE44_APP_ID') });
 
     // Find all cancelled users
     const cancelledUsers = await base44.asServiceRole.entities.User.filter({ subscription_status: 'cancelled' });
