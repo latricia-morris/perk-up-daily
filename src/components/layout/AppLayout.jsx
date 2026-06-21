@@ -7,6 +7,7 @@ import {
   Heart, Image, Quote, FileText, Star, Search, PenLine, ArrowLeftRight
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import SubscriptionGuard from '@/components/SubscriptionGuard';
 
 const ADMIN_EMAIL = 'perkupdaily@gmail.com'; // Only show Admin nav for this account
 
@@ -242,7 +243,9 @@ export default function AppLayout() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2, ease: 'easeInOut' }}
           >
-            <Outlet />
+            <SubscriptionGuard>
+              <Outlet />
+            </SubscriptionGuard>
           </motion.div>
         </AnimatePresence>
       </main>

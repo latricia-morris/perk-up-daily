@@ -36,27 +36,6 @@ export default function Dashboard() {
 
   useEffect(() => {
     base44.auth.me().then(u => {
-      // Gate: cancelled or expired users must subscribe
-      if (u.subscription_status === 'cancelled' || u.subscription_status === 'expired') {
-        window.location.href = '/paywall';
-        return;
-      }
-
-      // Grace period: 3 days after payment failure
-      if (u.subscription_status === 'grace_period' && u.grace_period_start) {
-        const graceStart = new Date(u.grace_period_start);
-        const daysInGrace = Math.floor((new Date() - graceStart) / (1000 * 60 * 60 * 24));
-        if (daysInGrace >= 3) {
-          // Grace period expired — cancel and redirect to paywall
-          base44.auth.updateMe({
-            subscription_status: 'cancelled',
-            cancelled_date: new Date().toISOString().split('T')[0],
-          });
-          window.location.href = '/paywall';
-          return;
-        }
-      }
-
       setUser(u);
 
       // Check if it's their birthday
