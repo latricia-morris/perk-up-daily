@@ -193,7 +193,7 @@ export default function Landing() {
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <img src="https://media.base44.com/images/public/6a312911bcddb0806c388af8/ad5333c2c_PerkUpKingfisher.png" alt="Perk Up Daily" className="w-8 h-8 object-contain" />
-            <h1 className="text-lg font-semibold [font-family:'Montserrat',_sans-serif] px-1 text-[#432f18]" style={{ color: '#2c1e0f' }}>Perk Up Daily</h1>
+            <h1 className="text-lg font-semibold [font-family:'Montserrat',_sans-serif] px-1 text-[#4b351b] uppercase" style={{ color: '#2c1e0f' }}>Perk Up Daily</h1>
           </div>
           <div className="flex items-center gap-3">
             <Link to="/login">
