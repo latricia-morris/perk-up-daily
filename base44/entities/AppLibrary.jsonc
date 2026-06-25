@@ -10,7 +10,7 @@
         "scripture",
         "encouragement_note"
       ],
-      "description": "Type of library content"
+      "description": "Type of library content. 'affirmation' displays as 'Declaration' to users."
     },
     "body": {
       "type": "string",
@@ -59,8 +59,10 @@
       }
     },
     "read": {
-      "data.status": "active",
       "$or": [
+        {
+          "data.status": "active"
+        },
         {
           "user_condition": {
             "role": "admin"
