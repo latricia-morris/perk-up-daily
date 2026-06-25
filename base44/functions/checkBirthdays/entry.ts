@@ -1,8 +1,8 @@
-import { createClient } from 'npm:@base44/sdk@0.8.31';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
 Deno.serve(async (req) => {
   try {
-    const base44 = createClient({ appId: Deno.env.get('BASE44_APP_ID') });
+    const base44 = createClientFromRequest(req);
 
     // Get today's date in MM-DD format
     const today = new Date();

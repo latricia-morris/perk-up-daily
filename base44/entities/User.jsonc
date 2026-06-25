@@ -90,6 +90,11 @@
       "default": "trial",
       "description": "Current subscription status"
     },
+    "renewal_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Stripe paid-through date / next renewal date. Set by webhook from subscription.current_period_end."
+    },
     "grace_period_start": {
       "type": "string",
       "description": "ISO date when grace period began (after payment failure)"
@@ -103,6 +108,11 @@
       "type": "string",
       "format": "date",
       "description": "When the 7-day trial started"
+    },
+    "trial_end_date": {
+      "type": "string",
+      "format": "date",
+      "description": "When the 7-day trial ends (trial_start_date + 7 days). Set by webhook."
     },
     "stripe_customer_id": {
       "type": "string",

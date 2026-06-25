@@ -1,10 +1,10 @@
 import Stripe from 'npm:stripe@14';
-import { createClient } from 'npm:@base44/sdk@0.8.31';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
 Deno.serve(async (req) => {
+  const base44 = createClientFromRequest(req);
   const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY'));
   const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET');
-  const base44 = createClient({ appId: Deno.env.get('BASE44_APP_ID') });
 
   const body = await req.text();
   const signature = req.headers.get('stripe-signature');
@@ -39,23 +39,36 @@ Deno.serve(async (req) => {
 
       const user = users[0];
 
-      // Determine status from subscription
+      // Determine status + renewal date from subscription
       let status = 'active';
+      let renewalDate = null;
+      let trialEndDate = null;
+
       if (subscriptionId) {
         const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-        if (subscription.status === 'trialing') status = 'trial';
-        else if (subscription.status === 'active') status = 'active';
+        if (subscription.status === 'trialing') {
+          status = 'trial';
+          trialEndDate = new Date(subscription.trial_end * 1000).toISOString().split('T')[0];
+        } else if (subscription.status === 'active') {
+          status = 'active';
+        }
+        // Store the paid-through / renewal date
+        if (subscription.current_period_end) {
+          renewalDate = new Date(subscription.current_period_end * 1000).toISOString();
+        }
       }
 
       await base44.asServiceRole.entities.User.update(user.id, {
         subscription_status: status,
         stripe_customer_id: session.customer,
         stripe_subscription_id: subscriptionId,
+        renewal_date: renewalDate,
+        trial_end_date: trialEndDate,
         grace_period_start: null,
         cancelled_date: null,
       });
 
-      console.log(`Updated user ${user.id} subscription_status to ${status}`);
+      console.log(`Updated user ${user.id} subscription_status to ${status}, renewal_date to ${renewalDate}`);
     }
 
     if (event.type === 'invoice.payment_failed') {
@@ -111,8 +124,7 @@ Deno.serve(async (req) => {
           newStatus = 'cancelled';
           updateData.cancelled_date = new Date().toISOString().split('T')[0];
         } else if (s === 'past_due' || s === 'unpaid') {
-          // Keep in grace period if already there, otherwise set it
-          newStatus = user.subscription_status === 'grace_period' ? 'grace_period' : 'grace_period';
+          newStatus = 'grace_period';
           if (!user.grace_period_start) {
             updateData.grace_period_start = new Date().toISOString();
           }
@@ -121,10 +133,15 @@ Deno.serve(async (req) => {
         }
       }
 
+      // Always sync the renewal date from Stripe
+      if (subscription.current_period_end) {
+        updateData.renewal_date = new Date(subscription.current_period_end * 1000).toISOString();
+      }
+
       updateData.subscription_status = newStatus;
 
       await base44.asServiceRole.entities.User.update(user.id, updateData);
-      console.log(`Updated user ${user.id} subscription_status to ${newStatus}`);
+      console.log(`Updated user ${user.id} subscription_status to ${newStatus}, renewal_date to ${updateData.renewal_date}`);
     }
   } catch (err) {
     console.error('Error processing webhook:', err.message);
