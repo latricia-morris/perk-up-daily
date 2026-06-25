@@ -166,6 +166,9 @@ export default function VaultEntryCard({ entry, index, christianEnabled, isLibra
                   {(entryType === 'scripture' && displayReference) && (
                     <p className="text-sm font-semibold text-foreground mb-0.5">{displayReference}</p>
                   )}
+                  {entryType === 'vision_goal' && entry.title && (
+                    <p className="text-sm font-semibold text-foreground mb-0.5">{entry.title}</p>
+                  )}
                   <p className="text-sm text-foreground leading-relaxed line-clamp-2">{displayBody}</p>
                 </>
               )}
@@ -174,6 +177,11 @@ export default function VaultEntryCard({ entry, index, christianEnabled, isLibra
                   {getEntryTypeLabel(entryType)}
                 </span>
                 <CategoryBadge category={form.category || entry.category} />
+                {entryType === 'vision_goal' && entry.progress_stage && (
+                  <span className="text-[10px] px-2 py-0.5 rounded-full font-medium" style={{ background: 'rgba(45,106,79,0.12)', color: '#2D6A4F' }}>
+                    {entry.progress_stage.replace(/_/g, ' ')}
+                  </span>
+                )}
                 {displayDate && (
                   <span className="text-[10px] text-muted-foreground">
                     {format(new Date(displayDate), 'MMM d, yyyy')}

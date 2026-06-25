@@ -18,6 +18,8 @@ export const STORAGE_LIMITS = {
   quote_author:             { soft: 100, hard: 160 },
   scripture_reference:      { soft: 100, hard: 160 },
   location:                 { soft: 100, hard: 160 },
+  vision_goal_body:         { soft: 600, hard: 1200 },
+  vision_goal_title:        { soft: 80,  hard: 120  },
 };
 
 /** Resolve the limit key for a given entry type + field */
@@ -26,6 +28,7 @@ export function getLimitKey(entryType, fieldKey) {
   if (fieldKey === 'author')    return 'quote_author';
   if (fieldKey === 'reference') return 'scripture_reference';
   if (fieldKey === 'location')  return 'location';
+  if (fieldKey === 'title' && entryType === 'vision_goal') return 'vision_goal_title';
   return `${entryType}_body`;
 }
 

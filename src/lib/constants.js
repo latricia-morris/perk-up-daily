@@ -16,6 +16,7 @@ export const ENTRY_TYPES = [
   { slug: 'quote', label: 'Quote', allowPhoto: false },
   { slug: 'identity_swap', label: 'Identity Upgrade', allowPhoto: false },
   { slug: 'scripture', label: 'Scripture', requiresChristian: true, allowPhoto: false },
+  { slug: 'vision_goal', label: 'Vision & Goals', allowPhoto: true },
 ];
 
 export const CONTENT_TYPES = [

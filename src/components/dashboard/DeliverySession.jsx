@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { Shuffle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import UpliftCard from '@/components/shared/UpliftCard';
+import VisionCheckIn from '@/components/vision/VisionCheckIn';
 import { getGreeting } from '@/lib/constants';
 
 const TILES_PER_SESSION = 3;
@@ -162,15 +163,24 @@ export default function DeliverySession({ libraryItems, userEntries, categories,
   }
 
   const [featured, ...supporting] = tiles;
+  const isVisionGoal = (item) => (item.entry_type || item.content_type) === 'vision_goal';
 
   return (
     <div>
-      <UpliftCard item={featured} featured source={featured.source} />
+      {isVisionGoal(featured) ? (
+        <VisionCheckIn entry={featured} featured />
+      ) : (
+        <UpliftCard item={featured} featured source={featured.source} />
+      )}
 
       {supporting.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
           {supporting.map((item, i) => (
-            <UpliftCard key={`${shuffleKey}-${i}-${item.id}`} item={item} source={item.source} />
+            isVisionGoal(item) ? (
+              <VisionCheckIn key={`${shuffleKey}-${i}-${item.id}`} entry={item} />
+            ) : (
+              <UpliftCard key={`${shuffleKey}-${i}-${item.id}`} item={item} source={item.source} />
+            )
           ))}
         </div>
       )}

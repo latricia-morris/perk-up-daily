@@ -2,8 +2,10 @@ import { memo, useCallback } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Upload, Loader2 } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import LimitedTextarea from '@/components/ui/limited-textarea';
 import { getLimit } from '@/lib/storageLimits';
+import { PROGRESS_STAGES } from '@/lib/visionGoals';
 
 /** Stable LimitedTextarea wrapper — defined OUTSIDE the parent so its identity
  *  never changes between renders. This is what stops the keyboard from closing. */
@@ -42,6 +44,28 @@ function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUpload, c
       />
     );
   };
+
+  /** Reusable photo upload block with landscape tip */
+  const PhotoUpload = () => (
+    <div>
+      <Label className="text-sm font-medium mb-1.5 block">Photo <span className="text-muted-foreground">(optional)</span></Label>
+      {form.photo_url ? (
+        <div className="relative">
+          <img src={form.photo_url} alt="" className="w-full h-48 object-cover rounded-lg" />
+          <button onClick={() => setForm(prev => ({ ...prev, photo_url: '' }))} className="absolute top-2 right-2 bg-foreground/50 text-background rounded-full w-6 h-6 flex items-center justify-center text-xs">×</button>
+        </div>
+      ) : (
+        <div>
+          <label className="flex items-center justify-center gap-2 border-2 border-dashed border-border rounded-lg p-8 cursor-pointer hover:border-primary/40 transition-colors">
+            {uploading ? <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /> : <Upload className="w-5 h-5 text-muted-foreground" />}
+            <span className="text-sm text-muted-foreground">{uploading ? 'Uploading...' : 'Upload a photo'}</span>
+            <input type="file" accept="image/*" onChange={onPhotoUpload} className="hidden" />
+          </label>
+          <p className="text-[10px] text-muted-foreground mt-1.5 text-center">Tip: Use a wide/landscape photo to minimize cropping.</p>
+        </div>
+      )}
+    </div>
+  );
 
   if (entryType === 'identity_swap') return (
     <>
@@ -105,6 +129,45 @@ function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUpload, c
     </div>
   );
 
+  if (entryType === 'vision_goal') {
+    const titleLim = getLimit(entryType, 'title');
+    return (
+      <>
+        <div>
+          <Label className="text-sm font-medium mb-1.5 block">What's the vision?</Label>
+          <Input
+            value={f('title')}
+            onChange={(e) => setForm(prev => ({ ...prev, title: e.target.value.slice(0, titleLim.hard) }))}
+            placeholder="e.g. Run my first 5K"
+            maxLength={titleLim.hard}
+          />
+        </div>
+        <div>
+          <Label className="text-sm font-medium mb-1.5 block">Tell us about it</Label>
+          {renderField('body', 'Why does this matter to you?', 'min-h-[100px]', false)}
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <Label className="text-sm font-medium mb-1.5 block">Target date <span className="text-muted-foreground">(optional)</span></Label>
+            <Input type="date" value={f('target_date')} onChange={set('target_date')} />
+          </div>
+          <div>
+            <Label className="text-sm font-medium mb-1.5 block">Progress</Label>
+            <Select value={f('progress_stage') || 'looking_ahead'} onValueChange={v => setForm(prev => ({ ...prev, progress_stage: v }))}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {PROGRESS_STAGES.map(s => (
+                  <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        <PhotoUpload />
+      </>
+    );
+  }
+
   if (entryType === 'reflection') return (
     <>
       <div>
@@ -160,21 +223,7 @@ function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUpload, c
         <Input type="date" value={f('entry_date')} onChange={set('entry_date')} />
         <p className="text-xs text-muted-foreground mt-1">Add a date and this entry will surface as an anniversary.</p>
       </div>
-      <div>
-        <Label className="text-sm font-medium mb-1.5 block">Photo <span className="text-muted-foreground">(optional)</span></Label>
-        {form.photo_url ? (
-          <div className="relative">
-            <img src={form.photo_url} alt="" className="w-full h-48 object-cover rounded-lg" />
-            <button onClick={() => setForm(prev => ({ ...prev, photo_url: '' }))} className="absolute top-2 right-2 bg-foreground/50 text-background rounded-full w-6 h-6 flex items-center justify-center text-xs">×</button>
-          </div>
-        ) : (
-          <label className="flex items-center justify-center gap-2 border-2 border-dashed border-border rounded-lg p-8 cursor-pointer hover:border-primary/40 transition-colors">
-            {uploading ? <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /> : <Upload className="w-5 h-5 text-muted-foreground" />}
-            <span className="text-sm text-muted-foreground">{uploading ? 'Uploading...' : 'Upload a photo'}</span>
-            <input type="file" accept="image/*" onChange={onPhotoUpload} className="hidden" />
-          </label>
-        )}
-      </div>
+      <PhotoUpload />
     </>
   );
 }

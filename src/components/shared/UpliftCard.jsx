@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getCategoryLabel } from '@/lib/constants';
 import { getSchema, getDisplayLabel } from '@/lib/contentSchema';
-import { Sparkles, BookOpen, Quote, Heart, Star, Trophy, ArrowLeftRight } from 'lucide-react';
+import { Sparkles, BookOpen, Quote, Heart, Star, Trophy, ArrowLeftRight, Target } from 'lucide-react';
 
 
 import ShareCard from '@/components/shared/ShareCard';
@@ -23,6 +23,7 @@ const typeConfig = {
   blessing:           { icon: Heart,    accent: '#BA1650', text: '#BA1650' },
   reflection:         { icon: Sparkles, accent: '#BA1650', text: '#BA1650' },
   identity_swap:      { icon: ArrowLeftRight, accent: '#5C3B8F', text: '#5C3B8F' },
+  vision_goal:        { icon: Target,        accent: '#2D6A4F', text: '#2D6A4F' },
 };
 
 const fallback = { icon: Sparkles, accent: '#D0902D', text: '#D0902D' };
@@ -42,13 +43,15 @@ function resolveDisplayFields(item) {
     photo: item.photo_url || null,
     location: item.location || null,
     date: item.entry_date || null,
+    target_date: item.target_date || null,
+    progress_stage: item.progress_stage || null,
     category: item.category || null,
   };
 }
 
 /** Renders ALL populated secondary fields for a tile, per content type — never early-returns */
 function TileSubline({ fields, size = 'sm' }) {
-  const { entryType, author, reference, location, date, category } = fields;
+  const { entryType, author, reference, location, date, target_date, category } = fields;
   const textClass = size === 'sm' ? 'text-[10px]' : 'text-xs';
   const lines = [];
 
@@ -66,6 +69,9 @@ function TileSubline({ fields, size = 'sm' }) {
   }
   if (['life_win', 'milestone', 'blessing'].includes(entryType) && date) {
     lines.push(<p key="date" className={`${textClass}`} style={{ color: '#c4a882' }}>{new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>);
+  }
+  if (entryType === 'vision_goal' && fields.target_date) {
+    lines.push(<p key="target" className={`${textClass} font-medium`} style={{ color: '#2D6A4F' }}>🎯 {new Date(fields.target_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>);
   }
   if (!lines.length && category) {
     lines.push(<p key="category" className={`${textClass}`} style={{ color: '#c4a882' }}>{getCategoryLabel(category)}</p>);

@@ -36,6 +36,7 @@ import Settings from '@/pages/Settings';
 import Admin from '@/pages/Admin';
 import Reflections from '@/pages/Reflections';
 import ElevateReflection from '@/pages/ElevateReflection';
+import VisionGoals from '@/pages/VisionGoals';
 import AppLayout from '@/components/layout/AppLayout';
 
 const AuthenticatedApp = () => {
@@ -90,6 +91,7 @@ const AuthenticatedApp = () => {
           <Route path="/admin" element={<Admin />} />
           <Route path="/reflections" element={<Reflections />} />
           <Route path="/elevate-reflection" element={<ElevateReflection />} />
+          <Route path="/vision-goals" element={<VisionGoals />} />
         </Route>
       </Route>
 

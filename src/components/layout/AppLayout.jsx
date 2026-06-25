@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Home, PlusCircle, Sparkles, Trophy, Settings,
   ShieldCheck, Zap, BookOpen, Menu, X, LogOut,
-  Heart, Image, Quote, FileText, Star, Search, PenLine, ArrowLeftRight
+  Heart, Image, Quote, FileText, Star, Search, PenLine, ArrowLeftRight, Target
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import SubscriptionGuard from '@/components/SubscriptionGuard';
@@ -26,6 +26,7 @@ const libraryNav = [
   { path: '/affirmations', icon: Zap, label: 'Affirmations' },
   { path: '/quotes', icon: Quote, label: 'Quotes' },
   { path: '/identity-upgrades', icon: ArrowLeftRight, label: 'Identity Upgrades' },
+  { path: '/vision-goals', icon: Target, label: 'Vision & Goals' },
 ];
 
 const scriptureNav = { path: '/scriptures', icon: BookOpen, label: 'Scriptures' };

@@ -130,6 +130,22 @@ export const CONTENT_SCHEMA = {
       category: { show: { form: true,  edit: true,  tile: false, social: false } },
     },
   },
+  vision_goal: {
+    label: 'Vision & Goals',
+    slug: 'vision_goal',
+    allowPhoto: true,
+    requiresChristian: false,
+    color: '#2D6A4F',
+    descriptor: 'What are you chasing? Name the vision, set a target, and keep it in your line of sight.',
+    fields: {
+      title:          { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'What\'s the vision?',  placeholder: 'e.g. Run my first 5K' },
+      body:           { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Tell us about it',     placeholder: 'Why does this matter to you?' },
+      target_date:    { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Target date',          optional: true },
+      progress_stage: { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Progress' },
+      photo:          { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Photo',                optional: true },
+      category:       { show: { form: true,  edit: true,  tile: true,  social: false } },
+    },
+  },
 };
 
 /** Get schema for a single entry type */
@@ -155,6 +171,7 @@ export function buildEmptyForm(entryType) {
   fieldKeys.forEach(f => {
     if (f === 'date') form.entry_date = '';
     else if (f === 'photo') form.photo_url = '';
+    else if (f === 'progress_stage') form.progress_stage = 'looking_ahead';
     else form[f] = '';
   });
   return form;
@@ -169,6 +186,7 @@ export function buildFormFromEntry(entry) {
   fieldKeys.forEach(f => {
     if (f === 'date') form.entry_date = entry.entry_date || '';
     else if (f === 'photo') form.photo_url = entry.photo_url || '';
+    else if (f === 'progress_stage') form.progress_stage = entry.progress_stage || 'looking_ahead';
     else if (f === 'reference') form.reference = entry.reference || entry.title || ''; // migrate old title→reference
     else if (f === 'author') form.author = entry.author || entry.title || ''; // migrate old title→author
     else form[f] = entry[f] || '';
@@ -191,8 +209,9 @@ export function serializeEntry(entryType, form) {
   });
 
   // For reflections, title stores the prompt — preserve it.
+  // For vision_goal, title is the goal name — preserve it.
   // For all other types, title is never used as a surrogate.
-  if (entryType !== 'reflection') payload.title = null;
+  if (entryType !== 'reflection' && entryType !== 'vision_goal') payload.title = null;
   return payload;
 }
 
