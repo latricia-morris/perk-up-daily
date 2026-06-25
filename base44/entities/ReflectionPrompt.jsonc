@@ -39,8 +39,10 @@
       }
     },
     "read": {
-      "data.status": "active",
       "$or": [
+        {
+          "data.status": "active"
+        },
         {
           "user_condition": {
             "role": "admin"
