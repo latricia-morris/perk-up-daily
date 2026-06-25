@@ -1,4 +1,5 @@
 import Stripe from 'npm:stripe@14';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.34';
 
 const PRICES = {
   monthly: 'price_1TkALtEyzW6vQLlOMrLtrYxy',
