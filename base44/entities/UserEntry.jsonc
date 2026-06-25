@@ -15,13 +15,14 @@
         "scripture",
         "accomplishment",
         "milestone",
-        "reflection"
+        "reflection",
+        "vision_goal"
       ],
       "description": "Type of user entry"
     },
     "title": {
       "type": "string",
-      "description": "Title or author/reference (for quotes/scriptures). For reflections, stores the prompt text."
+      "description": "Title or author/reference (for quotes/scriptures). For reflections, stores the prompt text. For vision_goal, the goal title."
     },
     "body": {
       "type": "string",
@@ -30,6 +31,14 @@
     "old_belief": {
       "type": "string",
       "description": "For identity_swap: the old false belief being released"
+    },
+    "author": {
+      "type": "string",
+      "description": "Author attribution for quotes"
+    },
+    "reference": {
+      "type": "string",
+      "description": "Bible reference for scriptures (e.g. Jeremiah 29:11 NIV)"
     },
     "category": {
       "type": "string",
@@ -47,6 +56,22 @@
       "type": "string",
       "format": "date",
       "description": "Optional date for entries"
+    },
+    "target_date": {
+      "type": "string",
+      "format": "date",
+      "description": "For vision_goal: the target completion date"
+    },
+    "progress_stage": {
+      "type": "string",
+      "enum": [
+        "looking_ahead",
+        "in_process",
+        "making_progress",
+        "almost_there",
+        "crushed_it"
+      ],
+      "description": "For vision_goal: current progress stage"
     },
     "location": {
       "type": "string",
@@ -80,8 +105,10 @@
       "created_by_id": "{{user.id}}"
     },
     "read": {
-      "created_by_id": "{{user.id}}",
       "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
         {
           "user_condition": {
             "role": "admin"
@@ -90,8 +117,10 @@
       ]
     },
     "update": {
-      "created_by_id": "{{user.id}}",
       "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
         {
           "user_condition": {
             "role": "admin"
@@ -100,8 +129,10 @@
       ]
     },
     "delete": {
-      "created_by_id": "{{user.id}}",
       "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
         {
           "user_condition": {
             "role": "admin"
