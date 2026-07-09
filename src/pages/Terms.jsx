@@ -105,11 +105,11 @@ export default function Terms() {
               <li>
                 <strong>Help:</strong> You may reply HELP at any time for help or contact{' '}
                 <a
-                  href="mailto:latriciamorris@gmail.com"
+                  href="mailto:perkupdaily@gmail.com"
                   className="underline"
                   style={{ color: '#E8A838' }}
                 >
-                  latriciamorris@gmail.com
+                  perkupdaily@gmail.com
                 </a>
                 .
               </li>
