@@ -114,7 +114,7 @@ export default function PrivacyPolicy() {
               <li>Update or correct your account information within the app or by contacting us.</li>
               <li>Opt out of marketing emails using the unsubscribe link in those messages.</li>
               <li>Opt out of SMS at any time by replying STOP.</li>
-              <li>Request access to or deletion of your personal information by contacting latriciamorris@gmail.com, subject to applicable law.</li>
+              <li>Request access to or deletion of your personal information by contacting perkupdaily@gmail.com, subject to applicable law.</li>
             </ul>
           </section>
 
