@@ -154,6 +154,7 @@ export function getSchema(entryType) {
   if (entryType === 'accomplishment' || entryType === 'milestone') return CONTENT_SCHEMA['life_win'];
   if (entryType === 'encouragement_note') return CONTENT_SCHEMA['power_up'];
   if (entryType === 'personal_note') return CONTENT_SCHEMA['power_up'];
+  if (entryType === 'quote') return CONTENT_SCHEMA['power_up'];
   return CONTENT_SCHEMA[entryType] || null;
 }
 

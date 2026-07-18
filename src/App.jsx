@@ -28,7 +28,14 @@ import Affirmations from '@/pages/Affirmations';
 import Scriptures from '@/pages/Scriptures';
 import MicroStories from '@/pages/MicroStories';
 import Blessings from '@/pages/Blessings';
-import Quotes from '@/pages/Quotes';
+import PowerUps from '@/pages/PowerUps';
+import NeuralTraining from '@/pages/NeuralTraining';
+import Reset from '@/pages/Reset';
+import BoxBreath from '@/pages/exercises/BoxBreath';
+import Breathe from '@/pages/exercises/Breathe';
+import FocusEx from '@/pages/exercises/Focus';
+import Sigh from '@/pages/exercises/Sigh';
+import SmileEx from '@/pages/exercises/Smile';
 import Notes from '@/pages/Notes';
 import IdentityUpgrades from '@/pages/IdentityUpgrades';
 import Search from '@/pages/Search';
@@ -83,7 +90,10 @@ const AuthenticatedApp = () => {
           <Route path="/scriptures" element={<Scriptures />} />
           <Route path="/micro-stories" element={<MicroStories />} />
           <Route path="/blessings" element={<Blessings />} />
-          <Route path="/quotes" element={<Quotes />} />
+          <Route path="/power-ups" element={<PowerUps />} />
+          <Route path="/quotes" element={<PowerUps />} />
+          <Route path="/neural-training" element={<NeuralTraining />} />
+          <Route path="/reset" element={<Reset />} />
           <Route path="/notes" element={<Notes />} />
           <Route path="/identity-upgrades" element={<IdentityUpgrades />} />
           <Route path="/search" element={<Search />} />
@@ -93,6 +103,13 @@ const AuthenticatedApp = () => {
           <Route path="/elevate-reflection" element={<ElevateReflection />} />
           <Route path="/vision-goals" element={<VisionGoals />} />
         </Route>
+
+        {/* Full-screen exercise routes — outside AppLayout for immersive experience */}
+        <Route path="/exercises/box-breath" element={<BoxBreath />} />
+        <Route path="/exercises/breathe" element={<Breathe />} />
+        <Route path="/exercises/focus" element={<FocusEx />} />
+        <Route path="/exercises/sigh" element={<Sigh />} />
+        <Route path="/exercises/smile" element={<SmileEx />} />
       </Route>
 
       <Route path="*" element={<PageNotFound />} />

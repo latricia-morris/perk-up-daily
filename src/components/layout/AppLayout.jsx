@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Home, PlusCircle, Sparkles, Trophy, Settings,
   ShieldCheck, Zap, BookOpen, Menu, X, LogOut,
-  Heart, Image, Quote, FileText, Star, Search, PenLine, ArrowLeftRight, Target
+  Heart, Image, Star, Search, ArrowLeftRight, Target, Brain, RotateCcw
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import SubscriptionGuard from '@/components/SubscriptionGuard';
@@ -19,14 +19,14 @@ const mainNav = [
 ];
 
 const libraryNav = [
-  { path: '/reflections', icon: PenLine, label: 'Reflections' },
+  { path: '/neural-training', icon: Brain, label: 'Neural Training' },
   { path: '/micro-stories', icon: Image, label: 'Micro-Stories' },
   { path: '/blessings', icon: Heart, label: 'Blessings' },
   { path: '/milestones', icon: Trophy, label: 'Life Wins' },
   { path: '/affirmations', icon: Zap, label: 'Affirmations' },
-  { path: '/quotes', icon: Quote, label: 'Quotes' },
   { path: '/identity-upgrades', icon: ArrowLeftRight, label: 'Identity Upgrades' },
   { path: '/vision-goals', icon: Target, label: 'Vision & Goals' },
+  { path: '/power-ups', icon: Star, label: 'Power-Ups' },
 ];
 
 const scriptureNav = { path: '/scriptures', icon: BookOpen, label: 'Scriptures' };
@@ -35,7 +35,7 @@ const sideTabNav = [
   { path: '/dashboard', icon: Home, label: 'Home' },
   { path: '/vault', icon: Sparkles, label: 'Perk Ups' },
   { path: '/search', icon: Search, label: 'Search' },
-  { path: '/settings', icon: Settings, label: 'Settings' },
+  { path: '/reset', icon: RotateCcw, label: 'Reset' },
 ];
 
 function NavLink({ path, icon: Icon, label, onClick }) {

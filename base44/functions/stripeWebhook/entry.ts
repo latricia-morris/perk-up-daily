@@ -47,7 +47,7 @@ Deno.serve(async (req) => {
 
       if (subscriptionId) {
         const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-        console.log(`Subscription status: ${subscription.status}, trial_end: ${subscription.trrial_end}, period_end: ${subscription.current_period_end}`);
+        console.log(`Subscription status: ${subscription.status}, trial_end: ${subscription.trial_end}, period_end: ${subscription.current_period_end}`);
 
         if (subscription.status === 'trialing') {
           status = 'trial';
