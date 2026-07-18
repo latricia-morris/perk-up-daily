@@ -5,12 +5,13 @@
     "content_type": {
       "type": "string",
       "enum": [
+        "power_up",
         "quote",
         "affirmation",
         "scripture",
         "encouragement_note"
       ],
-      "description": "Type of library content. 'affirmation' displays as 'Declaration' to users."
+      "description": "Type of library content. 'power_up' is the canonical type for short high-impact content (replaces 'quote'). 'affirmation' displays as 'Declaration' to users."
     },
     "body": {
       "type": "string",
@@ -18,7 +19,7 @@
     },
     "author": {
       "type": "string",
-      "description": "Author or attribution. Required for quotes. For scriptures, use the Bible reference (e.g. Jeremiah 29:11 NIV)."
+      "description": "Author or attribution. For scriptures, use the Bible reference (e.g. Jeremiah 29:11 NIV)."
     },
     "category": {
       "type": "string",

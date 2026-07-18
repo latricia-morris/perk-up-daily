@@ -13,14 +13,14 @@ export const ENTRY_TYPES = [
   { slug: 'blessing', label: 'Blessing', allowPhoto: true },
   { slug: 'life_win', label: 'Life Win', allowPhoto: true },
   { slug: 'affirmation', label: 'Affirmation', allowPhoto: false },
-  { slug: 'quote', label: 'Quote', allowPhoto: false },
+  { slug: 'power_up', label: 'Power-Up', allowPhoto: false },
   { slug: 'identity_swap', label: 'Identity Upgrade', allowPhoto: false },
   { slug: 'scripture', label: 'Scripture', requiresChristian: true, allowPhoto: false },
   { slug: 'vision_goal', label: 'Vision & Goals', allowPhoto: true },
 ];
 
 export const CONTENT_TYPES = [
-  { slug: 'quote', label: 'Quote' },
+  { slug: 'power_up', label: 'Power-Up' },
   { slug: 'affirmation', label: 'Affirmation' },
   { slug: 'scripture', label: 'Scripture', requiresChristian: true },
 ];
@@ -30,8 +30,9 @@ export function getCategoryLabel(slug) {
 }
 
 export function getEntryTypeLabel(slug) {
-  // Legacy slug support
+  // Legacy slug support — 'quote' is now 'power_up'
   if (slug === 'accomplishment' || slug === 'milestone') return 'Life Win';
+  if (slug === 'quote') return 'Power-Up';
   return ENTRY_TYPES.find(t => t.slug === slug)?.label || slug;
 }
 
@@ -40,6 +41,7 @@ export function isIdentitySwap(entry) {
 }
 
 export function getContentTypeLabel(slug) {
+  if (slug === 'quote') return 'Power-Up';
   return CONTENT_TYPES.find(t => t.slug === slug)?.label || slug;
 }
 

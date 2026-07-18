@@ -1,0 +1,93 @@
+{
+  "name": "NeuralTraining",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Exercise title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Short description of what the exercise does"
+    },
+    "exercise_type": {
+      "type": "string",
+      "enum": [
+        "breathing",
+        "perspective",
+        "cognitive_drill",
+        "reframing"
+      ],
+      "description": "Category of neural training exercise"
+    },
+    "route": {
+      "type": "string",
+      "description": "For component-based exercises: the app route to navigate to (e.g. /exercises/breathe)"
+    },
+    "content": {
+      "type": "string",
+      "description": "For data-driven exercises: the prompt text, instructions, or question"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "deep_faith",
+        "rich_relationships",
+        "strong_body",
+        "clear_mind",
+        "strong_business",
+        "sound_money",
+        "general"
+      ],
+      "default": "general",
+      "description": "Optional life area category"
+    },
+    "sort_order": {
+      "type": "number",
+      "default": 0,
+      "description": "Display order within its exercise type"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "archived"
+      ],
+      "default": "active",
+      "description": "Whether this exercise is available to users"
+    }
+  },
+  "required": [
+    "title",
+    "exercise_type"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "$or": [
+        {
+          "data.status": "active"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
