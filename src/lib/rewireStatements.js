@@ -1,43 +1,43 @@
 /**
- * Rewire in 60 — Statement Bank
- * Short, brain-affirming statements for the 60-second reinforcement micro-game.
+ * Rewire in 60 — Statement Bank (v2)
+ * Self-contained content bank. 20 fully-populated entries from CSV review.
+ * Each entry: statement, relevance_prompt, present_impact_prompt, matchups (3), category.
+ * NOTE: Spec calls for 40-50 entries minimum; 20 loaded here — more content needed before full launch.
  */
 
 export const REWIRE_STATEMENTS = [
-  "I am capable of learning something new today.",
-  "My brain grows stronger every time I try.",
-  "I can handle this moment.",
-  "I am becoming the person I want to be.",
-  "Every step forward counts.",
-  "I am built for this.",
-  "My effort matters more than the outcome.",
-  "I choose progress over perfection.",
-  "I am stronger than I feel right now.",
-  "Good things are working in my favor.",
-  "I can do hard things.",
-  "My past doesn't define my future.",
-  "I am worthy of good things.",
-  "Today is full of new possibilities.",
-  "I trust myself to figure it out.",
-  "I am growing, even when it's slow.",
-  "I choose to believe in myself today.",
-  "I am exactly where I need to be.",
-  "My potential is not limited by my past.",
-  "I am enough, exactly as I am.",
-  "I choose courage over comfort.",
-  "I am creating a life I'm proud of.",
-  "My voice and perspective matter.",
-  "I am resilient in the face of challenges.",
-  "I choose to see the good today.",
-  "I am surrounded by opportunities.",
-  "I trust the timing of my life.",
-  "I am capable of more than I know.",
-  "I choose hope over fear.",
-  "I am becoming stronger every day.",
-  "My future is bright and full of potential.",
-  "I am worthy of love and respect.",
-  "I choose to keep showing up.",
-  "I am grounded and capable.",
-  "I trust my ability to navigate today.",
-  "I am becoming who I was made to be.",
+  { id: 1, category: 'self-worth', statement: "I don't have to earn a seat at the table. I already belong here.", relevance_prompt: "When this week did you hold back because some part of you felt like you hadn't earned your place yet?", present_impact_prompt: "How did shrinking back (or not) last week change how comfortable you feel showing up today?", matchups: ["keep showing up even when I feel like an imposter", "shrink myself so nobody questions whether I deserve to be here", "just kind of hover at the edges and hope nobody notices me either way"] },
+  { id: 2, category: 'self-worth', statement: "Being told no by one person doesn't mean I'm not worth a yes from someone else.", relevance_prompt: "When this week did one no make you want to stop trying altogether?", present_impact_prompt: "Did the way you handled that no last week make it easier or harder to try again today?", matchups: ["keep putting myself out there even after getting turned down", "let one no convince me to stop trying altogether", "quietly lower what I ask for so rejection can't sting as much"] },
+  { id: 3, category: 'fear/anxiety', statement: "The fact that I'm scared of this doesn't mean I'm not ready for it.", relevance_prompt: "When this week did fear try to convince you that you weren't ready for something?", present_impact_prompt: "Where did that fear actually leave you standing today — did it stop you, or did you move anyway?", matchups: ["walk into the thing scared and do it anyway", "wait until the fear disappears completely before I even try", "let someone else make the call so I don't have to risk it myself"] },
+  { id: 4, category: 'fear/anxiety', statement: "Most of what I'm bracing for never actually happens the way I picture it.", relevance_prompt: "When this week did you brace yourself for something that turned out very differently than you expected?", present_impact_prompt: "Now that you know how it actually turned out, how much energy do you think you spent bracing for nothing?", matchups: ["notice when I'm spiraling into a story that hasn't happened yet", "keep rehearsing the worst version of tomorrow like it's already decided", "distract myself instead of ever checking whether the fear is even accurate"] },
+  { id: 5, category: 'relationships', statement: "Someone pulling away doesn't automatically mean I did something wrong.", relevance_prompt: "When this week did someone seem distant, and you immediately assumed it was about something you did?", present_impact_prompt: "Did assuming it was your fault change how you showed up with that person today?", matchups: ["give people room without immediately assuming the worst about myself", "replay every interaction looking for the thing I must have messed up", "go quiet myself and wait to see who reaches out first"] },
+  { id: 6, category: 'relationships', statement: "I can care about someone and still tell them the truth.", relevance_prompt: "When this week did you swallow something true because you didn't want to upset someone?", present_impact_prompt: "Is what you didn't say still sitting there today, unresolved?", matchups: ["say the honest thing even when it's uncomfortable", "keep swallowing what I actually think to keep the peace", "let the relationship coast on things left unsaid"] },
+  { id: 7, category: 'purpose/identity', statement: "I don't need the whole plan figured out to take the next right step.", relevance_prompt: "When this week did you stall out because you couldn't see the whole path yet?", present_impact_prompt: "Did waiting for the full plan actually move you forward today, or just keep you standing still?", matchups: ["move on the piece I can actually see clearly right now", "stay stuck until I can map out every step from here to the end", "keep everything the same because starting without a full plan feels too risky"] },
+  { id: 8, category: 'purpose/identity', statement: "What I've survived already proves more about me than what I haven't done yet.", relevance_prompt: "When this week did you forget to give yourself credit for something you've already gotten through?", present_impact_prompt: "How differently would today feel if you actually counted what you've already survived as proof, not just what's still unfinished?", matchups: ["let what I've already come through remind me what I can handle", "measure myself only against what's still unfinished", "brush past what I've survived like it doesn't really count"] },
+  { id: 9, category: 'self-worth', statement: "My value doesn't go up when I'm praised or down when I'm criticized.", relevance_prompt: "When this week did one comment (good or bad) end up deciding how you felt about yourself for the rest of the day?", present_impact_prompt: "Is the way you feel about yourself today actually tied to who you are, or to the last thing someone said to you?", matchups: ["hear feedback without letting it decide how I feel about myself", "let one piece of criticism undo a good week", "chase praise so I don't have to sit with how I actually feel about myself"] },
+  { id: 10, category: 'fear/anxiety', statement: "I can feel unprepared and still be capable enough to figure it out as I go.", relevance_prompt: "When this week did you avoid starting something because you didn't feel ready yet?", present_impact_prompt: "Looking at today, did waiting to feel ready actually make you any more prepared than just starting would have?", matchups: ["start even when I don't feel fully ready", "wait for a readiness that never actually shows up on its own", "hand the thing off to someone else so I don't have to risk being unprepared"] },
+  { id: 11, category: 'relationships', statement: "Asking for help doesn't make me a burden, it makes me honest.", relevance_prompt: "When this week did you need help but talked yourself out of asking for it?", present_impact_prompt: "Are you carrying something today that you're only carrying because you didn't ask?", matchups: ["actually say what I need instead of hoping someone notices", "keep carrying it alone so I don't feel like I'm asking for too much", "drop hints and get quietly frustrated when no one picks up on them"] },
+  { id: 12, category: 'purpose/identity', statement: "Slow progress is still progress, even on the days it doesn't feel like much.", relevance_prompt: "When this week did a slow day make you feel like you weren't actually moving at all?", present_impact_prompt: "If you looked at today honestly, is there movement you're not giving yourself credit for?", matchups: ["count the small wins even when the big picture still feels far off", "write off a slow week as if nothing actually happened", "quit early because the pace doesn't match what I expected"] },
+  { id: 13, category: 'self-worth', statement: "I get to take up space in my own life without apologizing for it.", relevance_prompt: "When this week did you downsize something you wanted before anyone even pushed back on it?", present_impact_prompt: "Did shrinking that want down actually make today easier, or did it just make you smaller?", matchups: ["say what I actually want out loud instead of downsizing it first", "apologize for needing things before anyone's even asked me to", "let other people's comfort quietly outrank my own"] },
+  { id: 14, category: 'fear/anxiety', statement: "A racing heart is my body's alarm system, not proof that something's actually wrong.", relevance_prompt: "When this week did your body panic before your mind had a chance to check if there was a real reason to?", present_impact_prompt: "Looking back at today, was there an actual threat, or was it your body reacting to something that never showed up?", matchups: ["pause and check what's real before reacting to the alarm", "treat every physical panic signal as confirmed danger", "avoid the situation entirely so the alarm never has a chance to go off"] },
+  { id: 15, category: 'relationships', statement: "Other people's moods are information, not always instructions for how I should feel.", relevance_prompt: "When this week did someone else's bad mood end up becoming your bad mood too?", present_impact_prompt: "Is the mood you're carrying today actually yours, or did you pick it up from someone else this week?", matchups: ["notice someone's mood without automatically absorbing it as my own", "let one person's bad day quietly rewrite mine", "walk on eggshells to manage feelings that were never actually mine to fix"] },
+  { id: 16, category: 'purpose/identity', statement: "I'm allowed to outgrow a version of myself without owing anyone an explanation for it.", relevance_prompt: "When this week did you hold back from changing because you didn't want to explain it to someone?", present_impact_prompt: "Is there a version of yourself today you're still performing just to keep someone else comfortable?", matchups: ["let myself change even when it surprises people who knew the old version", "stay small in old roles just to keep everyone comfortable", "justify every change I make instead of just living it"] },
+  { id: 17, category: 'faith-based', statement: "Waiting isn't the same as being forgotten.", relevance_prompt: "When this week did waiting for an answer start to feel like being overlooked?", present_impact_prompt: "Did the wait actually mean nothing was happening, or just that you couldn't see it happening yet?", matchups: ["keep trusting the timing even when it's slower than I'd like", "let the wait convince me nothing is actually happening", "give up right before the thing I was waiting on had room to move"] },
+  { id: 18, category: 'faith-based', statement: "I don't have to carry what was never mine to carry alone.", relevance_prompt: "When this week did you pick up a weight that was never actually supposed to be yours?", present_impact_prompt: "What is still on your shoulders today that you could actually set down?", matchups: ["actually set something down instead of gripping it tighter", "keep holding onto weight that was never meant to be mine alone", "pretend I'm fine carrying it so no one questions me"] },
+  { id: 19, category: 'self-worth', statement: "The people who matter most were never keeping score on my mistakes.", relevance_prompt: "When this week did an old mistake resurface in your head like it was still being counted against you?", present_impact_prompt: "Who's actually still keeping score today — the people around you, or just you?", matchups: ["let myself off the hook the way the people who love me already have", "keep replaying an old mistake like it's still being graded", "avoid people altogether so the mistake never has to come up again"] },
+  { id: 20, category: 'purpose/identity', statement: "Not knowing what's next yet doesn't mean I'm behind, it means I'm between.", relevance_prompt: "When this week did not having a clear next step make you feel like you were falling behind?", present_impact_prompt: "Is today actually behind schedule, or just in between one thing and the next?", matchups: ["let this in-between season have its own pace without rushing it", "panic like I'm falling behind everyone else's timeline", "numb out and let the in-between just pass without paying attention"] },
 ];
+
+export const FARED_OPTIONS = ['Not good', 'So-so', 'Stellar'];
+
+export const MATCHUP_STEMS = [
+  'I will / prefer to…',
+  "I won't…",
+  "I'm okay with / neutral toward…",
+];
+
+export function getRandomStatement(excludeIds = []) {
+  const pool = REWIRE_STATEMENTS.filter(s => !excludeIds.includes(s.id));
+  const pick = pool.length > 0 ? pool : REWIRE_STATEMENTS;
+  return pick[Math.floor(Math.random() * pick.length)];
+}

@@ -1,75 +1,47 @@
 /**
- * Instinct vs Insight — Scenario Bank
- * 42 real-world scenarios that trigger gut reactions across 10 life categories.
- * Each scenario has 2-3 tap-able response options.
+ * Instinct vs Insight — Scenario Bank (v2)
+ * Self-contained content bank. 32 entries from CSV review.
+ * Each entry: situation, feelings (3), starters (2), category.
+ * Steps 2, 4, and 5 are open-ended user reflection — only situation + starters need bank content.
  */
 
 export const INSTINCT_SCENARIOS = [
-  // CONFLICT
-  { id: 1, text: "Someone criticizes your work in front of others. Your first instinct?", options: ["Defend myself immediately", "Shut down and go quiet", "Get angry"], category: "Conflict" },
-  { id: 2, text: "A friend cancels on you last-minute, again. Your first instinct?", options: ["Assume they don't value me", "Get irritated but say nothing", "Call them out"], category: "Conflict" },
-  { id: 3, text: "Someone takes credit for your idea. Your first instinct?", options: ["Say something right now", "Let it go, it's not worth it", "Feel resentful and stew"], category: "Conflict" },
-  { id: 4, text: "You're interrupted mid-sentence in a meeting. Your first instinct?", options: ["Assume my input doesn't matter", "Talk louder to be heard", "Let it go"], category: "Conflict" },
-  { id: 5, text: "Someone disagrees with you strongly in front of others. Your first instinct?", options: ["Prove I'm right", "Go quiet to avoid escalation", "Feel embarrassed"], category: "Conflict" },
+  { id: 1, category: 'relationships', situation: "Someone doesn't respond to your text for a few hours.", feelings: ['Anxious', 'Rejected', 'Impatient'], starters: ["Maybe they're just in the middle of something and haven't seen it yet.", "People go quiet for all kinds of reasons that have nothing to do with me."] },
+  { id: 2, category: 'relationships', situation: "A friend cancels plans on you last minute for the second time in a row.", feelings: ['Hurt', 'Frustrated', 'Unimportant'], starters: ["Life gets messy sometimes, and this might just be a rough patch for them.", "I can be disappointed without deciding this means they don't care."] },
+  { id: 3, category: 'self-worth', situation: "You make a small mistake in front of coworkers during a meeting.", feelings: ['Embarrassed', 'Exposed', 'Small'], starters: ["Everyone messes up in front of others sometimes, it's not the disaster it feels like.", "One slip doesn't erase everything I've actually gotten right."] },
+  { id: 4, category: 'self-worth', situation: "Someone gives you feedback that stings more than you expected.", feelings: ['Defensive', 'Ashamed', 'Deflated'], starters: ["Feedback about my work isn't a verdict on who I am as a person.", "I can take this seriously without taking it as proof I'm not good enough."] },
+  { id: 5, category: 'fear/anxiety', situation: "You're about to have a conversation you've been putting off because it feels risky.", feelings: ['Dread', 'Nervous', 'On edge'], starters: ["The version of this I've built up in my head is probably worse than what actually happens.", "I can be nervous and still walk in and say what I need to say."] },
+  { id: 6, category: 'fear/anxiety', situation: "You notice your heart racing before a presentation or big moment.", feelings: ['Panicked', 'Shaky', 'Overwhelmed'], starters: ["This is just my body gearing up, not a sign that something's about to go wrong.", "Feeling keyed up doesn't mean I'm not actually ready for this."] },
+  { id: 7, category: 'control/perfectionism', situation: "A project doesn't turn out exactly how you planned it, even though it still worked.", feelings: ['Disappointed', 'Restless', 'Unsatisfied'], starters: ["Good enough and done is sometimes worth more than perfect and never finished.", "This still counts as a win even if it didn't match the picture in my head."] },
+  { id: 8, category: 'control/perfectionism', situation: "You catch yourself redoing something for the third time because it still doesn't feel right.", feelings: ['Uneasy', 'Obsessive', 'Never satisfied'], starters: ["At some point, more effort stops improving this and starts just delaying me.", "I can let this be finished without it being flawless."] },
+  { id: 9, category: 'purpose/identity', situation: "You compare where you are in life to where a friend or peer already is.", feelings: ['Behind', 'Inadequate', 'Discouraged'], starters: ["Their timeline isn't proof of anything about mine.", "I'm allowed to be exactly where I am without treating it like I'm behind."] },
+  { id: 10, category: 'purpose/identity', situation: "You're not sure what you actually want anymore in a season that used to feel clear.", feelings: ['Lost', 'Unsettled', 'Ashamed of not knowing'], starters: ["Not having it figured out right now doesn't mean I've lost it for good.", "Seasons where things feel unclear are still part of getting somewhere, not proof I've stalled."] },
+  { id: 11, category: 'relationships', situation: "Someone close to you seems distant or short with you lately, and you don't know why.", feelings: ['Confused', 'Anxious', 'On guard'], starters: ["Whatever's going on with them might not have anything to do with me at all.", "I can ask what's going on instead of quietly building a story in my head."] },
+  { id: 12, category: 'self-worth', situation: "You didn't get picked for something you really wanted.", feelings: ['Rejected', 'Disappointed', 'Discouraged'], starters: ["Not being chosen this time doesn't mean I wasn't good enough to be chosen.", "There's a difference between this wasn't the right fit and I'm not enough."] },
+  { id: 13, category: 'fear/anxiety', situation: "You're waiting on results or news that could go either way.", feelings: ['Anxious', 'Restless', 'On edge'], starters: ["However this turns out, I'll actually be able to handle it when it gets here.", "The waiting is the hardest part, and it doesn't mean the outcome is already bad."] },
+  { id: 14, category: 'control/perfectionism', situation: "You have to hand off a task to someone else and let them do it their own way.", feelings: ['Uneasy', 'Distrustful', 'Anxious'], starters: ["It doesn't have to be done exactly like I'd do it to still get done well.", "Letting go of this doesn't mean it falls apart without me."] },
+  { id: 15, category: 'purpose/identity', situation: "You feel like you're starting over in an area of life you thought you'd already figured out.", feelings: ['Defeated', 'Embarrassed', 'Discouraged'], starters: ["Starting again isn't the same as never having made any progress at all.", "This chapter can look different from the last one without meaning I failed the last one."] },
+  { id: 16, category: 'relationships', situation: "You say something in a conversation and immediately worry it came out wrong.", feelings: ['Embarrassed', 'Anxious', 'Self-conscious'], starters: ["One awkward moment isn't the thing this whole relationship is going to be remembered by.", "I can circle back and clarify instead of assuming the damage is already done."] },
+  { id: 17, category: 'self-worth', situation: "You scroll social media and end up feeling worse about your own life.", feelings: ['Inadequate', 'Envious', 'Discouraged'], starters: ["What I'm seeing is a highlight reel, not the full picture of anyone's actual life.", "Their good moment doesn't take anything away from what's actually true about mine."] },
+  { id: 18, category: 'fear/anxiety', situation: "You have to make a decision without knowing exactly how it's going to turn out.", feelings: ['Uncertain', 'Anxious', 'Overwhelmed'], starters: ["I don't need certainty to make a decision I can stand behind.", "Not knowing the outcome yet doesn't mean I'm choosing wrong."] },
+  { id: 19, category: 'control/perfectionism', situation: "Plans you organized fall apart because of something outside your control.", feelings: ['Frustrated', 'Responsible', 'Anxious'], starters: ["This going sideways isn't evidence that I didn't plan it well enough.", "Some things were never going to be mine to control in the first place."] },
+  { id: 20, category: 'purpose/identity', situation: "You turn down an opportunity that would've looked good on paper but didn't feel right.", feelings: ['Uncertain', 'Guilty', 'Anxious'], starters: ["Saying no to something impressive doesn't mean I'm wasting my potential.", "What looks right for someone else isn't automatically what's right for me."] },
+  { id: 21, category: 'faith-based', situation: "You're praying or hoping for something and the answer still hasn't come.", feelings: ['Discouraged', 'Impatient', 'Doubtful'], starters: ["Silence right now doesn't mean the answer is no, it might just not be time yet.", "I can keep trusting the process even in the part where nothing seems to be happening."] },
+  { id: 22, category: 'faith-based', situation: "You feel like you've fallen short of who you're trying to become.", feelings: ['Ashamed', 'Discouraged', 'Defeated'], starters: ["One off day doesn't cancel out the direction I'm actually walking in.", "Grace covers this stumble the same way it's covered every one before it."] },
+  { id: 23, category: 'relationships', situation: "You have to set a boundary with someone you care about, and you're worried how they'll take it.", feelings: ['Guilty', 'Anxious', 'Torn'], starters: ["A boundary isn't me pulling away from them, it's me staying in this relationship honestly.", "Their reaction to my boundary tells me something about them, not something wrong about me for having it."] },
+  { id: 24, category: 'self-worth', situation: "You accomplish something and immediately downplay it instead of letting it count.", feelings: ['Uncomfortable', 'Undeserving', 'Restless'], starters: ["I'm allowed to actually let this be a win instead of talking myself out of it.", "Brushing this off doesn't make me humble, it just makes me miss my own progress."] },
+  { id: 25, category: 'fear/anxiety', situation: "You avoid checking something (an email, a message, a number) because you're scared of what you'll find.", feelings: ['Dread', 'Anxious', 'Avoidant'], starters: ["Whatever it says, I can handle knowing it more than I can handle not knowing.", "Avoiding it doesn't make it not true, it just makes the waiting longer."] },
+  { id: 26, category: 'control/perfectionism', situation: "Someone points out a flaw in something you worked hard on.", feelings: ['Stung', 'Defensive', 'Discouraged'], starters: ["One flaw doesn't undo everything else that's actually working in this.", "I can fix what needs fixing without treating the whole thing as ruined."] },
+  { id: 27, category: 'purpose/identity', situation: "You feel pulled toward a change that would disappoint people who expect you to stay the same.", feelings: ['Torn', 'Guilty', 'Anxious'], starters: ["Their expectations were never supposed to be the ceiling on who I become.", "I can love people and still choose differently than what they pictured for me."] },
+  { id: 28, category: 'relationships', situation: "You find out about plans you weren't included in.", feelings: ['Hurt', 'Excluded', 'Insecure'], starters: ["Not being included this one time isn't proof I'm being pushed out.", "I can feel left out without turning it into a verdict on the whole friendship."] },
+  { id: 29, category: 'self-worth', situation: "You're the only one who didn't finish, win, or succeed in a group setting.", feelings: ['Embarrassed', 'Inadequate', 'Isolated'], starters: ["Where I landed this time isn't the whole story of what I'm capable of.", "Everyone's on a different timeline, and mine isn't behind just because it's different."] },
+  { id: 30, category: 'fear/anxiety', situation: "You wake up already dreading something later in the day.", feelings: ['Dread', 'Heavy', 'On edge'], starters: ["The dread showing up early doesn't mean the day is already decided.", "I can feel the nerves now and still have this go completely fine later."] },
+  { id: 31, category: 'faith-based', situation: "You're carrying something heavy and trying to hold it together on your own.", feelings: ['Exhausted', 'Alone', 'Overwhelmed'], starters: ["I wasn't actually built to carry this by myself, and setting it down isn't giving up.", "Asking for help with this is still allowed, even this far into carrying it alone."] },
+  { id: 32, category: 'control/perfectionism', situation: "You're tempted to stay up late fixing something that's already good enough.", feelings: ['Restless', 'Guilty', 'Driven'], starters: ["Rest is part of doing this well, not something standing in the way of it.", "This can wait until tomorrow without falling apart overnight."] },
+].filter(Boolean);
 
-  // MONEY
-  { id: 6, text: "An unexpected bill arrives. Your first instinct?", options: ["Panic about money", "Get frustrated at myself", "Immediately problem-solve"], category: "Money" },
-  { id: 7, text: "You see someone succeeding financially where you're not. Your first instinct?", options: ["Feel behind", "Feel motivated", "Feel resentful"], category: "Money" },
-  { id: 8, text: "You have to say no to something because of budget. Your first instinct?", options: ["Feel embarrassed", "Feel responsible and mature", "Feel resentful about money"], category: "Money" },
-  { id: 9, text: "A big expense comes up that you didn't plan for. Your first instinct?", options: ["Assume I'll never get ahead", "Trust I'll figure it out", "Blame myself for not saving more"], category: "Money" },
-  { id: 10, text: "Someone asks to borrow money from you. Your first instinct?", options: ["Say yes even if I shouldn't", "Feel guilty saying no", "Set a clear boundary calmly"], category: "Money" },
-
-  // SELF-WORTH
-  { id: 11, text: "You make a visible mistake at work. Your first instinct?", options: ["I'm not good enough", "Everyone's watching me fail", "This is just one moment"], category: "Self-Worth" },
-  { id: 12, text: "You don't hear back after a big opportunity. Your first instinct?", options: ["I wasn't good enough", "Their loss", "Something better is coming"], category: "Self-Worth" },
-  { id: 13, text: "Someone doesn't respond to your text for hours. Your first instinct?", options: ["They're upset with me", "They're busy", "I did something wrong"], category: "Self-Worth" },
-  { id: 14, text: "You receive praise for something you did. Your first instinct?", options: ["Deflect it, it's not a big deal", "Feel like a fraud", "Simply say thank you"], category: "Self-Worth" },
-  { id: 15, text: "You compare your progress to where you thought you'd be by now. Your first instinct?", options: ["I'm behind", "I'm exactly where I need to be", "I've wasted time"], category: "Self-Worth" },
-
-  // RELATIONSHIPS
-  { id: 16, text: "Your partner seems distant tonight. Your first instinct?", options: ["Assume it's about me", "Ask what's wrong", "Withdraw too"], category: "Relationships" },
-  { id: 17, text: "A family member gives unsolicited advice. Your first instinct?", options: ["Get defensive", "Feel judged", "Brush it off"], category: "Relationships" },
-  { id: 18, text: "Someone you trust lets you down. Your first instinct?", options: ["I can't rely on anyone", "This is disappointing but not everything", "It's my fault for trusting them"], category: "Relationships" },
-  { id: 19, text: "A friend shares something that hurts your feelings, without meaning to. Your first instinct?", options: ["Say nothing and let it build", "Address it calmly", "Assume they don't care about my feelings"], category: "Relationships" },
-  { id: 20, text: "Someone you love needs space right now. Your first instinct?", options: ["Feel rejected", "Give them room", "Chase for reassurance"], category: "Relationships" },
-
-  // OPPORTUNITY
-  { id: 21, text: "A new opportunity feels exciting but risky. Your first instinct?", options: ["Play it safe", "Jump in", "Overthink it for days"], category: "Opportunity" },
-  { id: 22, text: "You're offered something bigger than you feel ready for. Your first instinct?", options: ["I'm not ready", "I'll figure it out", "This is a mistake"], category: "Opportunity" },
-  { id: 23, text: "A plan you were excited about falls through. Your first instinct?", options: ["This always happens to me", "Something else will open up", "I should have known better"], category: "Opportunity" },
-  { id: 24, text: "You have to pitch or advocate for yourself. Your first instinct?", options: ["Downplay what I bring", "Own it confidently", "Avoid it if possible"], category: "Opportunity" },
-  { id: 25, text: "You're asked to lead something for the first time. Your first instinct?", options: ["I'm not qualified for this", "This is my moment", "I'll probably mess it up"], category: "Opportunity" },
-
-  // FAMILY
-  { id: 26, text: "A parent or sibling questions a decision you made. Your first instinct?", options: ["Doubt myself immediately", "Explain calmly and hold my ground", "Get defensive"], category: "Family" },
-  { id: 27, text: "You have to set a boundary with a family member. Your first instinct?", options: ["Feel guilty even thinking about it", "Set it clearly and kindly", "Avoid the conversation entirely"], category: "Family" },
-  { id: 28, text: "An old family pattern shows up again at a gathering. Your first instinct?", options: ["Fall right back into the old role", "Notice it and choose differently", "Get frustrated and shut down"], category: "Family" },
-  { id: 29, text: "Someone in your family compares you to a sibling or relative. Your first instinct?", options: ["Feel like I don't measure up", "That's their perception, not my truth", "Get competitive"], category: "Family" },
-  { id: 30, text: "You disappoint a family member by choosing yourself. Your first instinct?", options: ["Feel like a bad person", "Feel okay honoring my own needs", "Overexplain myself"], category: "Family" },
-
-  // CAREER
-  { id: 31, text: "You're passed over for a promotion or opportunity. Your first instinct?", options: ["I'm not valued here", "This isn't the end of the story", "I should have worked harder"], category: "Career" },
-  { id: 32, text: "You have to give feedback that might not be well received. Your first instinct?", options: ["Avoid saying anything", "Say it clearly and kindly", "Soften it until it means nothing"], category: "Career" },
-  { id: 33, text: "A coworker seems to be advancing faster than you. Your first instinct?", options: ["I'm falling behind", "Their path isn't my path", "I need to compete harder"], category: "Career" },
-  { id: 34, text: "You make a decision at work that doesn't go as planned. Your first instinct?", options: ["I shouldn't have trusted my judgment", "I'll learn and adjust", "Everyone probably noticed"], category: "Career" },
-  { id: 35, text: "You're asked a question in a meeting you don't know the answer to. Your first instinct?", options: ["I look incompetent", "It's okay to say I'll find out", "Panic and guess"], category: "Career" },
-
-  // COMPARISON & SOCIAL MEDIA
-  { id: 36, text: "You scroll past someone's highlight-reel life update. Your first instinct?", options: ["My life isn't measuring up", "Their story isn't my story", "Feel a pang of envy"], category: "Comparison" },
-  { id: 37, text: "A post gets far less engagement than you hoped. Your first instinct?", options: ["No one cares what I have to say", "That's not the point of putting it out there", "Feel embarrassed"], category: "Comparison" },
-  { id: 38, text: "You see someone your age hitting a milestone you haven't. Your first instinct?", options: ["I'm behind schedule", "Everyone's timeline is different", "Feel pressure to catch up"], category: "Comparison" },
-
-  // TIME & PRESSURE
-  { id: 39, text: "You fall behind on something you committed to. Your first instinct?", options: ["I've failed", "I'll adjust the plan, not abandon it", "Feel overwhelmed and shut down"], category: "Pressure" },
-  { id: 40, text: "You have way more on your plate than time allows today. Your first instinct?", options: ["Try to do it all anyway", "Decide what actually matters most", "Feel like I'm already behind"], category: "Pressure" },
-
-  // HEALTH & BODY
-  { id: 41, text: "You miss a workout or healthy habit you'd committed to. Your first instinct?", options: ["I've ruined my progress", "One miss doesn't erase the pattern", "Feel like giving up entirely"], category: "Health" },
-  { id: 42, text: "You don't feel good in your body today. Your first instinct?", options: ["Something is wrong with me", "This is temporary, not permanent", "Feel frustrated at myself"], category: "Health" },
-];
-
-export function pickRandomScenarios(count = 5, excludeIds = []) {
+export function getRandomScenario(excludeIds = []) {
   const pool = INSTINCT_SCENARIOS.filter(s => !excludeIds.includes(s.id));
-  const shuffled = [...pool].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, Math.min(count, shuffled.length));
+  const pick = pool.length > 0 ? pool : INSTINCT_SCENARIOS;
+  return pick[Math.floor(Math.random() * pick.length)];
 }

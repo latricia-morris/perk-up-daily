@@ -28,6 +28,7 @@ export default function Settings() {
   const [deleting, setDeleting] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const [deleteRequested, setDeleteRequested] = useState(false);
   const { theme, setTheme } = useTheme();
 
   const [prefs, setPrefs] = useState({
@@ -42,6 +43,7 @@ export default function Settings() {
    phone_number: '',
    country_code: 'US',
    sms_consent: false,
+   analytics_consent: false,
    });
   const [validationError, setValidationError] = useState('');
 
@@ -62,6 +64,7 @@ export default function Settings() {
          phone_number: u.phone_number || '',
          country_code: u.country_code || 'US',
          sms_consent: u.sms_consent || false,
+         analytics_consent: u.analytics_consent || false,
        });
       if (u.theme) setTheme(u.theme);
     });
@@ -103,8 +106,10 @@ export default function Settings() {
   const handleDeleteAccount = async () => {
     setDeleting(true);
     try {
-      await base44.auth.deleteAccount();
-      window.location.href = '/';
+      await base44.functions.invoke('requestAccountDeletion', {});
+      setDeleting(false);
+      setShowDeleteDialog(false);
+      setDeleteRequested(true);
     } catch (error) {
       setDeleting(false);
       setShowDeleteDialog(false);
@@ -307,6 +312,21 @@ export default function Settings() {
             </div>
           </section>
 
+          {/* Privacy */}
+          <section>
+            <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4">Privacy</h2>
+            <div className="flex items-center justify-between p-4 rounded-xl border border-border bg-card">
+              <div className="flex-1 mr-4">
+                <p className="text-sm font-medium text-foreground">Analytics &amp; personalization</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Helps us improve. Turn off anytime.</p>
+              </div>
+              <Switch
+                checked={prefs.analytics_consent}
+                onCheckedChange={v => setPrefs(prev => ({ ...prev, analytics_consent: v }))}
+              />
+            </div>
+          </section>
+
           {/* Subscription */}
           <section>
             <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4">Subscription</h2>
@@ -391,6 +411,21 @@ export default function Settings() {
                     {deleting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
                     Delete permanently
                   </AlertDialogAction>
+                </div>
+              </AlertDialogContent>
+            </AlertDialog>
+
+            {/* "Check your email" dialog after deletion request */}
+            <AlertDialog open={deleteRequested} onOpenChange={(open) => { if (!open) setDeleteRequested(false); }}>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Check your email</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    We've sent a confirmation link to {user?.email}. Click the link in the email to permanently delete your account and all associated data. The link expires in 24 hours.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <div className="flex justify-end">
+                  <AlertDialogAction>Got it</AlertDialogAction>
                 </div>
               </AlertDialogContent>
             </AlertDialog>

@@ -1,0 +1,60 @@
+{
+  "name": "AccountDeletionRequest",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "ID of the user requesting deletion"
+    },
+    "email": {
+      "type": "string",
+      "description": "User's email for confirmation"
+    },
+    "token": {
+      "type": "string",
+      "description": "Random verification token"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "confirmed",
+        "expired"
+      ],
+      "default": "pending",
+      "description": "Status of the deletion request"
+    }
+  },
+  "required": [
+    "user_id",
+    "email",
+    "token"
+  ],
+  "rls": {
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

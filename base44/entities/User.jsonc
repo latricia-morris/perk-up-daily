@@ -133,6 +133,15 @@
         "dark"
       ],
       "default": "light"
+    },
+    "analytics_consent": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether user has opted in to analytics and personalization tracking"
+    },
+    "analytics_consent_timestamp": {
+      "type": "string",
+      "description": "ISO timestamp of when analytics consent was set"
     }
   }
 }

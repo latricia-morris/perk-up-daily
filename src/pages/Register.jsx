@@ -60,6 +60,8 @@ export default function Register() {
             phone_number: onboardingData.phoneNumber || '',
             country_code: onboardingData.countryCode || 'US',
             sms_consent: onboardingData.smsConsent || false,
+            analytics_consent: onboardingData.analytics_consent || false,
+            analytics_consent_timestamp: onboardingData.analytics_consent_timestamp || null,
           };
           if (onboardingData.birthday) {
             updateData.birthday = onboardingData.birthday;

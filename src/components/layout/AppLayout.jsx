@@ -4,9 +4,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Home, PlusCircle, Sparkles, Trophy, Settings,
   ShieldCheck, Zap, BookOpen, Menu, X, LogOut,
-  Heart, Image, Star, Search, ArrowLeftRight, Target, Brain, RotateCcw
+  Heart, Image, Star, Search, ArrowLeftRight, Target, Brain
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import ResetIcon from '@/components/ResetIcon';
 import SubscriptionGuard from '@/components/SubscriptionGuard';
 
 const ADMIN_EMAIL = 'perkupdaily@gmail.com'; // Only show Admin nav for this account
@@ -35,7 +36,7 @@ const sideTabNav = [
   { path: '/dashboard', icon: Home, label: 'Home' },
   { path: '/vault', icon: Sparkles, label: 'Perk Ups' },
   { path: '/search', icon: Search, label: 'Search' },
-  { path: '/reset', icon: RotateCcw, label: 'Reset' },
+  { path: '/reset', icon: ResetIcon, label: 'Reset' },
 ];
 
 function NavLink({ path, icon: Icon, label, onClick }) {
@@ -236,8 +237,8 @@ export default function AppLayout() {
 
       {/* Desktop/Tablet floating Reset button */}
       <Link to="/reset" className="hidden md:flex fixed top-5 right-6 z-40 items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium backdrop-blur-md transition-all active:scale-95"
-        style={{ background: 'rgba(255,252,242,0.75)', color: '#2F2C29', border: '1px solid rgba(47,44,41,0.12)', boxShadow: '0 2px 12px rgba(47,44,41,0.06)' }}>
-        <RotateCcw className="w-3.5 h-3.5" />
+        style={{ background: 'rgba(255,252,242,0.75)', color: '#D4830A', border: '1px solid rgba(212,131,10,0.2)', boxShadow: '0 2px 12px rgba(47,44,41,0.06)' }}>
+        <ResetIcon className="w-3.5 h-3.5" />
         Reset
       </Link>
 

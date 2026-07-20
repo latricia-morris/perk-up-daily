@@ -77,7 +77,7 @@ export default function PrivacyPolicy() {
               <li>If required by law, legal process, or to protect our rights, users, or the public.</li>
               <li>In connection with a merger, acquisition, or sale of all or part of our business, subject to appropriate safeguards.</li>
             </ul>
-            <p className="mt-3">We do not sell your personal information, including mobile numbers, to third parties for their own direct marketing.</p>
+            <p className="mt-3"><strong>We do not sell or share your personal information with third parties.</strong> We do not sell your personal information, including mobile numbers, to third parties for their own direct marketing.</p>
           </section>
 
           <section>

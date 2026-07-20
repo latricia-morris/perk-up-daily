@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Check } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Switch } from '@/components/ui/switch';
 import LegalLinks from '@/components/shared/LegalLinks';
 import { CATEGORIES } from '@/lib/constants';
 import {
@@ -80,6 +81,7 @@ export default function Onboarding() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [countryCode, setCountryCode] = useState('US');
   const [smsConsent, setSmsConsent] = useState(false);
+  const [analyticsConsent, setAnalyticsConsent] = useState(false);
   const [times, setTimes] = useState({
     morning: '07:00',
     midday: '12:00',
@@ -107,11 +109,13 @@ export default function Onboarding() {
       countryCode,
       deliveryMethod: 'sms',
       smsConsent,
+      analytics_consent: analyticsConsent,
+      analytics_consent_timestamp: new Date().toISOString(),
     }));
     navigate('/register');
   };
 
-  const TOTAL_STEPS = 6;
+  const TOTAL_STEPS = 7;
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-6">
@@ -478,11 +482,11 @@ export default function Onboarding() {
                 waiting for you tomorrow morning.
               </p>
               <Button
-                onClick={handleFinish}
+                onClick={() => setStep(7)}
                 className="w-full bg-primary hover:bg-primary/90"
                 size="lg"
               >
-                Create your account <ArrowRight className="w-4 h-4 ml-2" />
+                Continue <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
               <p className="text-xs text-muted-foreground text-center mt-4">
                 Already have an account?{' '}
@@ -490,6 +494,66 @@ export default function Onboarding() {
                   Log in
                 </button>
               </p>
+            </motion.div>
+          )}
+
+          {/* Step 7: Consent */}
+          {step === 7 && (
+            <motion.div
+              key="step7"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <h2 className="font-display text-2xl font-semibold text-foreground mb-2">
+                Your privacy choices
+              </h2>
+              <p className="text-sm text-muted-foreground mb-6">
+                You're in control of how your data is used. Review and adjust below.
+              </p>
+
+              {/* Essential — locked on */}
+              <div className="rounded-xl border border-border bg-muted/30 p-4 mb-3 opacity-80">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1 mr-4">
+                    <p className="text-sm font-medium text-foreground">Essential app functionality</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">Required for the app to work. Cannot be turned off.</p>
+                  </div>
+                  <Switch checked={true} disabled />
+                </div>
+              </div>
+
+              {/* Analytics — off by default */}
+              <div className="rounded-xl border border-border bg-card p-4 mb-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1 mr-4">
+                    <p className="text-sm font-medium text-foreground">Analytics &amp; personalization</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">Helps us understand what's working so we can improve. Off by default — turn on if you'd like to help.</p>
+                  </div>
+                  <Switch
+                    checked={analyticsConsent}
+                    onCheckedChange={setAnalyticsConsent}
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <Button
+                  onClick={() => setStep(6)}
+                  variant="outline"
+                  className="flex-1"
+                >
+                  Back
+                </Button>
+                <Button
+                  onClick={handleFinish}
+                  className="flex-1 bg-primary hover:bg-primary/90"
+                  size="lg"
+                >
+                  Get Started <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
