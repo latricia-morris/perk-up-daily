@@ -78,6 +78,14 @@ export const COGNITIVE_DRILLS = [
     rhythm: '~3 min · 5 steps',
     accent: '#5C3B8F',
   },
+  {
+    id: 'intention-timer',
+    title: 'Intention Timer',
+    description: 'Set a single intention, then hold your focus on it with a timed countdown.',
+    route: '/exercises/intention-timer',
+    rhythm: '5–15 min · 4 steps',
+    accent: '#219EBC',
+  },
 ];
 
 export const RESET_OPTIONS = [

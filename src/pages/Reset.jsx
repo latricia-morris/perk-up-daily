@@ -79,7 +79,7 @@ export default function Reset() {
       </div>
 
       <p className="text-xs mt-8" style={{ color: '#c4a882' }}>
-        Each sequence runs 2 breathing exercises back-to-back.
+        Each sequence is tailored to what you need most.
       </p>
     </div>
   );

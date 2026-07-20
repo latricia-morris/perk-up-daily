@@ -32,6 +32,11 @@ export const TEACH_IT_BACK_PROMPTS = {
     "Why does naming the feeling first actually matter — how would you explain that to a friend?",
     "If someone said 'you can't just think your way out of a bad mood,' what would you say back?",
   ],
+  "intention-timer": [
+    "How would you explain to a friend why naming an intention before focusing actually changes the experience?",
+    "What did you notice about your mind when it had one clear thing to hold — and how would you describe that to someone who's never tried it?",
+    "If someone said 'I can just focus without naming it,' what would you say back?",
+  ],
   general: [
     "Explain what you just practiced like you're teaching a friend who's never heard of it.",
   ],
@@ -49,6 +54,8 @@ export function getPromptForExercise(exerciseType) {
     category = 'instinct';
   } else if (exerciseType === 'neurocycle') {
     category = 'neurocycle';
+  } else if (exerciseType === 'intention-timer') {
+    category = 'intention-timer';
   }
   const prompts = TEACH_IT_BACK_PROMPTS[category] || TEACH_IT_BACK_PROMPTS.general;
   return prompts[Math.floor(Math.random() * prompts.length)];

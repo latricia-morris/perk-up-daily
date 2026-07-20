@@ -5,46 +5,46 @@ import { ArrowLeft, ChevronRight } from 'lucide-react';
 
 const TRIAGE_OPTIONS = [
   {
-    id: 'racing',
-    label: 'My mind is racing',
-    description: 'Thoughts won\'t slow down',
-    accent: '#219EBC',
-    sequence: ['/exercises/box-breath', '/exercises/focus'],
+    id: 'overwhelmed',
+    label: 'I have too much to do and don\'t know where to start',
+    accent: '#F95826',
+    exerciseName: 'Impact Prioritization',
+    status: 'coming_soon',
   },
   {
     id: 'stuck',
-    label: 'I can\'t get started',
-    description: 'Feeling paralyzed or stalled',
+    label: 'I know what to do, but I can\'t seem to start it',
     accent: '#FFAD09',
-    sequence: ['/exercises/rewire-in-60'],
+    exerciseName: 'Task Initiation',
+    status: 'coming_soon',
   },
   {
-    id: 'loop',
-    label: 'I\'m stuck in a thought loop',
-    description: 'Replaying something over and over',
-    accent: '#5C3B8F',
-    sequence: ['/exercises/instinct-vs-insight'],
-  },
-  {
-    id: 'overwhelmed',
-    label: 'I\'m overwhelmed',
-    description: 'Too much coming at once',
-    accent: '#F95826',
-    sequence: ['/exercises/breathe', '/exercises/sigh'],
-  },
-  {
-    id: 'tense',
-    label: 'I\'m tense and on edge',
-    description: 'Body feels tight and braced',
-    accent: '#BA1650',
-    sequence: ['/exercises/smile', '/exercises/breathe'],
-  },
-  {
-    id: 'just-breathe',
-    label: 'I just need to breathe',
-    description: 'Simple reset, nothing fancy',
+    id: 'unstructured',
+    label: 'My day feels unstructured, I need a plan',
     accent: '#219EBC',
-    sequence: ['/exercises/box-breath'],
+    exerciseName: 'Time Blocking',
+    status: 'coming_soon',
+  },
+  {
+    id: 'distracted',
+    label: 'I\'m distracted and can\'t concentrate on anything',
+    accent: '#5C3B8F',
+    exerciseName: 'Focus Reset',
+    status: 'coming_soon',
+  },
+  {
+    id: 'scattered',
+    label: 'My mind feels scattered, not overloaded',
+    accent: '#BA1650',
+    exerciseName: 'Grounding Reset',
+    status: 'coming_soon',
+  },
+  {
+    id: 'not-sure',
+    label: 'Not sure, just pick for me',
+    accent: '#C97F0E',
+    exerciseName: 'Impact Prioritization',
+    status: 'coming_soon',
   },
 ];
 
@@ -55,9 +55,13 @@ export default function FocusTriage() {
   const handleSelect = (option) => {
     setSelected(option.id);
     setTimeout(() => {
-      navigate(option.sequence[0], {
-        state: { sequence: option.sequence, step: 0 },
-      });
+      if (option.status === 'coming_soon') {
+        navigate('/coming-soon', { state: { exerciseName: option.exerciseName } });
+      } else {
+        navigate(option.route, {
+          state: { sequence: option.sequence, step: 0 },
+        });
+      }
     }, 300);
   };
 
@@ -84,23 +88,23 @@ export default function FocusTriage() {
         className="text-center mb-10 max-w-md"
       >
         <h1 className="font-display text-2xl md:text-3xl font-semibold mb-2" style={{ color: '#2c1e0f' }}>
-          What kind of focus do you need?
+          What's pulling at your focus right now?
         </h1>
         <p className="text-sm" style={{ color: '#c4a882' }}>
-          We'll match you with the right exercise sequence.
+          Tap whichever resonates — there's no wrong answer.
         </p>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 w-full max-w-md">
+      <div className="grid grid-cols-1 gap-3 w-full max-w-md">
         <AnimatePresence>
           {TRIAGE_OPTIONS.map((option, i) => (
             <motion.button
               key={option.id}
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: i * 0.06, duration: 0.3 }}
               onClick={() => handleSelect(option)}
-              className="rounded-2xl p-5 text-left transition-all hover:shadow-lg active:scale-95 flex items-center justify-between"
+              className="rounded-2xl p-4 text-left transition-all hover:shadow-lg active:scale-95 flex items-center justify-between"
               style={{
                 background: selected === option.id
                   ? `linear-gradient(135deg, ${option.accent} 0%, ${option.accent}CC 100%)`
@@ -109,13 +113,8 @@ export default function FocusTriage() {
                 color: selected === option.id ? '#FFFCF2' : '#2c1e0f',
               }}
             >
-              <div>
-                <div className="text-base font-display font-semibold mb-0.5">{option.label}</div>
-                <div className="text-xs" style={{
-                  color: selected === option.id ? 'rgba(255,252,242,0.8)' : '#7a5c3a',
-                }}>
-                  {option.description}
-                </div>
+              <div className="flex-1 pr-2">
+                <div className="text-sm font-medium leading-snug">{option.label}</div>
               </div>
               <ChevronRight className="w-4 h-4 shrink-0" style={{ color: selected === option.id ? '#FFFCF2' : option.accent }} />
             </motion.button>

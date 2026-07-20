@@ -33,6 +33,7 @@ import PowerUps from '@/pages/PowerUps';
 import NeuralTraining from '@/pages/NeuralTraining';
 import Reset from '@/pages/Reset';
 import FocusTriage from '@/pages/FocusTriage';
+import ComingSoon from '@/pages/ComingSoon';
 import BoxBreath from '@/pages/exercises/BoxBreath';
 import Breathe from '@/pages/exercises/Breathe';
 import FocusEx from '@/pages/exercises/Focus';
@@ -41,6 +42,7 @@ import SmileEx from '@/pages/exercises/Smile';
 import RewireIn60 from '@/pages/exercises/RewireIn60';
 import InstinctVsInsight from '@/pages/exercises/InstinctVsInsight';
 import Neurocycle from '@/pages/exercises/Neurocycle';
+import IntentionTimer from '@/pages/exercises/IntentionTimer';
 import Notes from '@/pages/Notes';
 import IdentityUpgrades from '@/pages/IdentityUpgrades';
 import Search from '@/pages/Search';
@@ -101,6 +103,7 @@ const AuthenticatedApp = () => {
           <Route path="/neural-training" element={<NeuralTraining />} />
           <Route path="/reset" element={<Reset />} />
           <Route path="/focus-triage" element={<FocusTriage />} />
+          <Route path="/coming-soon" element={<ComingSoon />} />
           <Route path="/notes" element={<Notes />} />
           <Route path="/identity-upgrades" element={<IdentityUpgrades />} />
           <Route path="/search" element={<Search />} />
@@ -120,6 +123,7 @@ const AuthenticatedApp = () => {
         <Route path="/exercises/rewire-in-60" element={<RewireIn60 />} />
         <Route path="/exercises/instinct-vs-insight" element={<InstinctVsInsight />} />
         <Route path="/exercises/neurocycle" element={<Neurocycle />} />
+        <Route path="/exercises/intention-timer" element={<IntentionTimer />} />
       </Route>
 
       <Route path="*" element={<PageNotFound />} />

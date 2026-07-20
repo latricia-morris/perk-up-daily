@@ -10,7 +10,9 @@ export default function ResetIcon({ className = 'w-4 h-4', style, strokeWidth, .
     <span
       className={className}
       style={{
-        display: 'inline-block',
+        display: 'block',
+        flexShrink: 0,
+        boxSizing: 'border-box',
         WebkitMaskImage: `url(${RESET_SVG_URL})`,
         maskImage: `url(${RESET_SVG_URL})`,
         WebkitMaskSize: 'contain',

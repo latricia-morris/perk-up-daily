@@ -238,13 +238,14 @@ export default function AppLayout() {
       {/* Desktop/Tablet floating Reset button — large circular sunrise gradient */}
       <Link to="/reset" aria-label="Reset" className="hidden md:flex fixed bottom-6 right-6 z-40 items-center justify-center rounded-full transition-all active:scale-95"
         style={{
-          width: 56,
-          height: 56,
+          width: 64,
+          height: 64,
+          boxSizing: 'border-box',
           background: 'linear-gradient(45deg, #570d40 0%, #981f62 25%, #f15a2b 50%, #ffc923 75%, #fed855 100%)',
-          boxShadow: '0 6px 24px rgba(87,13,64,0.25)',
-          border: '2px solid rgba(255,255,255,0.3)',
+          boxShadow: '0 6px 24px rgba(87,13,64,0.3)',
+          border: '2px solid rgba(255,255,255,0.35)',
         }}>
-        <ResetIcon className="w-7 h-7" style={{ color: '#FFFFFF' }} />
+        <ResetIcon className="w-9 h-9" style={{ color: '#FFFFFF' }} />
       </Link>
 
       {/* Main content with slide transitions */}
