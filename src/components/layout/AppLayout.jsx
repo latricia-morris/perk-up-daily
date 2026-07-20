@@ -234,6 +234,13 @@ export default function AppLayout() {
         </div>
       </nav>
 
+      {/* Desktop/Tablet floating Reset button */}
+      <Link to="/reset" className="hidden md:flex fixed top-5 right-6 z-40 items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium backdrop-blur-md transition-all active:scale-95"
+        style={{ background: 'rgba(255,252,242,0.75)', color: '#2F2C29', border: '1px solid rgba(47,44,41,0.12)', boxShadow: '0 2px 12px rgba(47,44,41,0.06)' }}>
+        <RotateCcw className="w-3.5 h-3.5" />
+        Reset
+      </Link>
+
       {/* Main content with slide transitions */}
       <main className="md:ml-64 pt-[53px] md:pt-0 pb-24 md:pb-6 min-h-screen">
         <AnimatePresence mode="wait">

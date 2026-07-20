@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Brain, Wind, Lightbulb, Brain as BrainCircuit, Shuffle, ChevronRight } from 'lucide-react';
-import { BREATHING_EXERCISES, EXERCISE_TYPES } from '@/lib/exerciseRegistry';
+import { Brain, Wind, Brain as BrainCircuit, Shuffle, ChevronRight, Atom } from 'lucide-react';
+import { BREATHING_EXERCISES, COGNITIVE_DRILLS, EXERCISE_TYPES } from '@/lib/exerciseRegistry';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 
 const TYPE_ICONS = {
   breathing: Wind,
-  perspective: Lightbulb,
+  perspective: Atom,
   cognitive_drill: BrainCircuit,
   reframing: Shuffle,
 };
@@ -37,11 +37,11 @@ export default function NeuralTraining() {
   });
 
   return (
-    <div className="min-h-screen p-4 md:p-8 w-full max-w-3xl mx-auto" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 16px), 120px)' }}>
+    <div className="min-h-screen p-4 md:p-8 w-full max-w-5xl mx-auto" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 16px), 120px)' }}>
       {/* Header */}
-      <div className="mb-8">
+      <div className="mb-6">
         <div className="flex items-center gap-2 mb-1">
-          <Brain className="w-6 h-6" style={{ color: '#5C3B8F' }} />
+          <Brain className="w-6 h-6" style={{ color: '#BA1650' }} />
           <h1 className="font-display text-2xl md:text-3xl font-semibold" style={{ color: '#2c1e0f' }}>
             Neural Training
           </h1>
@@ -51,8 +51,8 @@ export default function NeuralTraining() {
         </p>
       </div>
 
-      {/* Category filter buttons */}
-      <div className="flex flex-wrap gap-2 mb-8">
+      {/* Category filter — glass gradient grid */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
         {EXERCISE_TYPES.map((type) => {
           const Icon = TYPE_ICONS[type.slug] || Wind;
           const isActive = activeType === type.slug;
@@ -61,14 +61,21 @@ export default function NeuralTraining() {
             <button
               key={type.slug}
               onClick={() => setActiveType(type.slug)}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm font-medium transition-all active:scale-95"
+              className="flex flex-col items-center gap-2 p-4 rounded-2xl text-sm font-medium transition-all active:scale-95"
               style={{
-                background: isActive ? accent : 'transparent',
+                background: isActive
+                  ? `linear-gradient(135deg, ${accent} 0%, ${accent}CC 100%)`
+                  : 'linear-gradient(135deg, rgba(255,252,242,0.7) 0%, rgba(255,252,242,0.3) 100%)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
                 color: isActive ? '#FFFCF2' : '#2F2C29',
-                border: `1px solid ${isActive ? accent : 'rgba(47,44,41,0.12)'}`,
+                border: `1px solid ${isActive ? accent + '44' : 'rgba(212,131,10,0.15)'}`,
+                boxShadow: isActive
+                  ? `0 6px 20px ${accent}33`
+                  : '0 4px 16px rgba(47,44,41,0.06)',
               }}
             >
-              <Icon className="w-3.5 h-3.5" />
+              <Icon className="w-5 h-5" />
               {type.label}
             </button>
           );
@@ -80,25 +87,25 @@ export default function NeuralTraining() {
         {EXERCISE_TYPES.find(t => t.slug === activeType)?.description}
       </p>
 
-      {/* Exercise list */}
+      {/* Exercise list — grid */}
       {activeType === 'breathing' && (
-        <div className="space-y-3">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {BREATHING_EXERCISES.map((ex, i) => (
-            <ExerciseCard key={ex.id} exercise={ex} onClick={() => navigate(ex.route)} index={i} />
+            <ExerciseGridCard key={ex.id} exercise={ex} onClick={() => navigate(ex.route)} index={i} />
           ))}
         </div>
       )}
 
       {activeType === 'perspective' && (
-        <div className="space-y-3">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {perspectivePrompts.length > 0 ? (
             perspectivePrompts.map((prompt, i) => (
-              <ExerciseCard
+              <ExerciseGridCard
                 key={prompt.id}
                 exercise={{
-                  title: 'Perspective Prompt',
+                  title: 'Mindset Prompt',
                   description: prompt.prompt,
-                  rhythm: 'Question-based',
+                  rhythm: 'Question',
                   accent: '#BA1650',
                 }}
                 onClick={() => navigate('/reflections', { state: { selectedPrompt: prompt } })}
@@ -106,24 +113,50 @@ export default function NeuralTraining() {
               />
             ))
           ) : (
-            <div className="text-center py-12">
-              <Lightbulb className="w-8 h-8 mx-auto mb-3" style={{ color: '#c4a882' }} />
-              <p className="text-sm" style={{ color: '#c4a882' }}>Perspective prompts are loading.</p>
+            <div className="col-span-full text-center py-12">
+              <Atom className="w-8 h-8 mx-auto mb-3" style={{ color: '#c4a882' }} />
+              <p className="text-sm" style={{ color: '#c4a882' }}>Mindset prompts are loading.</p>
             </div>
           )}
         </div>
       )}
 
-      {(activeType === 'cognitive_drill' || activeType === 'reframing') && (
-        <div className="space-y-3">
+      {activeType === 'cognitive_drill' && (
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          {COGNITIVE_DRILLS.map((ex, i) => (
+            <ExerciseGridCard
+              key={ex.id}
+              exercise={ex}
+              onClick={() => navigate(ex.route)}
+              index={i}
+            />
+          ))}
+          {dbExercises.map((ex, i) => (
+            <ExerciseGridCard
+              key={ex.id}
+              exercise={{
+                title: ex.title,
+                description: ex.description || ex.content,
+                rhythm: ex.route ? 'Interactive' : 'Prompt',
+                accent: TYPE_ACCENTS[activeType],
+              }}
+              onClick={() => ex.route ? navigate(ex.route) : null}
+              index={COGNITIVE_DRILLS.length + i}
+            />
+          ))}
+        </div>
+      )}
+
+      {activeType === 'reframing' && (
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {dbExercises.length > 0 ? (
             dbExercises.map((ex, i) => (
-              <ExerciseCard
+              <ExerciseGridCard
                 key={ex.id}
                 exercise={{
                   title: ex.title,
                   description: ex.description || ex.content,
-                  rhythm: ex.route ? 'Interactive' : 'Prompt-based',
+                  rhythm: ex.route ? 'Interactive' : 'Prompt',
                   accent: TYPE_ACCENTS[activeType],
                 }}
                 onClick={() => ex.route ? navigate(ex.route) : null}
@@ -131,12 +164,10 @@ export default function NeuralTraining() {
               />
             ))
           ) : (
-            <div className="text-center py-12">
+            <div className="col-span-full text-center py-12">
               <BrainCircuit className="w-8 h-8 mx-auto mb-3" style={{ color: '#c4a882' }} />
               <p className="text-sm" style={{ color: '#c4a882' }}>
-                {activeType === 'cognitive_drill'
-                  ? 'Cognitive drills are coming soon. Stay tuned!'
-                  : 'Reframing exercises are coming soon. Stay tuned!'}
+                Reframing exercises are coming soon. Stay tuned!
               </p>
             </div>
           )}
@@ -146,7 +177,7 @@ export default function NeuralTraining() {
   );
 }
 
-function ExerciseCard({ exercise, onClick, index }) {
+function ExerciseGridCard({ exercise, onClick, index }) {
   const accent = exercise.accent || '#D4830A';
   return (
     <motion.button
@@ -154,31 +185,31 @@ function ExerciseCard({ exercise, onClick, index }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05, duration: 0.3 }}
       onClick={onClick}
-      className="w-full text-left rounded-2xl p-5 transition-all hover:shadow-md active:scale-[0.98]"
+      className="text-left rounded-2xl p-4 transition-all hover:shadow-md active:scale-[0.98] flex flex-col h-full min-h-[120px]"
       style={{
-        background: 'linear-gradient(135deg, rgba(255,252,242,0.8) 0%, rgba(255,252,242,0.5) 100%)',
+        background: 'linear-gradient(135deg, rgba(255,252,242,0.7) 0%, rgba(255,252,242,0.3) 100%)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
         border: `1px solid ${accent}22`,
         boxShadow: '0 2px 12px rgba(47,44,41,0.04)',
       }}
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">
-            <span
-              className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full"
-              style={{ background: `${accent}1A`, color: accent }}
-            >
-              {exercise.rhythm}
-            </span>
-          </div>
-          <h3 className="font-display text-lg font-semibold mb-1" style={{ color: '#2c1e0f' }}>
-            {exercise.title}
-          </h3>
-          <p className="text-sm leading-relaxed line-clamp-2" style={{ color: '#7a5c3a' }}>
-            {exercise.description}
-          </p>
+      <div className="flex flex-col h-full gap-2">
+        <div className="flex items-center justify-between">
+          <span
+            className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full"
+            style={{ background: `${accent}1A`, color: accent }}
+          >
+            {exercise.rhythm}
+          </span>
+          <ChevronRight className="w-4 h-4 shrink-0" style={{ color: accent }} />
         </div>
-        <ChevronRight className="w-5 h-5 shrink-0 mt-1" style={{ color: accent }} />
+        <h3 className="font-display text-base font-semibold" style={{ color: '#2c1e0f' }}>
+          {exercise.title}
+        </h3>
+        <p className="text-xs leading-relaxed line-clamp-3 flex-1" style={{ color: '#7a5c3a' }}>
+          {exercise.description}
+        </p>
       </div>
     </motion.button>
   );

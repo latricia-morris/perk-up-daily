@@ -4,8 +4,8 @@
  */
 
 export const EXERCISE_TYPES = [
-  { slug: 'breathing', label: 'Breathing Exercises', description: 'Guided breathing for calm, focus, and nervous-system regulation.' },
-  { slug: 'perspective', label: 'Perspective Exercises', description: 'Question-based prompts to intentionally choose healthier thought patterns.' },
+  { slug: 'breathing', label: 'Breathing', description: 'Guided breathing for calm, focus, and nervous-system regulation.' },
+  { slug: 'perspective', label: 'Mindset Training', description: 'Question-based prompts to intentionally choose healthier thought patterns.' },
   { slug: 'cognitive_drill', label: 'Cognitive Drills', description: 'Structured brain-training drills for attention, memory, and mental flexibility.' },
   { slug: 'reframing', label: 'Reframing', description: 'Situation-focused reframe flows to reinterpret events in a healthier way.' },
 ];
@@ -53,10 +53,29 @@ export const BREATHING_EXERCISES = [
   },
 ];
 
+export const COGNITIVE_DRILLS = [
+  {
+    id: 'rewire-in-60',
+    title: 'Rewire in 60',
+    description: 'A 60-second tap-only micro-game that reinforces a brain-affirming statement 5 times.',
+    route: '/exercises/rewire-in-60',
+    rhythm: '60 sec · 5 rounds',
+    accent: '#FFAD09',
+  },
+  {
+    id: 'instinct-vs-insight',
+    title: 'Instinct vs Insight',
+    description: 'Notice the gap between your fast reaction and your slower, deliberate judgment.',
+    route: '/exercises/instinct-vs-insight',
+    rhythm: '~60 sec · 5 scenarios',
+    accent: '#F95826',
+  },
+];
+
 export const RESET_OPTIONS = [
   {
-    id: 'calm',
-    label: 'Calm',
+    id: 'chill',
+    label: 'Chill',
     description: 'Settle your nervous system',
     accent: '#5C3B8F',
     sequence: ['/exercises/breathe', '/exercises/sigh'],
@@ -69,31 +88,31 @@ export const RESET_OPTIONS = [
     sequence: ['/exercises/box-breath', '/exercises/focus'],
   },
   {
-    id: 'courage',
-    label: 'Courage',
-    description: 'Build inner strength',
+    id: 'smile',
+    label: 'Smile',
+    description: 'Soften and find comfort',
     accent: '#BA1650',
-    sequence: ['/exercises/smile', '/exercises/box-breath'],
+    sequence: ['/exercises/smile', '/exercises/breathe'],
   },
   {
-    id: 'reset',
-    label: 'Reset',
+    id: 'energize',
+    label: 'Energize',
+    description: 'Invigorate and wake up',
+    accent: '#FFAD09',
+    sequence: ['/exercises/sigh', '/exercises/box-breath'],
+  },
+  {
+    id: 'recalibrate',
+    label: 'Recalibrate',
     description: 'Quick physiological reset',
     accent: '#219EBC',
     sequence: ['/exercises/sigh', '/exercises/breathe'],
   },
   {
-    id: 'rest',
-    label: 'Rest',
-    description: 'Wind down for deep rest',
+    id: 'wind-down',
+    label: 'Wind Down',
+    description: 'Prepare for deep rest',
     accent: '#8ECAE6',
     sequence: ['/exercises/smile', '/exercises/breathe'],
-  },
-  {
-    id: 'energy',
-    label: 'Energy',
-    description: 'Invigorate and wake up',
-    accent: '#FFAD09',
-    sequence: ['/exercises/sigh', '/exercises/box-breath'],
   },
 ];

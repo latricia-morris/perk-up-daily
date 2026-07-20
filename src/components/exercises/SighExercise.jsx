@@ -256,13 +256,14 @@ export default function SighExercise() {
   return (
     <div
       style={{
-        minHeight: "100vh",
+        height: "100vh",
+        overflow: "hidden",
         background: PALETTE.page,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        gap: 28,
+        gap: 16,
         fontFamily: "'DM Sans', sans-serif",
         color: PALETTE.ink,
         padding: 24,

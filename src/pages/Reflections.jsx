@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { RefreshCw, Check, ChevronDown, ChevronUp, Pencil, Sparkles, Share2 } from 'lucide-react';
+import { RefreshCw, Check, ChevronDown, ChevronUp, Pencil, Sparkles, Share2, Atom } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import ShareCard from '@/components/shared/ShareCard';
 
 // Fallback prompts if no library prompts exist yet
@@ -112,7 +112,9 @@ function PastReflectionCard({ entry }) {
 
 export default function Reflections() {
   const queryClient = useQueryClient();
-  const [currentPrompt, setCurrentPrompt] = useState(null);
+  const location = useLocation();
+  const passedPrompt = location.state?.selectedPrompt;
+  const [currentPrompt, setCurrentPrompt] = useState(passedPrompt || null);
   const [answer, setAnswer] = useState('');
   const [saved, setSaved] = useState(false);
   const [showPast, setShowPast] = useState(false);
@@ -141,10 +143,11 @@ export default function Reflections() {
 
   // Pick a random prompt on load
   useEffect(() => {
-    if (allPrompts.length > 0 && !currentPrompt) {
+    if (currentPrompt) return;
+    if (allPrompts.length > 0) {
       setCurrentPrompt(pickRandom(allPrompts));
     }
-  }, [allPrompts]);
+  }, [allPrompts, currentPrompt]);
 
   const handleNewPrompt = () => {
     setCurrentPrompt(pickRandom(allPrompts, currentPrompt?.id));
@@ -180,8 +183,11 @@ export default function Reflections() {
 
       {/* Header */}
       <div className="mb-8">
-        <h1 className="font-display text-2xl md:text-3xl font-semibold mb-1" style={{ color: '#2c1e0f' }}>Reflections</h1>
-        <p className="text-sm" style={{ color: '#c4a882' }}>One question. One honest answer. Keep moving forward.</p>
+        <div className="flex items-center gap-2 mb-1">
+          <Atom className="w-6 h-6" style={{ color: '#BA1650' }} />
+          <h1 className="font-display text-2xl md:text-3xl font-semibold" style={{ color: '#2c1e0f' }}>Mindset Training</h1>
+        </div>
+        <p className="text-sm leading-relaxed" style={{ color: '#c4a882' }}>Intentional answers here are a great way to train the brain to choose the life you want. Remember to keep a positive, life-giving framing on your responses.</p>
       </div>
 
       {/* Prompt card */}
@@ -203,7 +209,7 @@ export default function Reflections() {
             {/* Prompt label */}
             <div className="flex items-center justify-between mb-5">
               <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: '#C97F0E' }}>
-                Today's Reflection
+                Mindset Prompt
               </span>
               <button
                 onClick={handleNewPrompt}

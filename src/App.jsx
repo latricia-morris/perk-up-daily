@@ -36,6 +36,8 @@ import Breathe from '@/pages/exercises/Breathe';
 import FocusEx from '@/pages/exercises/Focus';
 import Sigh from '@/pages/exercises/Sigh';
 import SmileEx from '@/pages/exercises/Smile';
+import RewireIn60 from '@/pages/exercises/RewireIn60';
+import InstinctVsInsight from '@/pages/exercises/InstinctVsInsight';
 import Notes from '@/pages/Notes';
 import IdentityUpgrades from '@/pages/IdentityUpgrades';
 import Search from '@/pages/Search';
@@ -110,6 +112,8 @@ const AuthenticatedApp = () => {
         <Route path="/exercises/focus" element={<FocusEx />} />
         <Route path="/exercises/sigh" element={<Sigh />} />
         <Route path="/exercises/smile" element={<SmileEx />} />
+        <Route path="/exercises/rewire-in-60" element={<RewireIn60 />} />
+        <Route path="/exercises/instinct-vs-insight" element={<InstinctVsInsight />} />
       </Route>
 
       <Route path="*" element={<PageNotFound />} />

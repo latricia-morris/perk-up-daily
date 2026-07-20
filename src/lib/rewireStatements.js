@@ -1,0 +1,43 @@
+/**
+ * Rewire in 60 — Statement Bank
+ * Short, brain-affirming statements for the 60-second reinforcement micro-game.
+ */
+
+export const REWIRE_STATEMENTS = [
+  "I am capable of learning something new today.",
+  "My brain grows stronger every time I try.",
+  "I can handle this moment.",
+  "I am becoming the person I want to be.",
+  "Every step forward counts.",
+  "I am built for this.",
+  "My effort matters more than the outcome.",
+  "I choose progress over perfection.",
+  "I am stronger than I feel right now.",
+  "Good things are working in my favor.",
+  "I can do hard things.",
+  "My past doesn't define my future.",
+  "I am worthy of good things.",
+  "Today is full of new possibilities.",
+  "I trust myself to figure it out.",
+  "I am growing, even when it's slow.",
+  "I choose to believe in myself today.",
+  "I am exactly where I need to be.",
+  "My potential is not limited by my past.",
+  "I am enough, exactly as I am.",
+  "I choose courage over comfort.",
+  "I am creating a life I'm proud of.",
+  "My voice and perspective matter.",
+  "I am resilient in the face of challenges.",
+  "I choose to see the good today.",
+  "I am surrounded by opportunities.",
+  "I trust the timing of my life.",
+  "I am capable of more than I know.",
+  "I choose hope over fear.",
+  "I am becoming stronger every day.",
+  "My future is bright and full of potential.",
+  "I am worthy of love and respect.",
+  "I choose to keep showing up.",
+  "I am grounded and capable.",
+  "I trust my ability to navigate today.",
+  "I am becoming who I was made to be.",
+];

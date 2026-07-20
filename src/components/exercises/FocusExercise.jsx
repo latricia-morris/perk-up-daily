@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import { useNavigate } from 'react-router-dom';
 
 /**
  * FocusExercise
@@ -26,7 +27,9 @@ const PHASES = [
   { name: "hold-out", label: "Hold", duration: 4000, scaleFrom: 0.4, scaleTo: 0.4 },
 ];
 
-const CYCLE_MS = PHASES.reduce((s, p) => s + p.duration, 0);
+const TOTAL_CYCLES = 4;
+const PHASE_CYCLE_MS = PHASES.reduce((s, p) => s + p.duration, 0);
+const CYCLE_MS = PHASE_CYCLE_MS * TOTAL_CYCLES;
 const ease = (t) => 0.5 - 0.5 * Math.cos(Math.PI * Math.min(1, Math.max(0, t)));
 
 // Bright warm sunrise gradient
@@ -64,12 +67,15 @@ const BENEFITS = {
 
 export default function FocusExercise() {
   useFonts();
+  const navigate = useNavigate();
 
   const [isRunning, setIsRunning] = useState(false);
   const [phaseIndex, setPhaseIndex] = useState(0);
+  const [cycle, setCycle] = useState(0);
   const [remaining, setRemaining] = useState(Math.ceil(PHASES[0].duration / 1000));
   const [scale, setScale] = useState(PHASES[0].scaleFrom);
   const [modalOpen, setModalOpen] = useState(false);
+  const [complete, setComplete] = useState(false);
 
   const startRef = useRef(0);
   const rafRef = useRef(0);
@@ -81,7 +87,18 @@ export default function FocusExercise() {
   const tick = useCallback(() => {
     if (!runningRef.current) return;
     const now = performance.now();
-    const elapsed = (carryRef.current + (now - startRef.current)) % CYCLE_MS;
+    const totalElapsed = carryRef.current + (now - startRef.current);
+
+    if (totalElapsed >= CYCLE_MS) {
+      runningRef.current = false;
+      setIsRunning(false);
+      setComplete(true);
+      cancelAnimationFrame(rafRef.current);
+      return;
+    }
+
+    const cycleIdx = Math.min(TOTAL_CYCLES - 1, Math.floor(totalElapsed / PHASE_CYCLE_MS));
+    const elapsed = totalElapsed % PHASE_CYCLE_MS;
     let acc = 0;
     for (let i = 0; i < PHASES.length; i++) {
       const p = PHASES[i];
@@ -91,6 +108,7 @@ export default function FocusExercise() {
         scaleRef.current = s;
         setScale(s);
         setPhaseIndex(i);
+        setCycle(cycleIdx);
         setRemaining(Math.max(1, Math.ceil((p.duration - (elapsed - acc)) / 1000)));
         break;
       }
@@ -211,11 +229,16 @@ export default function FocusExercise() {
     return () => cancelAnimationFrame(raf);
   }, []);
 
-  const toggle = () => setIsRunning((v) => !v);
+  const toggle = () => {
+    if (complete) reset();
+    setIsRunning((v) => !v);
+  };
   const reset = () => {
     setIsRunning(false);
     carryRef.current = 0;
     setPhaseIndex(0);
+    setCycle(0);
+    setComplete(false);
     setRemaining(Math.ceil(PHASES[0].duration / 1000));
     setScale(PHASES[0].scaleFrom);
     scaleRef.current = PHASES[0].scaleFrom;
@@ -226,7 +249,7 @@ export default function FocusExercise() {
   return (
     <div
       data-testid="focus-exercise-root"
-      className="relative min-h-screen w-full overflow-hidden"
+      className="relative h-screen w-full overflow-hidden"
       style={{
         background: PALETTE.page,
         fontFamily: "'DM Sans', ui-sans-serif, system-ui, sans-serif",
@@ -284,7 +307,7 @@ export default function FocusExercise() {
         />
       </div>
 
-      <div className="relative z-10 flex min-h-screen items-center justify-center px-5 py-10 sm:py-14">
+      <div className="relative z-10 flex h-screen items-center justify-center px-4 py-4 sm:py-6">
         <div
           className="relative w-full max-w-[440px] rounded-[28px] px-6 pb-7 pt-8 sm:max-w-[520px] sm:px-8 sm:pb-9 sm:pt-10"
           style={{
@@ -333,7 +356,7 @@ export default function FocusExercise() {
           {/* Orb stage — tiny particle cloud with gradient colors flowing through */}
           <div
             data-testid="focus-orb-stage"
-            className="relative mx-auto flex h-[300px] w-[300px] items-center justify-center overflow-visible sm:h-[360px] sm:w-[360px]"
+            className="relative mx-auto flex h-[220px] w-[220px] items-center justify-center overflow-visible sm:h-[280px] sm:w-[280px]"
           >
             <div
               className="absolute left-1/2 top-[86%] h-5 w-[46%] -translate-x-1/2 rounded-full"
@@ -372,57 +395,50 @@ export default function FocusExercise() {
             />
           </div>
 
-          <div className="mt-6 flex flex-col items-center">
-            <div
-              data-testid="focus-timer"
-              className="tabular-nums leading-none"
-              style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontWeight: 300,
-                fontSize: "72px",
-                letterSpacing: "-0.03em",
-                color: PALETTE.ink,
-              }}
-            >
-              {remaining}
-            </div>
-            <div
-              data-testid="focus-phase"
-              className="mt-1 text-sm uppercase tracking-[0.32em]"
-              style={{ color: `${PALETTE.ink}B3` }}
-            >
-              {isRunning ? phase.label : "Ready"}
-            </div>
+          <div className="mt-3 flex flex-col items-center">
+            {complete ? (
+              <>
+                <div className="leading-none mb-1" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 500, fontSize: "22px", color: PALETTE.ink }}>
+                  Session Complete
+                </div>
+                <div className="text-xs" style={{ color: `${PALETTE.ink}A6` }}>
+                  {TOTAL_CYCLES} full rotations — nicely done.
+                </div>
+              </>
+            ) : (
+              <>
+                <div data-testid="focus-timer" className="tabular-nums leading-none" style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: "48px", letterSpacing: "-0.03em", color: PALETTE.ink }}>
+                  {remaining}
+                </div>
+                <div data-testid="focus-phase" className="mt-1 text-xs uppercase tracking-[0.32em]" style={{ color: `${PALETTE.ink}B3` }}>
+                  {isRunning ? phase.label : "Ready"}
+                </div>
+                <div className="mt-0.5 text-[11px]" style={{ color: `${PALETTE.ink}80` }}>
+                  Rotation {cycle + 1} of {TOTAL_CYCLES}
+                </div>
+              </>
+            )}
           </div>
 
-          <div className="mt-6 flex items-center gap-3">
-            <button
-              data-testid="focus-toggle-btn"
-              onClick={toggle}
-              className="flex-1 rounded-full py-3.5 text-sm font-medium tracking-wide transition-all active:scale-[0.98]"
-              style={{
-                background: isRunning ? PALETTE.ink : PALETTE.ember,
-                color: PALETTE.cream,
-                boxShadow: isRunning
-                  ? `0 10px 30px -12px ${PALETTE.ink}80`
-                  : `0 12px 30px -10px ${PALETTE.ember}A6`,
-              }}
-            >
-              {isRunning ? "Pause" : "Begin"}
-            </button>
-            <button
-              data-testid="focus-reset-btn"
-              onClick={reset}
-              className="rounded-full px-5 py-3.5 text-sm transition-all active:scale-[0.98]"
-              style={{
-                background: "transparent",
-                color: PALETTE.ink,
-                border: `1px solid ${PALETTE.ink}26`,
-              }}
-            >
-              Reset
-            </button>
-          </div>
+          {complete ? (
+            <div className="mt-3 flex items-center gap-3">
+              <button onClick={reset} className="flex-1 rounded-full py-3 text-sm font-medium tracking-wide transition-all active:scale-[0.98]" style={{ background: PALETTE.ember, color: PALETTE.cream, boxShadow: `0 12px 30px -10px ${PALETTE.ember}A6` }}>
+                Repeat Again
+              </button>
+              <button onClick={() => navigate(-1)} className="flex-1 rounded-full py-3 text-sm font-medium tracking-wide transition-all active:scale-[0.98]" style={{ background: "transparent", color: PALETTE.ink, border: `1px solid ${PALETTE.ink}26` }}>
+                Close
+              </button>
+            </div>
+          ) : (
+            <div className="mt-3 flex items-center gap-3">
+              <button data-testid="focus-toggle-btn" onClick={toggle} className="flex-1 rounded-full py-3 text-sm font-medium tracking-wide transition-all active:scale-[0.98]" style={{ background: isRunning ? PALETTE.ink : PALETTE.ember, color: PALETTE.cream, boxShadow: isRunning ? `0 10px 30px -12px ${PALETTE.ink}80` : `0 12px 30px -10px ${PALETTE.ember}A6` }}>
+                {isRunning ? "Pause" : "Begin"}
+              </button>
+              <button data-testid="focus-reset-btn" onClick={reset} className="rounded-full px-5 py-3 text-sm transition-all active:scale-[0.98]" style={{ background: "transparent", color: PALETTE.ink, border: `1px solid ${PALETTE.ink}26` }}>
+                Reset
+              </button>
+            </div>
+          )}
 
           <button
             data-testid="focus-benefits-btn"
