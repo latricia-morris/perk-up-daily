@@ -22,8 +22,8 @@ export default function RewireIn60Exercise() {
   const [relevanceText, setRelevanceText] = useState('');
   const [fared, setFared] = useState(null);
   const [impactText, setImpactText] = useState('');
-  const [matchupStem, setMatchupStem] = useState(null);
-  const [matchupCompletion, setMatchupCompletion] = useState(null);
+  const [selectedStems, setSelectedStems] = useState([]);
+  const [selectedCompletions, setSelectedCompletions] = useState([]);
 
   const shuffle = () => {
     const next = getRandomStatement([...seenIds, statement.id]);
@@ -44,12 +44,12 @@ export default function RewireIn60Exercise() {
     setFared(val);
   };
 
-  const selectStem = (idx) => {
-    setMatchupStem(idx);
+  const toggleStem = (idx) => {
+    setSelectedStems(prev => prev.includes(idx) ? prev.filter(s => s !== idx) : [...prev, idx]);
   };
 
-  const selectCompletion = (idx) => {
-    setMatchupCompletion(idx);
+  const toggleCompletion = (idx) => {
+    setSelectedCompletions(prev => prev.includes(idx) ? prev.filter(c => c !== idx) : [...prev, idx]);
   };
 
   const reset = () => {
@@ -60,8 +60,8 @@ export default function RewireIn60Exercise() {
     setRelevanceText('');
     setFared(null);
     setImpactText('');
-    setMatchupStem(null);
-    setMatchupCompletion(null);
+    setSelectedStems([]);
+    setSelectedCompletions([]);
   };
 
   return (
@@ -214,54 +214,66 @@ export default function RewireIn60Exercise() {
         </div>
       )}
 
-      {/* STEP 6: Matchup Game */}
+      {/* STEP 6: Matchup Game — multi-select */}
       {step === 6 && (
         <div className="max-w-md w-full">
           <p className="text-sm font-medium mb-2 text-center" style={{ color: PALETTE.ink }}>
-            Pick one from each column to declare your stance.
+            Match as many as resonate. More than one can be right.
           </p>
           <p className="text-xs mb-5 text-center" style={{ color: `${PALETTE.ink}60` }}>
             "{statement.statement}"
           </p>
-          <div className="grid grid-cols-2 gap-3 mb-6">
+          <div className="grid grid-cols-2 gap-3 mb-4">
             {/* Column 1: Stems */}
             <div className="space-y-2">
               <p className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: `${PALETTE.ink}60` }}>Your stance</p>
-              {MATCHUP_STEMS.map((stem, idx) => (
-                <button key={idx} onClick={() => selectStem(idx)}
-                  className="w-full text-left rounded-xl px-3 py-3 text-xs font-medium transition-all active:scale-95"
-                  style={{
-                    background: matchupStem === idx ? `${PALETTE.amber}22` : `${PALETTE.ink}0A`,
-                    border: `1px solid ${matchupStem === idx ? PALETTE.amber : 'transparent'}`,
-                    color: PALETTE.ink
-                  }}>
-                  {stem}
-                </button>
-              ))}
+              {MATCHUP_STEMS.map((stem, idx) => {
+                const isSelected = selectedStems.includes(idx);
+                return (
+                  <button key={idx} onClick={() => toggleStem(idx)}
+                    className="w-full text-left rounded-xl px-3 py-3 text-xs font-medium transition-all active:scale-95"
+                    style={{
+                      background: isSelected ? `${PALETTE.amber}22` : `${PALETTE.ink}0A`,
+                      border: `1px solid ${isSelected ? PALETTE.amber : 'transparent'}`,
+                      color: PALETTE.ink
+                    }}>
+                    {stem}
+                  </button>
+                );
+              })}
             </div>
             {/* Column 2: Completions */}
             <div className="space-y-2">
               <p className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: `${PALETTE.ink}60` }}>Your action</p>
-              {statement.matchups.map((comp, idx) => (
-                <button key={idx} onClick={() => selectCompletion(idx)}
-                  className="w-full text-left rounded-xl px-3 py-3 text-xs font-medium transition-all active:scale-95"
-                  style={{
-                    background: matchupCompletion === idx ? `${PALETTE.teal}1A` : `${PALETTE.ink}0A`,
-                    border: `1px solid ${matchupCompletion === idx ? PALETTE.teal : 'transparent'}`,
-                    color: PALETTE.ink
-                  }}>
-                  {comp}
-                </button>
-              ))}
+              {statement.matchups.map((comp, idx) => {
+                const isSelected = selectedCompletions.includes(idx);
+                return (
+                  <button key={idx} onClick={() => toggleCompletion(idx)}
+                    className="w-full text-left rounded-xl px-3 py-3 text-xs font-medium transition-all active:scale-95"
+                    style={{
+                      background: isSelected ? `${PALETTE.teal}1A` : `${PALETTE.ink}0A`,
+                      border: `1px solid ${isSelected ? PALETTE.teal : 'transparent'}`,
+                      color: PALETTE.ink
+                    }}>
+                    {comp}
+                  </button>
+                );
+              })}
             </div>
           </div>
-          {/* Preview */}
-          {matchupStem !== null && matchupCompletion !== null && (
-            <div className="mb-4 rounded-xl p-3 text-xs text-center" style={{ background: `${PALETTE.amber}12`, border: `1px solid ${PALETTE.amber}33` }}>
-              <span style={{ color: PALETTE.ink }}>{MATCHUP_STEMS[matchupStem]} {statement.matchups[matchupCompletion]}.</span>
+          {/* Selected matches preview */}
+          {selectedStems.length > 0 && selectedCompletions.length > 0 && (
+            <div className="mb-4 rounded-xl p-3 text-xs space-y-1" style={{ background: `${PALETTE.amber}12`, border: `1px solid ${PALETTE.amber}33` }}>
+              {selectedStems.map(sIdx => (
+                selectedCompletions.map(cIdx => (
+                  <div key={`${sIdx}-${cIdx}`} style={{ color: PALETTE.ink }}>
+                    {MATCHUP_STEMS[sIdx]} {statement.matchups[cIdx]}.
+                  </div>
+                ))
+              ))}
             </div>
           )}
-          <button onClick={() => setStep(7)} disabled={matchupStem === null || matchupCompletion === null}
+          <button onClick={() => setStep(7)} disabled={selectedStems.length === 0 || selectedCompletions.length === 0}
             className="w-full rounded-full py-3 text-sm font-medium transition-all active:scale-95 disabled:opacity-40 flex items-center justify-center gap-2"
             style={{ background: PALETTE.ink, color: PALETTE.cream }}>
             Confirm <Check className="w-4 h-4" />
@@ -281,7 +293,7 @@ export default function RewireIn60Exercise() {
               You worked through it.
             </h2>
           </div>
-          <TeachItBack exerciseType="rewire-in-60" onClose={() => navigate(-1)} />
+          <TeachItBack exerciseType="rewire-in-60" onClose={() => navigate('/neural-training')} />
         </div>
       )}
     </div>

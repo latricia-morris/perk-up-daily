@@ -17,6 +17,7 @@ const STEPS = {
   SITUATION: 'situation',
   PAUSE: 'pause',
   INSTINCT: 'instinct',
+  INSTINCT_REFLECT: 'instinct_reflect',
   INSIGHT: 'insight',
   ROOT_THOUGHT: 'root_thought',
   ROOT_FEELING: 'root_feeling',
@@ -27,12 +28,16 @@ const STEPS = {
 
 const SITUATION_DURATION = 12000;
 const PAUSE_DURATION = 12000;
+const INSTINCT_REFLECT_DURATION = 8000;
 
 export default function InstinctVsInsightExercise() {
   const navigate = useNavigate();
   const [scenario] = useState(() => getRandomScenario());
   const [step, setStep] = useState(STEPS.SITUATION);
   const [timeLeft, setTimeLeft] = useState(SITUATION_DURATION / 1000);
+  const [selectedInstinct, setSelectedInstinct] = useState(null);
+  const [customInstinct, setCustomInstinct] = useState('');
+  const [showCustomInstinct, setShowCustomInstinct] = useState(false);
   const [instinctText, setInstinctText] = useState('');
   const [insightText, setInsightText] = useState('');
   const [rootThought, setRootThought] = useState('');
@@ -70,27 +75,34 @@ export default function InstinctVsInsightExercise() {
     return () => clearTimeout(timer);
   }, [step]);
 
+  // Instinct reflect auto-transition (8s)
+  useEffect(() => {
+    if (step !== STEPS.INSTINCT_REFLECT) return;
+    const timer = setTimeout(() => setStep(STEPS.INSIGHT), INSTINCT_REFLECT_DURATION);
+    return () => clearTimeout(timer);
+  }, [step]);
+
   const situationProgress = Math.round((timeLeft / (SITUATION_DURATION / 1000)) * 100);
 
-  const stepOrder = [STEPS.SITUATION, STEPS.PAUSE, STEPS.INSTINCT, STEPS.INSIGHT, STEPS.ROOT_THOUGHT, STEPS.ROOT_FEELING, STEPS.ROOT_BEHAVIOR, STEPS.REROUTE, STEPS.COMPLETE];
+  const stepOrder = [STEPS.SITUATION, STEPS.PAUSE, STEPS.INSTINCT, STEPS.INSTINCT_REFLECT, STEPS.INSIGHT, STEPS.ROOT_THOUGHT, STEPS.ROOT_FEELING, STEPS.ROOT_BEHAVIOR, STEPS.REROUTE, STEPS.COMPLETE];
   const stepNum = stepOrder.indexOf(step) + 1;
 
-  const canAdvanceRoot = (text, skip) => text.trim().length > 0 || skip;
+  const finalInstinct = showCustomInstinct ? customInstinct.trim() : selectedInstinct;
 
   return (
     <div className="relative h-screen w-full overflow-hidden flex flex-col items-center justify-center px-5"
       style={{ background: PALETTE.page, fontFamily: "'DM Sans', sans-serif", color: PALETTE.ink }}>
 
-      {/* Step indicator + back */}
+      {/* Step indicator */}
       <div className="absolute top-4 left-1/2 -translate-x-1/2 text-center">
         <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: `${PALETTE.ink}60` }}>
-          {step !== STEPS.COMPLETE ? `Step ${stepNum} of 8` : 'Complete'}
+          {step !== STEPS.COMPLETE ? `Step ${stepNum} of 9` : 'Complete'}
         </span>
       </div>
 
-      {/* Back button for pause screen */}
-      {step === STEPS.PAUSE && (
-        <button onClick={() => setStep(STEPS.SITUATION)}
+      {/* Back button for pause + reflect screens */}
+      {(step === STEPS.PAUSE || step === STEPS.INSTINCT_REFLECT) && (
+        <button onClick={() => setStep(step === STEPS.INSTINCT_REFLECT ? STEPS.INSTINCT : STEPS.SITUATION)}
           className="absolute bottom-6 left-6 flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium backdrop-blur-md transition-all active:scale-95"
           style={{ background: 'rgba(255,252,242,0.7)', color: PALETTE.ink, border: '1px solid rgba(47,44,41,0.12)' }}>
           <ArrowLeft className="w-3.5 h-3.5" /> Back
@@ -143,30 +155,78 @@ export default function InstinctVsInsightExercise() {
         </div>
       )}
 
-      {/* STEP 3: Name Your Instinct */}
+      {/* STEP 3: Name Your Instinct — options + "Something else" */}
       {step === STEPS.INSTINCT && (
         <div className="max-w-md w-full">
           <p className="text-sm font-medium mb-2" style={{ color: PALETTE.ink }}>
-            What's your gut reaction to this? What would you instinctively think, feel, or do?
+            What's your gut reaction to this?
           </p>
           <p className="text-xs mb-4" style={{ color: `${PALETTE.ink}60` }}>
             {scenario.situation}
           </p>
-          <textarea
-            value={instinctText}
-            onChange={e => setInstinctText(e.target.value)}
-            placeholder="Name it in your own words…"
-            rows={4}
-            maxLength={500}
-            autoFocus
-            className="w-full resize-none rounded-xl px-4 py-3 text-sm leading-relaxed outline-none mb-6"
-            style={{ background: 'rgba(255,255,255,0.7)', border: '1px solid rgba(249,88,38,0.18)', color: PALETTE.ink }}
-          />
-          <button onClick={() => setStep(STEPS.INSIGHT)} disabled={!instinctText.trim()}
+          <div className="flex flex-wrap gap-2 mb-3">
+            {scenario.instincts.map((instinct, idx) => (
+              <button key={idx}
+                onClick={() => { setSelectedInstinct(instinct); setShowCustomInstinct(false); setInstinctText(instinct); }}
+                className="w-full text-left rounded-xl px-4 py-3 text-sm font-medium transition-all active:scale-95"
+                style={{
+                  background: selectedInstinct === instinct && !showCustomInstinct ? `${PALETTE.ember}1A` : `${PALETTE.ink}0A`,
+                  border: `1px solid ${selectedInstinct === instinct && !showCustomInstinct ? PALETTE.ember : 'transparent'}`,
+                  color: PALETTE.ink
+                }}>
+                {instinct}
+              </button>
+            ))}
+            <button
+              onClick={() => { setShowCustomInstinct(true); setSelectedInstinct(null); }}
+              className="w-full text-left rounded-xl px-4 py-3 text-sm font-medium transition-all active:scale-95 flex items-center gap-2"
+              style={{
+                background: showCustomInstinct ? `${PALETTE.ember}1A` : `${PALETTE.ink}0A`,
+                border: `1px solid ${showCustomInstinct ? PALETTE.ember : 'transparent'}`,
+                color: PALETTE.ink
+              }}>
+              <Plus className="w-4 h-4 shrink-0" /> Something else
+            </button>
+          </div>
+          {showCustomInstinct && (
+            <input
+              value={customInstinct}
+              onChange={e => { setCustomInstinct(e.target.value); setInstinctText(e.target.value); }}
+              placeholder="Name your gut reaction…"
+              maxLength={120}
+              autoFocus
+              className="w-full rounded-xl px-4 py-2.5 text-sm outline-none mb-4"
+              style={{ background: 'rgba(255,255,255,0.7)', border: '1px solid rgba(249,88,38,0.18)', color: PALETTE.ink }}
+            />
+          )}
+          <button onClick={() => setStep(STEPS.INSTINCT_REFLECT)} disabled={!finalInstinct}
             className="w-full rounded-full py-3 text-sm font-medium transition-all active:scale-95 disabled:opacity-40 flex items-center justify-center gap-2"
             style={{ background: PALETTE.ink, color: PALETTE.cream }}>
             Next <ChevronRight className="w-4 h-4" />
           </button>
+        </div>
+      )}
+
+      {/* STEP 3.5: Instinct Reflect — "think" pause */}
+      {step === STEPS.INSTINCT_REFLECT && (
+        <div className="text-center max-w-md">
+          <div className="rounded-full mx-auto mb-4"
+            style={{
+              width: 80, height: 80,
+              background: `radial-gradient(circle, ${PALETTE.ember}33 0%, ${PALETTE.ember}11 60%, transparent 100%)`,
+              animation: 'pause-breathe 3s ease-in-out infinite'
+            }}
+          />
+          <p className="text-xs mb-2" style={{ color: `${PALETTE.ink}60` }}>
+            Your instinct:
+          </p>
+          <p style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 500, marginBottom: 8, color: PALETTE.ink }}>
+            "{instinctText}"
+          </p>
+          <p className="text-sm" style={{ color: `${PALETTE.ink}A6` }}>
+            Sit with that for a moment. Where does it come from?
+          </p>
+          <style>{`@keyframes pause-breathe { 0%,100% { transform: scale(0.85); opacity: 0.7; } 50% { transform: scale(1.05); opacity: 1; } }`}</style>
         </div>
       )}
 
@@ -193,7 +253,7 @@ export default function InstinctVsInsightExercise() {
           <div className="flex flex-wrap gap-2 mb-6">
             {scenario.starters.map((starter, idx) => (
               <button key={idx}
-                onClick={() => setInsightText(prev => prev ? prev + ' ' : '' + starter)}
+                onClick={() => setInsightText(prev => (prev ? prev + ' ' : '') + starter)}
                 className="rounded-full px-3 py-1.5 text-xs font-medium transition-all active:scale-95"
                 style={{ background: `${PALETTE.teal}0A`, border: `1px solid ${PALETTE.teal}33`, color: PALETTE.ink }}>
                 {starter}
@@ -240,7 +300,7 @@ export default function InstinctVsInsightExercise() {
         </div>
       )}
 
-      {/* STEP 5b: Root in Feeling */}
+      {/* STEP 5b: Root in Feeling — with "Something else" option */}
       {step === STEPS.ROOT_FEELING && (
         <div className="max-w-md w-full">
           <p className="text-[10px] font-bold uppercase tracking-widest mb-3" style={{ color: PALETTE.teal }}>Root in Feeling</p>
@@ -363,7 +423,7 @@ export default function InstinctVsInsightExercise() {
               You traced it to the root.
             </h2>
           </div>
-          <TeachItBack exerciseType="instinct-vs-insight" onClose={() => navigate(-1)} />
+          <TeachItBack exerciseType="instinct-vs-insight" onClose={() => navigate('/neural-training')} />
         </div>
       )}
     </div>

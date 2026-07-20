@@ -28,8 +28,10 @@ export default function ExerciseShell({ children }) {
       navigate(sequence[step - 1], { state: { sequence, step: step - 1 } });
     } else if (isInSequence) {
       navigate('/reset');
-    } else {
+    } else if (window.history.length > 1) {
       navigate(-1);
+    } else {
+      navigate('/neural-training');
     }
   };
 

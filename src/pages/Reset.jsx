@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { RotateCcw } from 'lucide-react';
 import { RESET_OPTIONS } from '@/lib/exerciseRegistry';
+import ResetIcon from '@/components/ResetIcon';
 
 export default function Reset() {
   const navigate = useNavigate();
@@ -11,9 +11,13 @@ export default function Reset() {
   const handleSelect = (option) => {
     setSelected(option.id);
     setTimeout(() => {
-      navigate(option.sequence[0], {
-        state: { sequence: option.sequence, step: 0 },
-      });
+      if (option.id === 'focus') {
+        navigate('/focus-triage');
+      } else {
+        navigate(option.sequence[0], {
+          state: { sequence: option.sequence, step: 0 },
+        });
+      }
     }, 300);
   };
 
@@ -35,7 +39,7 @@ export default function Reset() {
           className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4"
           style={{ background: 'linear-gradient(135deg, #E8A838 0%, #d4830a 100%)' }}
         >
-          <RotateCcw className="w-7 h-7" style={{ color: '#FFFCF2' }} />
+          <ResetIcon className="w-7 h-7" style={{ color: '#FFFCF2' }} />
         </div>
         <h1 className="font-display text-2xl md:text-3xl font-semibold mb-2" style={{ color: '#2c1e0f' }}>
           What do you most need right now?

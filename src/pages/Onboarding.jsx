@@ -453,12 +453,14 @@ export default function Onboarding() {
                 </Button>
                 <Button
                   onClick={() => setStep(6)}
-                  disabled={!phoneNumber || !smsConsent}
                   className="flex-1 bg-primary hover:bg-primary/90"
                 >
                   Continue <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </div>
+              <p className="text-xs text-muted-foreground text-center mt-3">
+                Phone number is optional — you can add it later in Settings.
+              </p>
             </motion.div>
           )}
 

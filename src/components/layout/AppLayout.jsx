@@ -235,11 +235,16 @@ export default function AppLayout() {
         </div>
       </nav>
 
-      {/* Desktop/Tablet floating Reset button */}
-      <Link to="/reset" className="hidden md:flex fixed top-5 right-6 z-40 items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium backdrop-blur-md transition-all active:scale-95"
-        style={{ background: 'rgba(255,252,242,0.75)', color: '#D4830A', border: '1px solid rgba(212,131,10,0.2)', boxShadow: '0 2px 12px rgba(47,44,41,0.06)' }}>
-        <ResetIcon className="w-3.5 h-3.5" />
-        Reset
+      {/* Desktop/Tablet floating Reset button — large circular sunrise gradient */}
+      <Link to="/reset" aria-label="Reset" className="hidden md:flex fixed bottom-6 right-6 z-40 items-center justify-center rounded-full transition-all active:scale-95"
+        style={{
+          width: 56,
+          height: 56,
+          background: 'linear-gradient(45deg, #570d40 0%, #981f62 25%, #f15a2b 50%, #ffc923 75%, #fed855 100%)',
+          boxShadow: '0 6px 24px rgba(87,13,64,0.25)',
+          border: '2px solid rgba(255,255,255,0.3)',
+        }}>
+        <ResetIcon className="w-7 h-7" style={{ color: '#FFFFFF' }} />
       </Link>
 
       {/* Main content with slide transitions */}

@@ -330,7 +330,7 @@ export default function NeurocycleExercise() {
               </p>
             )}
           </div>
-          <TeachItBack exerciseType="neurocycle" onClose={() => navigate(-1)} />
+          <TeachItBack exerciseType="neurocycle" onClose={() => navigate('/neural-training')} />
           <button
             onClick={reset}
             className="w-full mt-4 rounded-full py-2.5 text-sm font-medium transition-all active:scale-95 flex items-center justify-center gap-2"
