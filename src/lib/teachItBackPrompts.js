@@ -37,6 +37,11 @@ export const TEACH_IT_BACK_PROMPTS = {
     "What did you notice about your mind when it had one clear thing to hold — and how would you describe that to someone who's never tried it?",
     "If someone said 'I can just focus without naming it,' what would you say back?",
   ],
+  "impact-prioritization": [
+    "How would you explain the difference between Important, Urgent, and Extra to someone who's never sorted their list this way?",
+    "What did you notice about calling something 'Extra' instead of dismissing it — and how would you describe that shift to a friend?",
+    "If someone said 'everything feels urgent,' how would you explain what you just did to get unstuck?",
+  ],
   general: [
     "Explain what you just practiced like you're teaching a friend who's never heard of it.",
   ],
@@ -56,6 +61,8 @@ export function getPromptForExercise(exerciseType) {
     category = 'neurocycle';
   } else if (exerciseType === 'intention-timer') {
     category = 'intention-timer';
+  } else if (exerciseType === 'impact-prioritization') {
+    category = 'impact-prioritization';
   }
   const prompts = TEACH_IT_BACK_PROMPTS[category] || TEACH_IT_BACK_PROMPTS.general;
   return prompts[Math.floor(Math.random() * prompts.length)];

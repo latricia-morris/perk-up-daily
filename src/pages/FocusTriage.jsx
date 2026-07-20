@@ -8,8 +8,8 @@ const TRIAGE_OPTIONS = [
     id: 'overwhelmed',
     label: 'I have too much to do and don\'t know where to start',
     accent: '#F95826',
-    exerciseName: 'Impact Prioritization',
-    status: 'coming_soon',
+    route: '/exercises/impact-prioritization',
+    status: 'active',
   },
   {
     id: 'stuck',
@@ -43,8 +43,8 @@ const TRIAGE_OPTIONS = [
     id: 'not-sure',
     label: 'Not sure, just pick for me',
     accent: '#C97F0E',
-    exerciseName: 'Impact Prioritization',
-    status: 'coming_soon',
+    route: '/exercises/impact-prioritization',
+    status: 'active',
   },
 ];
 

@@ -43,6 +43,7 @@ import RewireIn60 from '@/pages/exercises/RewireIn60';
 import InstinctVsInsight from '@/pages/exercises/InstinctVsInsight';
 import Neurocycle from '@/pages/exercises/Neurocycle';
 import IntentionTimer from '@/pages/exercises/IntentionTimer';
+import ImpactPrioritization from '@/pages/exercises/ImpactPrioritization';
 import Notes from '@/pages/Notes';
 import IdentityUpgrades from '@/pages/IdentityUpgrades';
 import Search from '@/pages/Search';
@@ -124,6 +125,7 @@ const AuthenticatedApp = () => {
         <Route path="/exercises/instinct-vs-insight" element={<InstinctVsInsight />} />
         <Route path="/exercises/neurocycle" element={<Neurocycle />} />
         <Route path="/exercises/intention-timer" element={<IntentionTimer />} />
+        <Route path="/exercises/impact-prioritization" element={<ImpactPrioritization />} />
       </Route>
 
       <Route path="*" element={<PageNotFound />} />

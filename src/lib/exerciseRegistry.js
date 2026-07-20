@@ -86,6 +86,14 @@ export const COGNITIVE_DRILLS = [
     rhythm: '5–15 min · 4 steps',
     accent: '#219EBC',
   },
+  {
+    id: 'impact-prioritization',
+    title: 'Impact Prioritization',
+    description: 'Brain dump, sort into Important / Urgent / Extra, and pick your top 3 for today.',
+    route: '/exercises/impact-prioritization',
+    rhythm: '~3 min · 5 steps',
+    accent: '#219EBC',
+  },
 ];
 
 export const RESET_OPTIONS = [
