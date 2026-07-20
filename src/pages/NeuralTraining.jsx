@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Brain, Wind, Brain as BrainCircuit, Shuffle, ChevronRight, Atom } from 'lucide-react';
-import { BREATHING_EXERCISES, COGNITIVE_DRILLS, EXERCISE_TYPES } from '@/lib/exerciseRegistry';
+import { ALL_STATIC_EXERCISES, EXERCISE_TYPES } from '@/lib/exerciseRegistry';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 
@@ -35,6 +35,8 @@ export default function NeuralTraining() {
     queryFn: () => base44.entities.NeuralTraining.filter({ exercise_type: activeType, status: 'active' }, 'sort_order'),
     enabled: activeType !== 'breathing' && activeType !== 'perspective',
   });
+
+  const staticExercises = ALL_STATIC_EXERCISES.filter(ex => ex.categories?.includes(activeType));
 
   return (
     <div className="min-h-screen p-4 md:p-8 w-full max-w-5xl mx-auto" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 16px), 120px)' }}>
@@ -88,15 +90,7 @@ export default function NeuralTraining() {
       </p>
 
       {/* Exercise list — grid */}
-      {activeType === 'breathing' && (
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          {BREATHING_EXERCISES.map((ex, i) => (
-            <ExerciseGridCard key={ex.id} exercise={ex} onClick={() => navigate(ex.route)} index={i} />
-          ))}
-        </div>
-      )}
-
-      {activeType === 'perspective' && (
+      {activeType === 'perspective' ? (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {perspectivePrompts.length > 0 ? (
             perspectivePrompts.map((prompt, i) => (
@@ -119,11 +113,9 @@ export default function NeuralTraining() {
             </div>
           )}
         </div>
-      )}
-
-      {activeType === 'cognitive_drill' && (
+      ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          {COGNITIVE_DRILLS.map((ex, i) => (
+          {staticExercises.map((ex, i) => (
             <ExerciseGridCard
               key={ex.id}
               exercise={ex}
@@ -141,36 +133,9 @@ export default function NeuralTraining() {
                 accent: TYPE_ACCENTS[activeType],
               }}
               onClick={() => ex.route ? navigate(ex.route) : null}
-              index={COGNITIVE_DRILLS.length + i}
+              index={staticExercises.length + i}
             />
           ))}
-        </div>
-      )}
-
-      {activeType === 'reframing' && (
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          {dbExercises.length > 0 ? (
-            dbExercises.map((ex, i) => (
-              <ExerciseGridCard
-                key={ex.id}
-                exercise={{
-                  title: ex.title,
-                  description: ex.description || ex.content,
-                  rhythm: ex.route ? 'Interactive' : 'Prompt',
-                  accent: TYPE_ACCENTS[activeType],
-                }}
-                onClick={() => ex.route ? navigate(ex.route) : null}
-                index={i}
-              />
-            ))
-          ) : (
-            <div className="col-span-full text-center py-12">
-              <BrainCircuit className="w-8 h-8 mx-auto mb-3" style={{ color: '#c4a882' }} />
-              <p className="text-sm" style={{ color: '#c4a882' }}>
-                Reframing exercises are coming soon. Stay tuned!
-              </p>
-            </div>
-          )}
         </div>
       )}
     </div>

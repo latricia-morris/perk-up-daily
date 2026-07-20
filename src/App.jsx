@@ -47,6 +47,10 @@ import ImpactPrioritization from '@/pages/exercises/ImpactPrioritization';
 import RuminationInterrupt from '@/pages/exercises/RuminationInterrupt';
 import WorryBlocks from '@/pages/exercises/WorryBlocks';
 import EvidenceCheck from '@/pages/exercises/EvidenceCheck';
+import TaskInitiation from '@/pages/exercises/TaskInitiation';
+import TimeBlocking from '@/pages/exercises/TimeBlocking';
+import FocusReset from '@/pages/exercises/FocusReset';
+import Grounding from '@/pages/exercises/Grounding';
 import Notes from '@/pages/Notes';
 import IdentityUpgrades from '@/pages/IdentityUpgrades';
 import Search from '@/pages/Search';
@@ -132,6 +136,10 @@ const AuthenticatedApp = () => {
         <Route path="/exercises/rumination-interrupt" element={<RuminationInterrupt />} />
         <Route path="/exercises/worry-blocks" element={<WorryBlocks />} />
         <Route path="/exercises/evidence-check" element={<EvidenceCheck />} />
+        <Route path="/exercises/task-initiation" element={<TaskInitiation />} />
+        <Route path="/exercises/time-blocking" element={<TimeBlocking />} />
+        <Route path="/exercises/focus-reset" element={<FocusReset />} />
+        <Route path="/exercises/grounding" element={<Grounding />} />
       </Route>
 
       <Route path="*" element={<PageNotFound />} />

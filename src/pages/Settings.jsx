@@ -240,28 +240,38 @@ export default function Settings() {
                 <p className="text-xs text-muted-foreground mt-1.5">Enter just the number (no country code needed)</p>
               </div>
 
-              {/* SMS Consent */}
+              {/* Texting toggle */}
               <div className="rounded-xl border border-border bg-card p-4 space-y-3">
-                <label className="flex items-start gap-3 cursor-pointer">
-                  <Checkbox
-                    checked={prefs.sms_consent}
-                    onCheckedChange={v => setPrefs(prev => ({ ...prev, sms_consent: v }))}
-                    className="mt-0.5"
-                  />
-                  <span className="text-xs text-foreground leading-relaxed">
-                    <strong>Yes, sign me up!</strong> I consent to receive recurring SMS messages from Perk Up
-                    Daily, including daily encouragement, reminders, and occasional updates about features or
-                    subscriptions.
-                  </span>
-                </label>
-                <div className="text-[11px] text-muted-foreground leading-relaxed space-y-1.5 pl-1">
-                  <p><strong>Message frequency:</strong> Varies based on your settings (typically 1–3 messages per day).</p>
-                  <p><strong>Message &amp; data rates may apply.</strong></p>
-                  <p>Reply <strong>STOP</strong> at any time to unsubscribe. Reply <strong>HELP</strong> for help.</p>
-                  <div className="pt-1">
-                    <LegalLinks />
+                <div className="flex items-center justify-between">
+                  <div className="flex-1 mr-3">
+                    <Label className="text-sm font-medium text-foreground">Text messages</Label>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      {prefs.sms_consent
+                        ? 'On — you\'ll receive daily encouragement via text'
+                        : 'Off — no text messages will be sent to you'}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className={`text-xs font-bold ${prefs.sms_consent ? 'text-primary' : 'text-muted-foreground'}`}>
+                      {prefs.sms_consent ? 'ON' : 'OFF'}
+                    </span>
+                    <Switch
+                      checked={prefs.sms_consent}
+                      onCheckedChange={v => setPrefs(prev => ({ ...prev, sms_consent: v }))}
+                    />
                   </div>
                 </div>
+                {prefs.sms_consent && (
+                  <div className="text-[11px] text-muted-foreground leading-relaxed space-y-1.5 pl-1 pt-2 border-t border-border/50">
+                    <p>I consent to receive recurring SMS messages from Perk Up Daily, including daily encouragement, reminders, and occasional updates about features or subscriptions.</p>
+                    <p><strong>Message frequency:</strong> Varies based on your settings (typically 1–3 messages per day).</p>
+                    <p><strong>Message &amp; data rates may apply.</strong></p>
+                    <p>Reply <strong>STOP</strong> at any time to unsubscribe. Reply <strong>HELP</strong> for help.</p>
+                    <div className="pt-1">
+                      <LegalLinks />
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </section>
