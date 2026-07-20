@@ -94,6 +94,30 @@ export const COGNITIVE_DRILLS = [
     rhythm: '~3 min · 5 steps',
     accent: '#219EBC',
   },
+  {
+    id: 'rumination-interrupt',
+    title: 'Rumination Interrupt',
+    description: 'Catch a looping thought and redirect — toward action, or toward letting it rest.',
+    route: '/exercises/rumination-interrupt',
+    rhythm: '~2 min · branching',
+    accent: '#5C3B8F',
+  },
+  {
+    id: 'worry-blocks',
+    title: 'Worry-Blocks',
+    description: 'Give a pulling thought full, undistracted attention for a set window — then set it down.',
+    route: '/exercises/worry-blocks',
+    rhythm: '5–10 min · 4 steps',
+    accent: '#F95826',
+  },
+  {
+    id: 'evidence-check',
+    title: 'Evidence-Check Drill',
+    description: 'Check a thought against real evidence — both its accuracy and the space it deserves.',
+    route: '/exercises/evidence-check',
+    rhythm: '~3 min · 6 steps',
+    accent: '#FFAD09',
+  },
 ];
 
 export const RESET_OPTIONS = [

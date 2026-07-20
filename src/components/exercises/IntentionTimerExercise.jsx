@@ -13,9 +13,9 @@ const PALETTE = {
 };
 
 const DURATION_OPTIONS = [
+  { label: '1 min', seconds: 60 },
+  { label: '3 min', seconds: 180 },
   { label: '5 min', seconds: 300 },
-  { label: '10 min', seconds: 600 },
-  { label: '15 min', seconds: 900 },
 ];
 
 export default function IntentionTimerExercise() {

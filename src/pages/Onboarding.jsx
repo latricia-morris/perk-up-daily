@@ -237,7 +237,7 @@ export default function Onboarding() {
 
               <Button
                 onClick={() => setStep(3)}
-                disabled={selectedCategories.length === 0 || christianContent === null}
+                disabled={selectedCategories.length === 0}
                 className="w-full bg-primary hover:bg-primary/90"
                 size="lg"
               >

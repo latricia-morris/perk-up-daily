@@ -42,6 +42,11 @@ export const TEACH_IT_BACK_PROMPTS = {
     "What did you notice about calling something 'Extra' instead of dismissing it — and how would you describe that shift to a friend?",
     "If someone said 'everything feels urgent,' how would you explain what you just did to get unstuck?",
   ],
+  "evidence-check": [
+    "You just checked a thought against real evidence, and separated whether it's true from how much room it's actually taking up in your head. How would you explain that difference to a friend who's stuck on something that's real, but maybe bigger in their head than it needs to be right now?",
+    "How would you explain why accuracy and weight are two different things — and why a thought can be true and still taking up too much space?",
+    "If someone said 'but it IS true,' how would you explain what you just did to check whether it deserves this much room?",
+  ],
   general: [
     "Explain what you just practiced like you're teaching a friend who's never heard of it.",
   ],
@@ -63,6 +68,8 @@ export function getPromptForExercise(exerciseType) {
     category = 'intention-timer';
   } else if (exerciseType === 'impact-prioritization') {
     category = 'impact-prioritization';
+  } else if (exerciseType === 'evidence-check') {
+    category = 'evidence-check';
   }
   const prompts = TEACH_IT_BACK_PROMPTS[category] || TEACH_IT_BACK_PROMPTS.general;
   return prompts[Math.floor(Math.random() * prompts.length)];
