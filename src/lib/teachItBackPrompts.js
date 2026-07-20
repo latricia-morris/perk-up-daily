@@ -26,6 +26,12 @@ export const TEACH_IT_BACK_PROMPTS = {
     "What's one default setting you noticed today, and how would you describe where it might have come from?",
     "If a friend said 'I just am who I am, I can't change how I react' — what would you say back to them?",
   ],
+  neurocycle: [
+    "How would you explain the 5 steps of a neurocycle to someone who's never heard of it?",
+    "What did you notice about the difference between your captured thought and your reconceptualized one?",
+    "Why does naming the feeling first actually matter — how would you explain that to a friend?",
+    "If someone said 'you can't just think your way out of a bad mood,' what would you say back?",
+  ],
   general: [
     "Explain what you just practiced like you're teaching a friend who's never heard of it.",
   ],
@@ -41,6 +47,8 @@ export function getPromptForExercise(exerciseType) {
     category = 'rewire';
   } else if (exerciseType === 'instinct-vs-insight') {
     category = 'instinct';
+  } else if (exerciseType === 'neurocycle') {
+    category = 'neurocycle';
   }
   const prompts = TEACH_IT_BACK_PROMPTS[category] || TEACH_IT_BACK_PROMPTS.general;
   return prompts[Math.floor(Math.random() * prompts.length)];

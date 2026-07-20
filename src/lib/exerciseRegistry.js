@@ -70,6 +70,14 @@ export const COGNITIVE_DRILLS = [
     rhythm: '~60 sec · 5 scenarios',
     accent: '#F95826',
   },
+  {
+    id: 'neurocycle',
+    title: 'Neurocycle',
+    description: 'A 5-step cycle to gather, reflect, capture, reframe, and act on a thought pattern.',
+    route: '/exercises/neurocycle',
+    rhythm: '~3 min · 5 steps',
+    accent: '#5C3B8F',
+  },
 ];
 
 export const RESET_OPTIONS = [

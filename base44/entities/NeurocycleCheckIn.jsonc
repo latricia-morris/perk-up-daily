@@ -1,0 +1,64 @@
+{
+  "name": "NeurocycleCheckIn",
+  "type": "object",
+  "properties": {
+    "cycle_date": {
+      "type": "string",
+      "format": "date",
+      "description": "The date the neurocycle was completed"
+    },
+    "gathered_emotion": {
+      "type": "string",
+      "description": "The emotion or feeling the user identified during the Gather step"
+    },
+    "captured_thought": {
+      "type": "string",
+      "description": "The original thought captured during the Capture step"
+    },
+    "reconceptualized_thought": {
+      "type": "string",
+      "description": "The reframed, healthier thought from the Reconceptualize step"
+    },
+    "active_reach": {
+      "type": "string",
+      "description": "The one small action the user committed to in the Active Reach step"
+    },
+    "check_in_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "completed"
+      ],
+      "default": "pending",
+      "description": "Whether the evening check-in has been completed"
+    },
+    "check_in_result": {
+      "type": "string",
+      "enum": [
+        "yes",
+        "partial",
+        "none"
+      ],
+      "description": "Result of the evening check-in: did the user follow through on their active reach?"
+    }
+  },
+  "required": [
+    "cycle_date",
+    "captured_thought",
+    "reconceptualized_thought"
+  ],
+  "rls": {
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}
