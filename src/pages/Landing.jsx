@@ -281,7 +281,7 @@ export default function Landing() {
       {/* ── SECTION 3: YOUR STORY ─────────────────────────────────────── */}
       <section className="py-12 md:py-16">
         <div className="max-w-3xl mx-auto px-6">
-          <p className="font-semibold text-sm mb-3" style={{ color: '#E8A838' }}>Why I built this</p>
+          <p className="font-semibold mb-3 text-xl" style={{ color: '#E8A838' }}>Why I built this</p>
           <h3 className="font-display text-2xl md:text-3xl font-semibold mb-6" style={{ color: '#2c1e0f' }}>
             I spent decades in the dark. Then I learned the brain can change.
           </h3>
@@ -330,7 +330,7 @@ export default function Landing() {
       {/* ── SECTION 3.5: PERK UP PLAYS IT BACK ────────────────────────── */}
       <section className="py-12 md:py-16">
         <div className="max-w-3xl mx-auto px-6">
-          <p className="font-semibold text-sm mb-3" style={{ color: '#E8A838' }}>Your best moments deserve more than a box in the basement.</p>
+          <p className="font-semibold mb-3 text-xl" style={{ color: '#E8A838' }}>Your best moments deserve more than a box in the basement.</p>
           <h3 className="font-display text-2xl md:text-3xl font-semibold mb-6" style={{ color: '#2c1e0f' }}>
             Perk Up plays it back.
           </h3>
@@ -344,7 +344,7 @@ export default function Landing() {
       {/* ── SECTION 3.6: THE ENGINE FOR YOUR EVOLUTION ────────────────── */}
       <section className="py-12 md:py-16">
         <div className="max-w-3xl mx-auto px-6">
-          <p className="font-semibold text-sm mb-3" style={{ color: '#E8A838' }}>The Engine for Your Evolution</p>
+          <p className="font-semibold mb-3 text-xl" style={{ color: '#E8A838' }}>The Engine for Your Evolution</p>
           <h3 className="font-display text-2xl md:text-3xl font-semibold mb-6" style={{ color: '#2c1e0f' }}>
             Perk Up celebrates &amp; elevates YOU.
           </h3>
@@ -397,7 +397,7 @@ export default function Landing() {
           <h3 className="font-display text-2xl md:text-3xl font-semibold mb-2" style={{ color: '#2c1e0f' }}>
             What if your brain could be rewired for joy?
           </h3>
-          <p className="font-semibold text-base mb-6" style={{ color: '#E8A838' }}>Science says it can.</p>
+          <p className="font-semibold mb-6 text-xl" style={{ color: '#E8A838' }}>Science says it can.</p>
 
           {/* Brain image & text layout */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-8 items-start">
