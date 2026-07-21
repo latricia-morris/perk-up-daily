@@ -51,6 +51,10 @@ import TaskInitiation from '@/pages/exercises/TaskInitiation';
 import TimeBlocking from '@/pages/exercises/TimeBlocking';
 import FocusReset from '@/pages/exercises/FocusReset';
 import Grounding from '@/pages/exercises/Grounding';
+import SensoryGrounding from '@/pages/exercises/SensoryGrounding';
+import ChillReset from '@/pages/exercises/ChillReset';
+import SmileReset from '@/pages/exercises/SmileReset';
+import EnergizeReset from '@/pages/exercises/EnergizeReset';
 import Notes from '@/pages/Notes';
 import IdentityUpgrades from '@/pages/IdentityUpgrades';
 import Search from '@/pages/Search';
@@ -140,6 +144,10 @@ const AuthenticatedApp = () => {
         <Route path="/exercises/time-blocking" element={<TimeBlocking />} />
         <Route path="/exercises/focus-reset" element={<FocusReset />} />
         <Route path="/exercises/grounding" element={<Grounding />} />
+        <Route path="/exercises/sensory-grounding" element={<SensoryGrounding />} />
+        <Route path="/exercises/chill-reset" element={<ChillReset />} />
+        <Route path="/exercises/smile-reset" element={<SmileReset />} />
+        <Route path="/exercises/energize-reset" element={<EnergizeReset />} />
       </Route>
 
       <Route path="*" element={<PageNotFound />} />

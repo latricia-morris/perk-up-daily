@@ -13,6 +13,8 @@ export default function Reset() {
     setTimeout(() => {
       if (option.id === 'focus') {
         navigate('/focus-triage');
+      } else if (option.flow) {
+        navigate(option.flow);
       } else {
         navigate(option.sequence[0], {
           state: { sequence: option.sequence, step: 0 },

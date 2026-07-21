@@ -32,15 +32,16 @@ export const COGNITIVE_DRILLS = [
   { id: 'time-blocking', title: 'Time Blocking', description: 'Dump everything, slot it into morning / afternoon / evening / gap, and shape your day.', route: '/exercises/time-blocking', rhythm: '~3 min · 5 steps', accent: '#219EBC', categories: ['cognitive_drill'] },
   { id: 'focus-reset', title: 'Focus Reset', description: 'Pick one thing, set a timer, and give it your full attention — then check in on how it went.', route: '/exercises/focus-reset', rhythm: '15–45 min · 5 steps', accent: '#5C3B8F', categories: ['cognitive_drill'] },
   { id: 'grounding', title: 'Grounding Reset', description: 'A stillness beat, one task, full presence — for when your mind feels scattered.', route: '/exercises/grounding', rhythm: '~2 min · 4 steps', accent: '#BA1650', categories: ['cognitive_drill'] },
+  { id: 'sensory-grounding', title: '5-4-3-2-1 Grounding', description: 'Use your senses to come back to the present — 5 things you see, 4 you feel, 3 you hear, 2 you smell, 1 you taste.', route: '/exercises/sensory-grounding', rhythm: '~2 min · 5 senses', accent: '#219EBC', categories: ['cognitive_drill'] },
 ];
 
 export const ALL_STATIC_EXERCISES = [...BREATHING_EXERCISES, ...COGNITIVE_DRILLS];
 
 export const RESET_OPTIONS = [
-  { id: 'chill', label: 'Chill', description: 'Settle your nervous system', accent: '#5C3B8F', sequence: ['/exercises/breathe', '/exercises/sigh'] },
+  { id: 'chill', label: 'Chill', description: 'Settle your nervous system', accent: '#5C3B8F', flow: '/exercises/chill-reset' },
   { id: 'focus', label: 'Focus', description: 'Sharpen your attention', accent: '#F95826', sequence: ['/exercises/box-breath', '/exercises/focus'] },
-  { id: 'smile', label: 'Smile', description: 'Soften and find comfort', accent: '#BA1650', sequence: ['/exercises/smile', '/exercises/breathe'] },
-  { id: 'energize', label: 'Energize', description: 'Invigorate and wake up', accent: '#FFAD09', sequence: ['/exercises/sigh', '/exercises/box-breath'] },
+  { id: 'smile', label: 'Smile', description: 'Soften and find comfort', accent: '#BA1650', flow: '/exercises/smile-reset' },
+  { id: 'energize', label: 'Energize', description: 'Invigorate and wake up', accent: '#FFAD09', flow: '/exercises/energize-reset' },
   { id: 'recalibrate', label: 'Recalibrate', description: 'Quick physiological reset', accent: '#219EBC', sequence: ['/exercises/sigh', '/exercises/breathe'] },
   { id: 'wind-down', label: 'Wind Down', description: 'Prepare for deep rest', accent: '#8ECAE6', sequence: ['/exercises/smile', '/exercises/breathe'] },
 ];
