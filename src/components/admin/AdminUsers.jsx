@@ -6,7 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Search, UserPlus, Mail, Phone, Calendar, Shield, Download, Eye, X, CheckCircle2, XCircle } from 'lucide-react';
+import { Search, UserPlus, Mail, Phone, Calendar, Shield, Download, Eye, X, CheckCircle2, XCircle, Clock } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
 import { exportToCSV, formatDate, formatNumber, STATUS_LABELS, STATUS_COLORS } from '@/lib/adminUtils';
 
 export default function AdminUsers({ data }) {
@@ -18,6 +19,7 @@ export default function AdminUsers({ data }) {
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteRole, setInviteRole] = useState('user');
   const [inviteLoading, setInviteLoading] = useState(false);
+  const [inviteLimitedAccess, setInviteLimitedAccess] = useState(true);
   const [updateLoading, setUpdateLoading] = useState(false);
 
   if (!data) return null;
@@ -39,6 +41,9 @@ export default function AdminUsers({ data }) {
     setInviteLoading(true);
     try {
       await base44.users.inviteUser(inviteEmail, inviteRole);
+      if (inviteLimitedAccess) {
+        await base44.entities.AccessLimitInvite.create({ email: inviteEmail, access_days: 30, processed: false });
+      }
       setInviteEmail('');
       setInviteOpen(false);
       queryClient.invalidateQueries({ queryKey: ['admin-dashboard'] });
@@ -244,6 +249,14 @@ export default function AdminUsers({ data }) {
                       <span className="text-foreground">{formatDate(selectedUser.trial_end_date)}</span>
                     </div>
                   )}
+                  {selectedUser.access_expires_at && (
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground flex items-center gap-1">
+                        <Clock className="w-3.5 h-3.5" /> Access Expires
+                      </span>
+                      <span className="text-foreground">{formatDate(selectedUser.access_expires_at)}</span>
+                    </div>
+                  )}
                   {selectedUser.stripe_customer_id && (
                     <div className="flex items-center justify-between">
                       <span className="text-muted-foreground">Stripe Customer</span>
@@ -304,6 +317,17 @@ export default function AdminUsers({ data }) {
                 </SelectContent>
               </Select>
             </div>
+          </div>
+          <div className="flex items-center gap-2 rounded-lg border border-border bg-muted/30 p-3">
+            <Checkbox
+              id="limited-access"
+              checked={inviteLimitedAccess}
+              onCheckedChange={v => setInviteLimitedAccess(v === true)}
+            />
+            <Label htmlFor="limited-access" className="text-sm font-medium cursor-pointer">
+              30-day limited access
+              <span className="block text-xs text-muted-foreground font-normal">Access expires 30 days after first login</span>
+            </Label>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setInviteOpen(false)}>Cancel</Button>

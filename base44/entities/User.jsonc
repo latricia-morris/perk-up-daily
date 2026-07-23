@@ -142,6 +142,10 @@
     "analytics_consent_timestamp": {
       "type": "string",
       "description": "ISO timestamp of when analytics consent was set"
+    },
+    "access_expires_at": {
+      "type": "string",
+      "description": "ISO date-time when this user's access expires. Set 30 days after first login for admin-invited limited-access users. When this date passes, subscription_status is set to 'expired'."
     }
   }
 }

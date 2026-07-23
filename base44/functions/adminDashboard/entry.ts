@@ -321,7 +321,8 @@ Deno.serve(async (req) => {
       cancelled_date: u.cancelled_date,
       stripe_customer_id: u.stripe_customer_id,
       selected_categories: u.selected_categories,
-      christian_content: u.christian_content
+      christian_content: u.christian_content,
+      access_expires_at: u.access_expires_at
     }));
 
     return Response.json({

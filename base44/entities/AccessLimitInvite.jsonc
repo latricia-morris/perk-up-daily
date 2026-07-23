@@ -1,0 +1,45 @@
+{
+  "name": "AccessLimitInvite",
+  "type": "object",
+  "properties": {
+    "email": {
+      "type": "string",
+      "description": "Email of the invited user who should receive time-limited access"
+    },
+    "access_days": {
+      "type": "number",
+      "default": 30,
+      "description": "Number of days of access the user gets after first login before expiry"
+    },
+    "processed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the access_expires_at has been applied to the user account"
+    }
+  },
+  "required": [
+    "email"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
