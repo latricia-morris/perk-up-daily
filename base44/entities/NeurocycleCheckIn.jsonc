@@ -5,7 +5,33 @@
     "cycle_date": {
       "type": "string",
       "format": "date",
-      "description": "The date the neurocycle was completed"
+      "description": "The date this check-in was completed"
+    },
+    "cycle_id": {
+      "type": "string",
+      "description": "UUID linking all check-ins within a 21-day cycle. Generated on Day 1."
+    },
+    "cycle_day": {
+      "type": "number",
+      "description": "Which day of the 21-day cycle (1-21). Day 1 is the full flow; Days 2-21 are lighter check-ins."
+    },
+    "cycle_status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "completed",
+        "abandoned"
+      ],
+      "default": "active",
+      "description": "Status of the 21-day cycle this check-in belongs to"
+    },
+    "focus_thought": {
+      "type": "string",
+      "description": "The thought pattern being worked on (set on Day 1). Shown on dashboard as 'What you're working on'."
+    },
+    "replacement_thought": {
+      "type": "string",
+      "description": "The positive, forward-facing replacement thought (the Active Reach from Day 1). Pinned to dashboard for the full 21 days."
     },
     "gathered_emotion": {
       "type": "string",
@@ -13,15 +39,25 @@
     },
     "captured_thought": {
       "type": "string",
-      "description": "The original thought captured during the Capture step"
+      "description": "The original thought captured during the Capture step (Day 1 only)"
     },
     "reconceptualized_thought": {
       "type": "string",
-      "description": "The reframed, healthier thought from the Reconceptualize step"
+      "description": "The reframed, healthier thought from the Reconceptualize step (Day 1 only)"
     },
     "active_reach": {
       "type": "string",
       "description": "The one small action the user committed to in the Active Reach step"
+    },
+    "presence_level": {
+      "type": "string",
+      "enum": [
+        "barely",
+        "somewhat",
+        "clearly",
+        "strongly"
+      ],
+      "description": "For Days 2-21: how present is this thought today?"
     },
     "check_in_status": {
       "type": "string",

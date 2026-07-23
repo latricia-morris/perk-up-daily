@@ -8,6 +8,7 @@ import { Check, Loader2, Trash2, Download } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { MobileSelect } from '@/components/ui/mobile-select';
 import LegalLinks from '@/components/shared/LegalLinks';
+import BugReportSection from '@/components/shared/BugReportSection';
 import { CATEGORIES } from '@/lib/constants';
 import { useTheme } from '@/lib/useTheme';
 import { motion } from 'framer-motion';
@@ -440,6 +441,9 @@ export default function Settings() {
               </AlertDialogContent>
             </AlertDialog>
           </section>
+
+          {/* Bug report / feature request */}
+          <BugReportSection user={user} />
 
           {/* Legal links */}
           <div className="pt-4">

@@ -1,0 +1,91 @@
+{
+  "name": "BugReport",
+  "type": "object",
+  "properties": {
+    "reporter_id": {
+      "type": "string",
+      "description": "ID of the user who submitted the report"
+    },
+    "reporter_email": {
+      "type": "string",
+      "description": "Email of the user who submitted the report"
+    },
+    "reporter_name": {
+      "type": "string",
+      "description": "Display name of the user who submitted the report"
+    },
+    "title": {
+      "type": "string",
+      "description": "Short summary of the issue"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description of the issue or feature request"
+    },
+    "report_type": {
+      "type": "string",
+      "enum": [
+        "bug",
+        "feature_request",
+        "other"
+      ],
+      "default": "bug",
+      "description": "Type of submission"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "fix_now",
+        "fix_later",
+        "later_feature",
+        "discarded",
+        "resolved"
+      ],
+      "default": "pending",
+      "description": "Admin triage status"
+    },
+    "admin_notes": {
+      "type": "string",
+      "description": "Internal notes added by admin during triage"
+    },
+    "page_url": {
+      "type": "string",
+      "description": "The page URL where the user was when they reported the issue"
+    }
+  },
+  "required": [
+    "reporter_id",
+    "reporter_email",
+    "title",
+    "description",
+    "report_type"
+  ],
+  "rls": {
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

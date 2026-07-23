@@ -2,6 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import AdminLibrary from './AdminLibrary';
 import AdminAddItem from './AdminAddItem';
 import AdminCSVUpload from './AdminCSVUpload';
+import AdminMindsetPrompts from './AdminMindsetPrompts';
 import SchemaRegistryTable from './SchemaRegistryTable';
 
 export default function AdminContent() {
@@ -10,6 +11,7 @@ export default function AdminContent() {
       <TabsList className="bg-muted">
         <TabsTrigger value="library">Library</TabsTrigger>
         <TabsTrigger value="add">Add Item</TabsTrigger>
+        <TabsTrigger value="prompts">Mindset Prompts</TabsTrigger>
         <TabsTrigger value="csv">CSV Upload</TabsTrigger>
         <TabsTrigger value="schema">Schema Registry</TabsTrigger>
       </TabsList>
@@ -20,6 +22,10 @@ export default function AdminContent() {
 
       <TabsContent value="add" className="mt-6">
         <AdminAddItem />
+      </TabsContent>
+
+      <TabsContent value="prompts" className="mt-6">
+        <AdminMindsetPrompts />
       </TabsContent>
 
       <TabsContent value="csv" className="mt-6">

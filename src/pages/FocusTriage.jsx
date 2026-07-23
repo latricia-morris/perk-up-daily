@@ -55,13 +55,9 @@ export default function FocusTriage() {
   const handleSelect = (option) => {
     setSelected(option.id);
     setTimeout(() => {
-      if (option.status === 'coming_soon') {
-        navigate('/coming-soon', { state: { exerciseName: option.exerciseName } });
-      } else {
-        navigate(option.route, {
-          state: { sequence: option.sequence, step: 0 },
-        });
-      }
+      navigate(option.route, {
+        state: { sequence: option.sequence, step: 0 },
+      });
     }, 300);
   };
 

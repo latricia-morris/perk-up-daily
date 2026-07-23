@@ -33,7 +33,6 @@ import PowerUps from '@/pages/PowerUps';
 import NeuralTraining from '@/pages/NeuralTraining';
 import Reset from '@/pages/Reset';
 import FocusTriage from '@/pages/FocusTriage';
-import ComingSoon from '@/pages/ComingSoon';
 import BoxBreath from '@/pages/exercises/BoxBreath';
 import Breathe from '@/pages/exercises/Breathe';
 import FocusEx from '@/pages/exercises/Focus';
@@ -115,7 +114,6 @@ const AuthenticatedApp = () => {
           <Route path="/neural-training" element={<NeuralTraining />} />
           <Route path="/reset" element={<Reset />} />
           <Route path="/focus-triage" element={<FocusTriage />} />
-          <Route path="/coming-soon" element={<ComingSoon />} />
           <Route path="/notes" element={<Notes />} />
           <Route path="/identity-upgrades" element={<IdentityUpgrades />} />
           <Route path="/search" element={<Search />} />

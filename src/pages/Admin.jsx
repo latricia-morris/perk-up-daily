@@ -1,13 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Navigate } from 'react-router-dom';
-import { LayoutDashboard, Activity, BarChart3, DollarSign, Users, Library, RefreshCw } from 'lucide-react';
+import { LayoutDashboard, Activity, BarChart3, DollarSign, Users, Library, RefreshCw, Bug } from 'lucide-react';
 import AdminOverview from '@/components/admin/AdminOverview';
 import AdminEngagement from '@/components/admin/AdminEngagement';
 import AdminFeatures from '@/components/admin/AdminFeatures';
 import AdminSales from '@/components/admin/AdminSales';
 import AdminUsers from '@/components/admin/AdminUsers';
 import AdminContent from '@/components/admin/AdminContent';
+import AdminBugReports from '@/components/admin/AdminBugReports';
 
 const SECTIONS = [
   { key: 'overview', label: 'Overview', icon: LayoutDashboard },
@@ -16,6 +17,7 @@ const SECTIONS = [
   { key: 'sales', label: 'Sales', icon: DollarSign },
   { key: 'users', label: 'Users', icon: Users },
   { key: 'content', label: 'Content', icon: Library },
+  { key: 'reports', label: 'Reports', icon: Bug },
 ];
 
 const DATE_PRESETS = [
@@ -70,7 +72,7 @@ export default function Admin() {
     return <Navigate to="/dashboard" replace />;
   }
 
-  const showDateFilter = section !== 'content';
+  const showDateFilter = section !== 'content' && section !== 'reports';
 
   return (
     <div className="min-h-screen pb-20 md:pb-8">
@@ -140,6 +142,8 @@ export default function Admin() {
         {/* Content */}
         {section === 'content' ? (
           <AdminContent />
+        ) : section === 'reports' ? (
+          <AdminBugReports />
         ) : section === 'users' ? (
           data ? <AdminUsers data={data} /> : null
         ) : dataLoading && !data ? (

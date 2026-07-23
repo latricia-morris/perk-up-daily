@@ -79,6 +79,24 @@ export default function Dashboard() {
     queryFn: () => base44.entities.UserEntry.filter({ status: 'active' }),
   });
 
+  // Query for active 21-day Neurocycle — replacement thought gets pinned to dashboard
+  const { data: activeCycle } = useQuery({
+    queryKey: ['neurocycle-active'],
+    queryFn: async () => {
+      const checkIns = await base44.entities.NeurocycleCheckIn.filter({ cycle_status: 'active' }, '-cycle_date');
+      if (checkIns.length === 0) return null;
+      const day1 = checkIns.find(c => c.cycle_day === 1) || checkIns[checkIns.length - 1];
+      const startDate = new Date(day1.cycle_date);
+      const currentDay = Math.floor((new Date() - startDate) / (1000 * 60 * 60 * 24)) + 1;
+      if (currentDay > 21) return null;
+      return {
+        replacementThought: day1.replacement_thought || day1.reconceptualized_thought,
+        focusThought: day1.focus_thought || day1.captured_thought,
+        day: currentDay,
+      };
+    },
+  });
+
   const greeting = getGreeting();
   const SessionIcon = sessionIcons[greeting.session];
   const [skipToDelivery, setSkipToDelivery] = useState(false);
@@ -93,6 +111,7 @@ export default function Dashboard() {
     return Promise.all([
       queryClient.invalidateQueries({ queryKey: ['library'] }),
       queryClient.invalidateQueries({ queryKey: ['user-entries'] }),
+      queryClient.invalidateQueries({ queryKey: ['neurocycle-active'] }),
     ]);
   };
 
@@ -145,6 +164,39 @@ export default function Dashboard() {
 
         {/* Streak */}
         <StreakCounter entries={userEntries} />
+
+        {/* 21-Day Neurocycle — pinned replacement thought */}
+        {activeCycle && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 rounded-2xl overflow-hidden"
+            style={{
+              background: 'linear-gradient(135deg, #5C3B8F 0%, #219EBC 100%)',
+              boxShadow: '0 4px 20px rgba(92,59,143,0.2)',
+            }}
+          >
+            <div className="p-5 text-white">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-[10px] font-bold uppercase tracking-widest opacity-80">
+                  21-Day Nurture
+                </span>
+                <span className="text-[10px] font-medium opacity-60">
+                  Day {activeCycle.day} of 21
+                </span>
+              </div>
+              <p className="text-lg font-semibold leading-relaxed" style={{ fontFamily: "'Playfair Display', serif" }}>
+                {activeCycle.replacementThought}
+              </p>
+              <div className="mt-3 h-1 rounded-full bg-white/20 overflow-hidden">
+                <div
+                  className="h-full rounded-full bg-white/60 transition-all"
+                  style={{ width: `${(activeCycle.day / 21) * 100}%` }}
+                />
+              </div>
+            </div>
+          </motion.div>
+        )}
 
         {/* Delivery or Evening Prompt */}
          {greeting.session === 'evening' && !skipToDelivery ? (

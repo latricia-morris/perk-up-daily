@@ -83,18 +83,24 @@ function selectDiverseTiles(pool, avoidIds = new Set(), shuffleSeed = 0) {
     });
   }
 
-  // Pick up to TILES_PER_SESSION different types
+  // Pick up to TILES_PER_SESSION different types AND different categories
   const typeKeys = shuffleArray(Object.keys(byType));
   const picked = [];
   const usedTypes = new Set();
+  const usedCategories = new Set();
 
+  // First pass: pick items that have both a unique type AND a unique category
   for (const type of typeKeys) {
     if (picked.length >= TILES_PER_SESSION) break;
     if (usedTypes.has(type)) continue;
     const candidates = byType[type];
     if (candidates.length > 0) {
-      picked.push(candidates[0]);
+      // Prefer a candidate whose category hasn't been used yet
+      const freshCatCandidate = candidates.find(c => c.category && !usedCategories.has(c.category));
+      const chosen = freshCatCandidate || candidates[0];
+      picked.push(chosen);
       usedTypes.add(type);
+      if (chosen.category) usedCategories.add(chosen.category);
     }
   }
 
@@ -135,8 +141,20 @@ export default function DeliverySession({ libraryItems, userEntries, categories,
       .filter(item => item.status === 'active' && filterItem(item))
       .map(item => ({ ...item, source: 'library' }));
 
+    // Forward-Focus whitelist: only surface positive, reinforcing entry types.
+    // Exclude 'reflection' and other neural-training artifacts from the dashboard.
+    const DASHBOARD_ENTRY_TYPES = new Set([
+      'experience', 'blessing', 'life_win', 'affirmation',
+      'identity_swap', 'vision_goal', 'power_up', 'scripture',
+      'accomplishment', 'milestone', 'personal_note',
+    ]);
+
     const entryPool = userEntries
       .filter(entry => entry.status === 'active' && filterItem(entry))
+      .filter(entry => {
+        const type = entry.entry_type;
+        return DASHBOARD_ENTRY_TYPES.has(type);
+      })
       .map(entry => ({ ...entry, source: 'user_entry' }));
 
     const fullPool = [...entryPool, ...libPool];
