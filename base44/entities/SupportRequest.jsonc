@@ -1,0 +1,70 @@
+{
+  "name": "SupportRequest",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Submitter's name (optional)"
+    },
+    "email": {
+      "type": "string",
+      "description": "Submitter's email address"
+    },
+    "support_type": {
+      "type": "string",
+      "enum": [
+        "content",
+        "functions_features",
+        "questions",
+        "account_billing",
+        "other"
+      ],
+      "description": "Category of support request"
+    },
+    "subject": {
+      "type": "string",
+      "description": "Short subject line"
+    },
+    "message": {
+      "type": "string",
+      "description": "Full message from the user"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "resolved"
+      ],
+      "default": "pending",
+      "description": "Resolution status"
+    }
+  },
+  "required": [
+    "email",
+    "support_type",
+    "subject",
+    "message"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

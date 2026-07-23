@@ -10,6 +10,7 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import ScrollToTop from './components/ScrollToTop';
 
 import Landing from '@/pages/Landing';
+import Support from '@/pages/Support';
 import Disclaimer from '@/pages/Disclaimer';
 import PrivacyPolicy from '@/pages/PrivacyPolicy';
 import Terms from '@/pages/Terms';
@@ -86,6 +87,7 @@ const AuthenticatedApp = () => {
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<Landing />} />
+        <Route path="/support" element={<Support />} />
         <Route path="/disclaimer" element={<Disclaimer />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms" element={<Terms />} />
