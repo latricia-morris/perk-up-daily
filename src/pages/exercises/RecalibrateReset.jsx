@@ -1,9 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import BreathingPhase from '@/components/exercises/BreathingPhase';
-import Grounding54321 from '@/components/exercises/Grounding54321';
 
 const PALETTE = {
   teal: '#219EBC',
@@ -13,7 +12,7 @@ const PALETTE = {
   page: '#fbf6ef',
 };
 
-// Sigh config (physiological sigh: 4.5s double-kick inhale, 1s hold, 8s exhale)
+// Physiological sigh: 4.5s double-kick inhale, 1s hold, 8s exhale
 const SIGH_KICK_POINT = 0.85;
 const SIGH_MID_RATIO = 0.7;
 
@@ -49,31 +48,38 @@ const SIGH_GRADIENT = [
   { at: 1.0, rgb: [231, 161, 52] },
 ];
 
-const BOX_PHASES = [
-  { name: 'inhale', label: 'Inhale', duration: 4000, scaleFrom: 0.35, scaleTo: 1.15 },
-  { name: 'hold-in', label: 'Hold', duration: 4000, scaleFrom: 1.15, scaleTo: 1.15 },
-  { name: 'exhale', label: 'Exhale', duration: 4000, scaleFrom: 1.15, scaleTo: 0.35 },
-  { name: 'hold-out', label: 'Hold', duration: 4000, scaleFrom: 0.35, scaleTo: 0.35 },
+// Steady breath: 5-5 ocean wave
+const STEADY_PHASES = [
+  { name: 'inhale', label: 'Inhale', duration: 5000, scaleFrom: 0.35, scaleTo: 1.15 },
+  { name: 'exhale', label: 'Exhale', duration: 5000, scaleFrom: 1.15, scaleTo: 0.35 },
 ];
 
-const BOX_GRADIENT = [
-  { at: 0.0, rgb: [186, 22, 80] },
-  { at: 0.5, rgb: [231, 161, 52] },
-  { at: 1.0, rgb: [255, 213, 100] },
+const STEADY_GRADIENT = [
+  { at: 0.0, rgb: [92, 59, 143] },
+  { at: 0.5, rgb: [120, 80, 180] },
+  { at: 1.0, rgb: [33, 158, 188] },
 ];
 
-export default function ChillReset() {
+const PATTERN_BREAK_LINES = [
+  'Stop right where you are.',
+  'Notice your body in this moment.',
+  'Notice the space around you.',
+  'You are here. Not in your head — here.',
+];
+
+const REDIRECT_LINES = [
+  'What had you keyed up a few minutes ago?',
+  'Notice how different that feels now.',
+  'Is there one small, good step you can take?',
+  'Whatever it is, you can handle it from here.',
+];
+
+const LINE_HOLD_MS = 2800;
+
+export default function RecalibrateReset() {
   const navigate = useNavigate();
+  // 0: intro, 1-4: pattern break, 5: sigh, 6: steady breath, 7-10: redirect, 11: close
   const [phase, setPhase] = useState(0);
-  // 0: intro, 1: sigh, 2: box, 3: grounding, 4: stillness, 5-7: redirect, 8: close
-
-  const REDIRECT_LINES = [
-    'What had you keyed up a few minutes ago?',
-    'Notice how different that feels now.',
-    'Is there one small, good step you can take from here?',
-  ];
-
-  const REDIRECT_HOLD_MS = 2800;
 
   // Intro auto-advance
   useEffect(() => {
@@ -82,35 +88,64 @@ export default function ChillReset() {
     return () => clearTimeout(timer);
   }, [phase]);
 
-  // Stillness auto-advance
+  // Pattern break auto-advance (phases 1-4 map to PATTERN_BREAK_LINES[0-3])
   useEffect(() => {
-    if (phase !== 4) return;
-    const timer = setTimeout(() => setPhase(5), 3000);
+    if (phase < 1 || phase > 4) return;
+    if (phase === 4) {
+      const timer = setTimeout(() => setPhase(5), LINE_HOLD_MS);
+      return () => clearTimeout(timer);
+    }
+    const timer = setTimeout(() => setPhase(phase + 1), LINE_HOLD_MS);
     return () => clearTimeout(timer);
   }, [phase]);
 
-  // Redirect auto-advance (phases 5-7)
+  // Redirect auto-advance (phases 7-10 map to REDIRECT_LINES[0-3])
   useEffect(() => {
-    if (phase < 5 || phase > 7) return;
-    if (phase === 7) {
-      const timer = setTimeout(() => setPhase(8), REDIRECT_HOLD_MS);
+    if (phase < 7 || phase > 10) return;
+    if (phase === 10) {
+      const timer = setTimeout(() => setPhase(11), LINE_HOLD_MS);
       return () => clearTimeout(timer);
     }
-    const timer = setTimeout(() => setPhase(phase + 1), REDIRECT_HOLD_MS);
+    const timer = setTimeout(() => setPhase(phase + 1), LINE_HOLD_MS);
     return () => clearTimeout(timer);
   }, [phase]);
+
+  const renderTextLine = (text, accent = PALETTE.teal) => (
+    <motion.div
+      key={phase}
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -16 }}
+      transition={{ duration: 0.4 }}
+      className="text-center"
+    >
+      <p
+        style={{
+          fontFamily: "'Playfair Display', serif",
+          fontSize: 26,
+          fontWeight: 500,
+          lineHeight: 1.4,
+          maxWidth: 320,
+          marginLeft: 'auto',
+          marginRight: 'auto',
+        }}
+      >
+        {text}
+      </p>
+      <div style={{ width: 6, height: 6, borderRadius: '50%', background: accent, margin: '32px auto 0', opacity: 0.4 }} />
+    </motion.div>
+  );
 
   return (
     <div
       className="min-h-screen w-full flex flex-col items-center justify-center relative"
       style={{
-        background: `linear-gradient(160deg, ${PALETTE.page} 0%, #fffdf8 50%, #f0f6f8 100%)`,
+        background: `linear-gradient(160deg, ${PALETTE.page} 0%, #f0f6f8 50%, #fbf6ef 100%)`,
         fontFamily: "'DM Sans', sans-serif",
         color: PALETTE.ink,
         padding: 24,
       }}
     >
-      {/* Close/exit */}
       <button
         onClick={() => navigate('/reset')}
         className="absolute top-6 right-6 z-50"
@@ -128,7 +163,6 @@ export default function ChillReset() {
 
       <div className="w-full max-w-md">
         <AnimatePresence mode="wait">
-          {/* Phase 0: Intro */}
           {phase === 0 && (
             <motion.div
               key="intro"
@@ -139,16 +173,17 @@ export default function ChillReset() {
               className="text-center"
             >
               <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: PALETTE.teal, marginBottom: 16 }}>
-                Chill
+                Recalibrate
               </p>
               <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 26, fontWeight: 500 }}>
-                Let's first reset your breathing.
+                Let's hit pause and reset.
               </h2>
             </motion.div>
           )}
 
-          {/* Phase 1: Physiological Sigh */}
-          {phase === 1 && (
+          {phase >= 1 && phase <= 4 && renderTextLine(PATTERN_BREAK_LINES[phase - 1])}
+
+          {phase === 5 && (
             <motion.div
               key="sigh"
               initial={{ opacity: 0 }}
@@ -159,19 +194,18 @@ export default function ChillReset() {
             >
               <BreathingPhase
                 phases={SIGH_PHASES}
-                totalCycles={4}
+                totalCycles={3}
                 gradientStops={SIGH_GRADIENT}
                 accentColor={PALETTE.teal}
                 getScale={sighGetScale}
-                onComplete={() => setPhase(2)}
+                onComplete={() => setPhase(6)}
               />
             </motion.div>
           )}
 
-          {/* Phase 2: Box Breathing */}
-          {phase === 2 && (
+          {phase === 6 && (
             <motion.div
-              key="box"
+              key="steady"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -179,88 +213,18 @@ export default function ChillReset() {
               className="flex flex-col items-center"
             >
               <BreathingPhase
-                phases={BOX_PHASES}
+                phases={STEADY_PHASES}
                 totalCycles={4}
-                gradientStops={BOX_GRADIENT}
-                accentColor={PALETTE.amber}
-                onComplete={() => setPhase(3)}
-              />
-            </motion.div>
-          )}
-
-          {/* Phase 3: 5-4-3-2-1 Grounding */}
-          {phase === 3 && (
-            <motion.div
-              key="grounding"
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -16 }}
-              transition={{ duration: 0.4 }}
-              className="flex flex-col items-center"
-            >
-              <Grounding54321
+                gradientStops={STEADY_GRADIENT}
                 accentColor={PALETTE.teal}
-                onComplete={() => setPhase(4)}
+                onComplete={() => setPhase(7)}
               />
             </motion.div>
           )}
 
-          {/* Phase 4: Stillness beat */}
-          {phase === 4 && (
-            <motion.div
-              key="stillness"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-center"
-            >
-              <div
-                style={{
-                  width: 10,
-                  height: 10,
-                  borderRadius: '50%',
-                  background: PALETTE.teal,
-                  margin: '0 auto 24px',
-                  animation: 'pulse 2s ease-in-out infinite',
-                }}
-              />
-              <p style={{ fontSize: 14, opacity: 0.5 }}>Take a moment.</p>
-            </motion.div>
-          )}
+          {phase >= 7 && phase <= 10 && renderTextLine(REDIRECT_LINES[phase - 7], PALETTE.amber)}
 
-          {/* Phases 5-7: Redirect — bring them back to what they were keyed up about */}
-          {phase >= 5 && phase <= 7 && (
-            <motion.div
-              key={`redirect-${phase}`}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -16 }}
-              transition={{ duration: 0.4 }}
-              className="text-center"
-            >
-              <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: PALETTE.teal, marginBottom: 32, opacity: 0.5 }}>
-                Reset
-              </p>
-              <p
-                style={{
-                  fontFamily: "'Playfair Display', serif",
-                  fontSize: 24,
-                  fontWeight: 500,
-                  lineHeight: 1.4,
-                  maxWidth: 320,
-                  marginLeft: 'auto',
-                  marginRight: 'auto',
-                }}
-              >
-                {REDIRECT_LINES[phase - 5]}
-              </p>
-              <div style={{ width: 6, height: 6, borderRadius: '50%', background: PALETTE.teal, margin: '32px auto 0', opacity: 0.35 }} />
-            </motion.div>
-          )}
-
-          {/* Phase 8: Closing handoff */}
-          {phase === 8 && (
+          {phase === 11 && (
             <motion.div
               key="close"
               initial={{ opacity: 0, y: 16 }}
@@ -269,7 +233,7 @@ export default function ChillReset() {
               className="text-center"
             >
               <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, fontWeight: 500, marginBottom: 32, maxWidth: 320, marginLeft: 'auto', marginRight: 'auto' }}>
-                You're here now. Go from here.
+                You're back. Go from here.
               </h2>
               <button
                 onClick={() => navigate('/reset')}

@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft, ChevronRight, Check } from 'lucide-react';
+import ExerciseCompletePrompt from './ExerciseCompletePrompt';
 
 /**
  * Floating navigation bar for exercise pages.
@@ -9,6 +11,7 @@ import { ArrowLeft, ChevronRight, Check } from 'lucide-react';
 export default function ExerciseNav() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [showComplete, setShowComplete] = useState(false);
   const sequence = location.state?.sequence || [];
   const step = location.state?.step || 0;
   const hasSequence = sequence.length > 0;
@@ -17,7 +20,7 @@ export default function ExerciseNav() {
     if (step + 1 < sequence.length) {
       navigate(sequence[step + 1], { state: { sequence, step: step + 1 } });
     } else {
-      navigate('/dashboard');
+      setShowComplete(true);
     }
   };
 
@@ -89,6 +92,13 @@ export default function ExerciseNav() {
           <>Next <ChevronRight className="w-4 h-4" /></>
         )}
       </button>
+
+      {showComplete && (
+        <ExerciseCompletePrompt
+          onClose={() => navigate('/dashboard')}
+          onAddToVault={() => { window.location.href = '/add-entry'; }}
+        />
+      )}
     </div>
   );
 }

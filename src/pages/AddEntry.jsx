@@ -97,13 +97,12 @@ export default function AddEntry() {
         setUser(currentUser || null);
       } catch (err) {
         setUser(null);
-        navigate('/login');
       } finally {
         setLoading(false);
       }
     };
     fetchUser();
-  }, [navigate]);
+  }, []);
 
   const christianEnabled = user?.christian_content || false;
   const aiGuardEnabled = user?.ai_guard_enabled !== false;
@@ -212,7 +211,14 @@ export default function AddEntry() {
     );
   }
 
-  if (!user) return null;
+  if (!user) {
+    return (
+      <div className="max-w-lg mx-auto px-6 py-8 flex flex-col items-center justify-center min-h-screen text-center">
+        <p className="text-sm text-muted-foreground mb-4">Something went wrong loading your profile.</p>
+        <Button onClick={() => window.location.reload()} variant="outline" size="sm">Retry</Button>
+      </div>
+    );
+  }
 
   return (
     <div>

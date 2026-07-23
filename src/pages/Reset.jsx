@@ -10,17 +10,15 @@ export default function Reset() {
 
   const handleSelect = (option) => {
     setSelected(option.id);
-    setTimeout(() => {
-      if (option.id === 'focus') {
-        navigate('/focus-triage');
-      } else if (option.flow) {
-        navigate(option.flow);
-      } else {
-        navigate(option.sequence[0], {
-          state: { sequence: option.sequence, step: 0 },
-        });
-      }
-    }, 300);
+    if (option.id === 'focus') {
+      navigate('/focus-triage');
+    } else if (option.flow) {
+      navigate(option.flow);
+    } else {
+      navigate(option.sequence[0], {
+        state: { sequence: option.sequence, step: 0 },
+      });
+    }
   };
 
   return (

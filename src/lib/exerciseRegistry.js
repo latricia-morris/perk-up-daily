@@ -42,6 +42,6 @@ export const RESET_OPTIONS = [
   { id: 'focus', label: 'Focus', description: 'Sharpen your attention', accent: '#F95826', sequence: ['/exercises/box-breath', '/exercises/focus'] },
   { id: 'smile', label: 'Smile', description: 'Soften and find comfort', accent: '#BA1650', flow: '/exercises/smile-reset' },
   { id: 'energize', label: 'Energize', description: 'Invigorate and wake up', accent: '#FFAD09', flow: '/exercises/energize-reset' },
-  { id: 'recalibrate', label: 'Recalibrate', description: 'Quick physiological reset', accent: '#219EBC', sequence: ['/exercises/sigh', '/exercises/breathe'] },
-  { id: 'wind-down', label: 'Wind Down', description: 'Prepare for deep rest', accent: '#8ECAE6', sequence: ['/exercises/smile', '/exercises/breathe'] },
+  { id: 'recalibrate', label: 'Recalibrate', description: 'Quick physiological reset', accent: '#219EBC', flow: '/exercises/recalibrate-reset' },
+  { id: 'wind-down', label: 'Wind Down', description: 'Prepare for deep rest', accent: '#8ECAE6', flow: '/exercises/wind-down-reset' },
 ];

@@ -55,6 +55,8 @@ import SensoryGrounding from '@/pages/exercises/SensoryGrounding';
 import ChillReset from '@/pages/exercises/ChillReset';
 import SmileReset from '@/pages/exercises/SmileReset';
 import EnergizeReset from '@/pages/exercises/EnergizeReset';
+import RecalibrateReset from '@/pages/exercises/RecalibrateReset';
+import WindDownReset from '@/pages/exercises/WindDownReset';
 import Notes from '@/pages/Notes';
 import IdentityUpgrades from '@/pages/IdentityUpgrades';
 import Search from '@/pages/Search';
@@ -148,6 +150,8 @@ const AuthenticatedApp = () => {
         <Route path="/exercises/chill-reset" element={<ChillReset />} />
         <Route path="/exercises/smile-reset" element={<SmileReset />} />
         <Route path="/exercises/energize-reset" element={<EnergizeReset />} />
+        <Route path="/exercises/recalibrate-reset" element={<RecalibrateReset />} />
+        <Route path="/exercises/wind-down-reset" element={<WindDownReset />} />
       </Route>
 
       <Route path="*" element={<PageNotFound />} />

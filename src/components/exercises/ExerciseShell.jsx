@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, Check, PlusCircle } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
+import ExerciseCompletePrompt from './ExerciseCompletePrompt';
 
 /**
  * ExerciseShell — wraps exercise components with floating navigation.
@@ -9,6 +11,7 @@ import { ArrowLeft, ArrowRight, Check, PlusCircle } from 'lucide-react';
 export default function ExerciseShell({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
+  const [showComplete, setShowComplete] = useState(false);
   const sequence = location.state?.sequence || [];
   const step = location.state?.step || 0;
   const isInSequence = sequence.length > 0;
@@ -19,7 +22,7 @@ export default function ExerciseShell({ children }) {
         state: { sequence, step: step + 1 }
       });
     } else {
-      navigate('/dashboard');
+      setShowComplete(true);
     }
   };
 
@@ -53,22 +56,6 @@ export default function ExerciseShell({ children }) {
         {isInSequence ? 'End' : 'Back'}
       </button>
 
-      {/* Bottom-right: Add to Your Personal Vault */}
-      <button
-        onClick={() => navigate('/add-entry')}
-        className="fixed bottom-6 right-6 z-[60] flex items-center gap-1.5 px-4 py-2.5 rounded-full text-xs font-medium backdrop-blur-md transition-all active:scale-95"
-        style={{
-          background: 'rgba(212,131,10,0.12)',
-          color: '#d4830a',
-          border: '1px solid rgba(212,131,10,0.25)',
-          boxShadow: '0 2px 12px rgba(212,131,10,0.1)',
-          paddingBottom: 'max(10px, env(safe-area-inset-bottom, 10px))',
-        }}
-      >
-        <PlusCircle className="w-3.5 h-3.5" />
-        Add to Vault
-      </button>
-
       {/* Sequence progress (top-right, only when in a Reset sequence) */}
       {isInSequence && (
         <div className="fixed top-4 right-4 z-[60] flex items-center gap-2">
@@ -89,6 +76,12 @@ export default function ExerciseShell({ children }) {
         </div>
       )}
       {children}
+      {showComplete && (
+        <ExerciseCompletePrompt
+          onClose={() => navigate('/dashboard')}
+          onAddToVault={() => { window.location.href = '/add-entry'; }}
+        />
+      )}
     </div>
   );
 }
