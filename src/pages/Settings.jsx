@@ -362,7 +362,7 @@ export default function Settings() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-foreground capitalize">{user?.subscription_status || 'trial'}</p>
-                  <p className="text-xs text-muted-foreground">$4.99/month</p>
+                  <p className="text-xs text-muted-foreground">$4.99/month · founding member rate</p>
                 </div>
                 <Button variant="outline" size="sm">Manage</Button>
               </div>

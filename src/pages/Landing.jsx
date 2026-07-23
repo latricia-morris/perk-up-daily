@@ -117,7 +117,7 @@ const faqs = [
 },
 {
   q: 'What happens after my free trial?',
-  a: 'After 7 days your subscription begins at $4.99 per month. You will receive a reminder before you are charged, and you can cancel at any time directly from your account settings.'
+  a: 'After 7 days your subscription begins at $7.99 per month. As a founding member, you lock in $4.99 per month for as long as you maintain your subscription. You will receive a reminder before you are charged, and you can cancel at any time directly from your account settings.'
 },
 {
   q: 'How is this different from a journal app?',
@@ -176,7 +176,7 @@ function CtaBlock() {
           Start your free 7-day trial <ArrowRight className="w-4 h-4 ml-2" />
         </Button>
       </Link>
-      <p className="text-sm" style={{ color: '#c4a882' }}>7 days free, then $4.99/month. Cancel anytime.</p>
+      <p className="text-sm" style={{ color: '#c4a882' }}>7 days free, then $7.99/month. Founding members lock in $4.99/month. Cancel anytime.</p>
     </div>);
 
 }
@@ -228,7 +228,7 @@ export default function Landing() {
                   Start your free 7-day trial <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </Link>
-              <p className="text-sm" style={{ color: '#c4a882' }}>7 days free, then $4.99/month. Cancel anytime.</p>
+              <p className="text-sm" style={{ color: '#c4a882' }}>7 days free, then $7.99/month. Founding members lock in $4.99/month. Cancel anytime.</p>
             </div>
           </motion.div>
 
@@ -495,7 +495,12 @@ export default function Landing() {
           <h3 className="font-display text-2xl md:text-3xl font-semibold mb-3" style={{ color: '#2c1e0f' }}>
             Start your free trial and Perk Up today.
           </h3>
-          <p className="text-3xl font-display font-bold mb-4" style={{ color: '#E8A838' }}>$4.99 per month</p>
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <p className="text-3xl font-display font-bold" style={{ color: '#E8A838' }}>$4.99</p>
+            <p className="text-lg font-display text-muted-foreground line-through">$7.99</p>
+            <span className="text-sm font-medium" style={{ color: '#7a5c3a' }}>/month</span>
+          </div>
+          <p className="text-sm font-semibold mb-4" style={{ color: '#d4830a' }}>Founding member rate — locked in for as long as you subscribe.</p>
           <p className="text-sm leading-relaxed mb-8" style={{ color: '#7a5c3a' }}>
             Your free trial gives you 7 full days of access before you are charged anything. You get full access from day one, you can cancel with one tap at any time, and the app is available on iOS, Android, and desktop.
           </p>

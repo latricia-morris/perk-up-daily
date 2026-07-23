@@ -77,10 +77,11 @@ export default function Paywall() {
             }`}
           >
             <div className="text-xs font-medium text-primary mb-1 uppercase tracking-wide">Monthly</div>
-            <div className="flex items-baseline gap-0.5">
+            <div className="flex items-baseline gap-1.5">
               <span className="text-2xl font-display font-bold text-foreground">$4.99</span>
+              <span className="text-sm text-muted-foreground line-through">$7.99</span>
             </div>
-            <div className="text-xs text-muted-foreground mt-0.5">per month</div>
+            <div className="text-xs text-muted-foreground mt-0.5">per month · founding member rate</div>
             <div className="mt-2 text-[10px] font-medium text-primary bg-primary/10 rounded-full px-2 py-0.5 inline-block">
               7-day free trial
             </div>
@@ -134,7 +135,7 @@ export default function Paywall() {
 
         <p className="text-xs text-muted-foreground text-center mt-4 leading-relaxed">
           {selectedPlan === 'monthly'
-            ? 'Your trial starts today. No charge until day 8. Cancel anytime.'
+            ? 'Founding member rate: $4.99/mo locked in (standard $7.99/mo). No charge until day 8. Cancel anytime.'
             : 'Billed once per year. Cancel anytime in settings.'}
         </p>
       </motion.div>
