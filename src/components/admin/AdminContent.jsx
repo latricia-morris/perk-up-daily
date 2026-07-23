@@ -3,6 +3,7 @@ import AdminLibrary from './AdminLibrary';
 import AdminAddItem from './AdminAddItem';
 import AdminCSVUpload from './AdminCSVUpload';
 import AdminMindsetPrompts from './AdminMindsetPrompts';
+import AdminSMSSender from './AdminSMSSender';
 import SchemaRegistryTable from './SchemaRegistryTable';
 
 export default function AdminContent() {
@@ -12,6 +13,7 @@ export default function AdminContent() {
         <TabsTrigger value="library">Library</TabsTrigger>
         <TabsTrigger value="add">Add Item</TabsTrigger>
         <TabsTrigger value="prompts">Mindset Prompts</TabsTrigger>
+        <TabsTrigger value="sms">SMS Sender</TabsTrigger>
         <TabsTrigger value="csv">CSV Upload</TabsTrigger>
         <TabsTrigger value="schema">Schema Registry</TabsTrigger>
       </TabsList>
@@ -26,6 +28,10 @@ export default function AdminContent() {
 
       <TabsContent value="prompts" className="mt-6">
         <AdminMindsetPrompts />
+      </TabsContent>
+
+      <TabsContent value="sms" className="mt-6">
+        <AdminSMSSender />
       </TabsContent>
 
       <TabsContent value="csv" className="mt-6">
