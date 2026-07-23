@@ -264,6 +264,17 @@ export default function AppLayout() {
           </motion.div>
         </AnimatePresence>
       </main>
+
+      {/* Footer with marketing + support links */}
+      <footer className="md:ml-64 border-t border-border/60 px-6 py-3" style={{ background: 'rgba(253,248,240,0.5)' }}>
+        <div className="flex items-center justify-between text-xs text-muted-foreground">
+          <span>2025 Perk Up Daily</span>
+          <div className="flex gap-4">
+            <a href="/" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">Marketing Page</a>
+            <a href="/support" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">Support</a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

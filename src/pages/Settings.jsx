@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Check, Loader2, Trash2, Download } from 'lucide-react';
+import { Check, Loader2, Trash2, Download, LifeBuoy, ExternalLink } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { MobileSelect } from '@/components/ui/mobile-select';
 import LegalLinks from '@/components/shared/LegalLinks';
@@ -472,6 +472,23 @@ export default function Settings() {
                 </div>
               </AlertDialogContent>
             </AlertDialog>
+          </section>
+
+          {/* Support */}
+          <section>
+            <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4">Support</h2>
+            <a href="/support" target="_blank" rel="noopener noreferrer" className="block">
+              <div className="bg-card border border-border rounded-xl p-4 flex items-center justify-between hover:border-primary/30 transition-colors">
+                <div className="flex items-center gap-3">
+                  <LifeBuoy className="w-5 h-5 text-primary" />
+                  <div>
+                    <p className="text-sm font-medium text-foreground">Get Support</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">Questions, feedback, or need help with the app?</p>
+                  </div>
+                </div>
+                <ExternalLink className="w-4 h-4 text-muted-foreground" />
+              </div>
+            </a>
           </section>
 
           {/* Bug report / feature request */}
