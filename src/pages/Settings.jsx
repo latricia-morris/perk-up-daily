@@ -30,6 +30,8 @@ export default function Settings() {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [deleteRequested, setDeleteRequested] = useState(false);
+  const [passwordLinkSent, setPasswordLinkSent] = useState(false);
+  const [sendingPasswordLink, setSendingPasswordLink] = useState(false);
   const { theme, setTheme } = useTheme();
 
   const [prefs, setPrefs] = useState({
@@ -114,6 +116,21 @@ export default function Settings() {
     } catch (error) {
       setDeleting(false);
       setShowDeleteDialog(false);
+    }
+  };
+
+  const handleSetPassword = async () => {
+    setSendingPasswordLink(true);
+    try {
+      await base44.auth.resetPasswordRequest(user.email);
+      setPasswordLinkSent(true);
+      setTimeout(() => setPasswordLinkSent(false), 5000);
+    } catch (error) {
+      // Still show generic success per security best practice
+      setPasswordLinkSent(true);
+      setTimeout(() => setPasswordLinkSent(false), 5000);
+    } finally {
+      setSendingPasswordLink(false);
     }
   };
 
@@ -387,6 +404,21 @@ export default function Settings() {
               <p className="text-sm"><span className="text-muted-foreground">Name:</span> {user?.full_name}</p>
               <p className="text-sm"><span className="text-muted-foreground">Email:</span> {user?.email}</p>
             </div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="mt-3 w-full justify-center"
+              onClick={handleSetPassword}
+              disabled={sendingPasswordLink}
+            >
+              {sendingPasswordLink ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Check className="w-4 h-4 mr-2" />}
+              {passwordLinkSent ? 'Reset link sent — check your email' : 'Set a password'}
+            </Button>
+            {passwordLinkSent && (
+              <p className="text-xs text-muted-foreground mt-2">
+                We've sent a link to {user?.email}. Open it to set a password you can use to sign in directly.
+              </p>
+            )}
             <Button
               variant="ghost"
               size="sm"
