@@ -7,6 +7,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Switch } from '@/components/ui/switch';
 import LegalLinks from '@/components/shared/LegalLinks';
 import { CATEGORIES } from '@/lib/constants';
+import { getDialCode } from '@/lib/countryCodes';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -406,14 +407,21 @@ export default function Onboarding() {
                 </div>
                 <div>
                   <label className="text-sm font-medium text-foreground mb-1.5 block">Phone Number</label>
-                  <input
-                    type="tel"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, ''))}
-                    placeholder="5551234567"
-                    className="w-full h-10 px-3 rounded-md border border-input bg-transparent text-foreground placeholder-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-                  />
-                  <p className="text-xs text-muted-foreground mt-1.5">Enter just the number (no country code needed)</p>
+                  <div className="flex">
+                    <span className="inline-flex items-center px-3 h-10 rounded-l-md border border-r-0 border-input bg-muted text-sm font-medium text-muted-foreground whitespace-nowrap">
+                      +{getDialCode(countryCode)}
+                    </span>
+                    <input
+                      type="tel"
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, ''))}
+                      placeholder="5551234567"
+                      className="w-full h-10 px-3 rounded-r-md border border-input bg-transparent text-foreground placeholder-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                    />
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1.5">
+                    We'll send texts to <strong>+{getDialCode(countryCode)}{phoneNumber || '5551234567'}</strong>
+                  </p>
                 </div>
               </div>
 

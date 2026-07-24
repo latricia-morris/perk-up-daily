@@ -10,6 +10,7 @@ import { MobileSelect } from '@/components/ui/mobile-select';
 import LegalLinks from '@/components/shared/LegalLinks';
 import BugReportSection from '@/components/shared/BugReportSection';
 import { CATEGORIES } from '@/lib/constants';
+import { getDialCode } from '@/lib/countryCodes';
 import { useTheme } from '@/lib/useTheme';
 import { motion } from 'framer-motion';
 import {
@@ -249,13 +250,21 @@ export default function Settings() {
               </div>
               <div>
                 <Label className="text-sm font-medium text-foreground mb-1.5 block">Phone Number</Label>
-                <Input
-                  type="tel"
-                  value={prefs.phone_number}
-                  onChange={(e) => setPrefs(prev => ({ ...prev, phone_number: e.target.value.replace(/\D/g, '') }))}
-                  placeholder="5551234567"
-                />
-                <p className="text-xs text-muted-foreground mt-1.5">Enter just the number (no country code needed)</p>
+                <div className="flex">
+                  <span className="inline-flex items-center px-3 h-10 rounded-l-md border border-r-0 border-input bg-muted text-sm font-medium text-muted-foreground whitespace-nowrap">
+                    +{getDialCode(prefs.country_code)}
+                  </span>
+                  <Input
+                    type="tel"
+                    value={prefs.phone_number}
+                    onChange={(e) => setPrefs(prev => ({ ...prev, phone_number: e.target.value.replace(/\D/g, '') }))}
+                    placeholder="5551234567"
+                    className="rounded-l-none"
+                  />
+                </div>
+                <p className="text-xs text-muted-foreground mt-1.5">
+                  We'll send texts to <strong>+{getDialCode(prefs.country_code)}{prefs.phone_number || '5551234567'}</strong>
+                </p>
               </div>
 
               {/* Texting toggle */}

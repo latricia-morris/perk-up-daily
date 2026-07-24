@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
 import { ExternalLink } from 'lucide-react';
 
+const BRAIN_IMG = 'https://media.base44.com/images/public/6a312911bcddb0806c388af8/9f842113f_BrainGlow2.png';
+
 const SCIENCE_CARDS = [
   {
     num: 1,
@@ -45,16 +47,29 @@ const SCIENCE_CARDS = [
   },
 ];
 
+const CARD_ACCENTS = ['#F95826', '#BA1650', '#E8A838', '#219EBC', '#5C3B8F'];
+
 export default function ScienceMatrix() {
   return (
-    <section>
-      <div className="max-w-5xl mx-auto px-6 py-10 md:py-14">
+    <section className="relative overflow-hidden">
+      {/* Brain glow background */}
+      <div className="absolute inset-0 flex items-start justify-center pointer-events-none">
+        <img
+          src={BRAIN_IMG}
+          alt=""
+          className="w-[450px] md:w-[650px] max-w-[90%] opacity-45"
+          style={{ mixBlendMode: 'screen', marginTop: '-30px' }}
+        />
+      </div>
+
+      <div className="relative max-w-5xl mx-auto px-6 py-10 md:py-14">
         <div className="text-center mb-8">
-          <h3 className="font-display text-2xl md:text-3xl font-semibold mb-2" style={{ color: '#2c1e0f' }}>
-            The Science Behind the Perks
+          <p className="text-sm font-semibold mb-2" style={{ color: '#F95826' }}>The Science Behind the Perks</p>
+          <h3 className="font-display text-2xl md:text-3xl font-semibold mb-3" style={{ color: '#2c1e0f' }}>
+            What your brain could be up to
           </h3>
-          <p className="text-sm md:text-base leading-relaxed max-w-xl mx-auto" style={{ color: '#706F6A' }}>
-            Perk Up Daily moves past passive inspiration blocks. Every asset is mapped directly to peer-reviewed mechanisms.
+          <p className="text-sm md:text-base leading-relaxed max-w-xl mx-auto" style={{ color: '#7a5c3a' }}>
+            Perk Up Daily moves past passive inspiration. Every tool is mapped directly to peer-reviewed mechanisms for real neuroplastic change.
           </p>
         </div>
 
@@ -77,6 +92,7 @@ export default function ScienceMatrix() {
 }
 
 function ScienceCard({ card, index }) {
+  const accent = CARD_ACCENTS[(card.num - 1) % CARD_ACCENTS.length];
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -84,18 +100,23 @@ function ScienceCard({ card, index }) {
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.07 }}
       className="rounded-2xl p-6 md:p-8"
-      style={{ background: 'rgba(252,251,247,0.7)', backdropFilter: 'blur(12px)', border: '1px solid rgba(44,30,15,0.06)', boxShadow: '0 2px 12px rgba(44,30,15,0.04)' }}
+      style={{ background: 'rgba(252,251,247,0.75)', backdropFilter: 'blur(12px)', border: `1px solid ${accent}1A`, boxShadow: '0 4px 16px rgba(44,30,15,0.05)' }}
     >
-      <h4 className="font-display text-lg font-semibold mb-3" style={{ color: '#2c1e0f' }}>
-        {card.num}. {card.title}
-      </h4>
+      <div className="flex items-center gap-3 mb-3">
+        <span className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0" style={{ background: `${accent}1A`, color: accent }}>
+          {card.num}
+        </span>
+        <h4 className="font-display text-lg font-semibold" style={{ color: '#2c1e0f' }}>
+          {card.title}
+        </h4>
+      </div>
 
       <p className="text-sm leading-relaxed mb-3" style={{ color: '#4a3520' }}>
         {card.body}
       </p>
 
-      <p className="text-xs leading-relaxed mb-4" style={{ color: '#706F6A' }}>
-        <strong style={{ color: '#d4830a' }}>Proven to Help With:</strong> {card.proven}
+      <p className="text-xs leading-relaxed mb-4" style={{ color: '#7a5c3a' }}>
+        <strong style={{ color: accent }}>Proven to Help With:</strong> {card.proven}
       </p>
 
       <a
@@ -103,15 +124,15 @@ function ScienceCard({ card, index }) {
         target="_blank"
         rel="noopener noreferrer"
         className="inline-flex items-center gap-1 text-xs font-medium mb-4 transition-opacity hover:opacity-70"
-        style={{ color: '#E8A838' }}
+        style={{ color: accent }}
       >
         {card.link.text}
         <ExternalLink className="w-3 h-3" />
       </a>
 
       <div className="flex items-center gap-1.5 pt-3" style={{ borderTop: '1px solid rgba(168,152,136,0.15)' }}>
-        <span className="text-[10px] italic" style={{ color: '#908F8A' }}>
-          Mechanism: {card.mechanism}
+        <span className="text-[10px] italic" style={{ color: '#a89888' }}>
+          🔬 Mechanism: {card.mechanism}
         </span>
       </div>
     </motion.div>
