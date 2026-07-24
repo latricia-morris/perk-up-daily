@@ -43,7 +43,6 @@ const SCIENCE_CARDS = [
     proven: 'Overcoming cognitive bias parameters and establishing long-term behavioral identity metrics.',
     link: { text: '→ Neuroplasticity & Habituation Mechanics', url: 'https://www.ncbi.nlm.nih.gov/books/NBK279297/' },
     mechanism: 'Neuro-Plastic Encoding & Reticular Activation Tuning',
-    fullWidth: true,
   },
 ];
 
@@ -51,41 +50,41 @@ const CARD_ACCENTS = ['#F95826', '#BA1650', '#E8A838', '#219EBC', '#5C3B8F'];
 
 export default function ScienceMatrix() {
   return (
-    <section className="relative overflow-hidden">
-      {/* Brain glow background */}
-      <div className="absolute inset-0 flex items-start justify-center pointer-events-none">
-        <img
-          src={BRAIN_IMG}
-          alt=""
-          className="w-[450px] md:w-[650px] max-w-[90%] opacity-45"
-          style={{ mixBlendMode: 'screen', marginTop: '-30px' }}
-        />
-      </div>
-
-      <div className="relative max-w-5xl mx-auto px-6 py-10 md:py-14">
-        <div className="text-center mb-8">
-          <p className="text-sm font-semibold mb-2" style={{ color: '#F95826' }}>The Science Behind the Perks</p>
-          <h3 className="font-display text-2xl md:text-3xl font-semibold mb-3" style={{ color: '#2c1e0f' }}>
-            What your brain could be up to
-          </h3>
-          <p className="text-sm md:text-base leading-relaxed max-w-xl mx-auto" style={{ color: '#7a5c3a' }}>
-            Perk Up Daily moves past passive inspiration. Every tool is mapped directly to peer-reviewed mechanisms for real neuroplastic change.
-          </p>
+    <section className="relative">
+      <div className="max-w-6xl mx-auto px-6 py-10 md:py-14">
+        {/* Intro + Brain: side-by-side */}
+        <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12 mb-10 md:mb-14">
+          <div className="md:w-1/2 text-center md:text-left">
+            <p className="text-sm font-semibold mb-2" style={{ color: '#F95826' }}>The Science Behind the Perks</p>
+            <h3 className="font-display text-2xl md:text-3xl font-semibold mb-3" style={{ color: '#2c1e0f' }}>
+              What your brain could be up to
+            </h3>
+            <p className="text-sm md:text-base leading-relaxed max-w-xl" style={{ color: '#7a5c3a' }}>
+              Perk Up Daily moves past passive inspiration. Every tool is mapped directly to peer-reviewed mechanisms for real neuroplastic change.
+            </p>
+          </div>
+          <div className="md:w-1/2 flex justify-center">
+            <img
+              src={BRAIN_IMG}
+              alt="Brain neuroplasticity illustration"
+              className="w-full max-w-[400px] md:max-w-[480px]"
+            />
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          {SCIENCE_CARDS.slice(0, 2).map((card, i) => (
+        {/* Row of 3 */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          {SCIENCE_CARDS.slice(0, 3).map((card, i) => (
             <ScienceCard key={card.num} card={card} index={i} />
           ))}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          {SCIENCE_CARDS.slice(2, 4).map((card, i) => (
+        {/* Row of 2 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {SCIENCE_CARDS.slice(3).map((card, i) => (
             <ScienceCard key={card.num} card={card} index={i} />
           ))}
         </div>
-
-        <ScienceCard card={SCIENCE_CARDS[4]} index={0} />
       </div>
     </section>
   );

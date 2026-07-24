@@ -262,7 +262,7 @@ export default function Landing() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
               {/* Left: Side Effects */}
               <div>
-                <h3 className="font-display text-lg font-semibold mb-4" style={{ color: INK }}>
+                <h3 className="font-display text-2xl md:text-3xl font-semibold mb-4" style={{ background: SUNRISE_BTN, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
                   Possible side effects may include:
                 </h3>
                 <ul className="space-y-2.5">
