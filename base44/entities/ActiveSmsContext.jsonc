@@ -1,0 +1,83 @@
+{
+  "name": "ActiveSmsContext",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "ID of the user this SMS conversation belongs to"
+    },
+    "phone_number": {
+      "type": "string",
+      "description": "E.164 formatted phone number for this conversation"
+    },
+    "context_type": {
+      "type": "string",
+      "enum": [
+        "reflection_prompt",
+        "entry_clarification"
+      ],
+      "description": "What the current SMS conversation is about: a reflection prompt awaiting a reply, or a clarification request for entry type"
+    },
+    "prompt_id": {
+      "type": "string",
+      "description": "For reflection_prompt context: ID of the ReflectionPrompt sent"
+    },
+    "prompt_text": {
+      "type": "string",
+      "description": "For reflection_prompt context: snapshot of the prompt text"
+    },
+    "pending_body": {
+      "type": "string",
+      "description": "For entry_clarification context: the body text extracted but awaiting type confirmation"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "resolved",
+        "expired"
+      ],
+      "default": "active",
+      "description": "Whether this context is still awaiting a reply"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this context expires (24h after creation)"
+    }
+  },
+  "required": [
+    "user_id",
+    "phone_number",
+    "context_type"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "$or": [
+        {
+          "data.user_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

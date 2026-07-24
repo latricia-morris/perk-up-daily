@@ -17,15 +17,16 @@
     },
     "featured_item_id": {
       "type": "string",
-      "description": "ID of the featured card"
+      "description": "ID of the featured card or prompt"
     },
     "featured_source": {
       "type": "string",
       "enum": [
         "library",
-        "user_entry"
+        "user_entry",
+        "reflection_prompt"
       ],
-      "description": "Whether featured came from library or user entries"
+      "description": "Whether featured came from library, user entries, or a reflection prompt"
     },
     "supporting_items": {
       "type": "string",
