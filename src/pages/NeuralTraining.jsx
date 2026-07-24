@@ -101,6 +101,7 @@ export default function NeuralTraining() {
                   description: prompt.prompt,
                   rhythm: 'Question',
                   accent: '#BA1650',
+                  mechanism: 'Socratic Cognitive Restructuring',
                 }}
                 onClick={() => navigate('/reflections', { state: { selectedPrompt: prompt } })}
                 index={i}
@@ -172,9 +173,17 @@ function ExerciseGridCard({ exercise, onClick, index }) {
         <h3 className="font-display text-base font-semibold" style={{ color: '#2c1e0f' }}>
           {exercise.title}
         </h3>
-        <p className="text-xs leading-relaxed line-clamp-3 flex-1" style={{ color: '#7a5c3a' }}>
+        <p className="text-xs leading-relaxed line-clamp-3" style={{ color: '#7a5c3a' }}>
           {exercise.description}
         </p>
+        {exercise.mechanism && (
+          <div className="flex items-center gap-1 pt-2 mt-auto" style={{ borderTop: '1px solid rgba(168,152,136,0.15)' }}>
+            <span className="text-[9px]">🔬</span>
+            <span className="text-[9px] italic leading-tight" style={{ color: '#a89888' }}>
+              {exercise.mechanism}
+            </span>
+          </div>
+        )}
       </div>
     </motion.button>
   );
