@@ -85,8 +85,8 @@ export default function Landing() {
       {/* ── 2. FOUNDER'S STORY ─────────────────────────────────────── */}
       <section id="story">
         <div className="max-w-6xl mx-auto px-6 py-10 md:py-14">
-          <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
-            <div className="lg:w-2/3 lg:pr-8">
+          <div className="flex flex-col lg:flex-row-reverse items-center gap-8 lg:gap-12">
+            <div className="lg:w-2/3 lg:pl-8">
               <p className="text-sm font-semibold mb-2" style={{ color: GOLD }}>Why I Built This</p>
               <h2 className="font-display text-2xl md:text-3xl font-semibold leading-tight mb-5" style={{ color: INK }}>
                 I spent decades in the dark. Then I learned the brain can change.
