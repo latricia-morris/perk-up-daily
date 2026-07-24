@@ -135,10 +135,6 @@ Deno.serve(async (req) => {
     const [etHour, etMin] = etTime.split(':').map(Number);
     const currentMinutes = etHour * 60 + etMin;
 
-    // 15-minute window — each delivery time caught exactly once
-    const windowStart = Math.floor(currentMinutes / 15) * 15;
-    const windowEnd = windowStart + 15;
-
     const today = now.toISOString().split('T')[0];
 
     // Get all users with SMS consent + phone + active subscription
@@ -179,8 +175,8 @@ Deno.serve(async (req) => {
         const [h, m] = deliveryTime.split(':').map(Number);
         const slotMinutes = h * 60 + m;
 
-        // Check if this slot falls in the current 15-min window
-        if (slotMinutes < windowStart || slotMinutes >= windowEnd) continue;
+        // Skip if this delivery time hasn't passed yet
+        if (slotMinutes > currentMinutes) continue;
 
         // Skip if already delivered today
         const logKey = `${user.id}_${session.key}`;
