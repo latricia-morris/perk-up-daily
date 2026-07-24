@@ -25,19 +25,20 @@ const SIDE_EFFECTS = [
   'Experiencing moments of deep, unshakeable gratitude',
 ];
 
-const CREAM = '#fffdf9';
-const WHITE = '#ffffff';
-const DARK = '#1a1a1a';
 const INK = '#2c1e0f';
 const MUTE = '#7a5c3a';
-const GOLD = '#E6B800';
+const GOLD = '#E8A838';
+const PANEL = 'rgba(252,251,247,0.7)';
 
 export default function Landing() {
   return (
-    <div className="min-h-screen" style={{ background: CREAM }}>
+    <div className="min-h-screen" style={{
+      background: '#fef9f2',
+      backgroundImage: 'radial-gradient(ellipse 90% 55% at 65% 18%, rgba(255,243,210,0.92) 0%, rgba(253,232,175,0.28) 52%, transparent 78%), radial-gradient(ellipse 55% 40% at 8% 72%, rgba(255,236,170,0.38) 0%, transparent 70%)',
+    }}>
 
       {/* ── NAV ─────────────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-50 backdrop-blur-md" style={{ background: 'rgba(255,253,249,0.82)', borderBottom: '1px solid rgba(44,30,15,0.06)' }}>
+      <header className="sticky top-0 z-50 backdrop-blur-md" style={{ background: 'rgba(254,249,242,0.72)', borderBottom: '1px solid rgba(44,30,15,0.06)' }}>
         <div className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <img src={IMG.logo} alt="Perk Up Daily" className="w-8 h-8 object-contain" />
@@ -45,16 +46,16 @@ export default function Landing() {
           </div>
           <div className="flex items-center gap-3">
             <Link to="/login"><Button variant="ghost" size="sm" style={{ color: MUTE }}>Log in</Button></Link>
-            <Link to="/onboarding"><Button size="sm" style={{ background: GOLD, color: '#fff' }}>Get Started</Button></Link>
+            <Link to="/onboarding"><Button size="sm" style={{ background: GOLD, color: '#FFFCF2' }}>Get Started</Button></Link>
           </div>
         </div>
       </header>
 
       {/* ── 1. HERO ────────────────────────────────────────────────── */}
-      <section style={{ background: CREAM }}>
-        <div className="max-w-6xl mx-auto px-6 py-10 md:py-14">
+      <section className="min-h-[calc(100vh-56px)] flex items-center">
+        <div className="max-w-6xl mx-auto px-6 py-10 w-full">
           <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
-            <div className="flex-1 max-w-xl">
+            <div className="flex-1 max-w-xl text-center lg:text-left">
               <p className="text-sm font-semibold mb-3" style={{ color: GOLD }}>Backed by Science. Powered by Positivity.</p>
               <h1 className="font-display text-4xl md:text-5xl font-semibold leading-tight mb-4" style={{ color: INK }}>
                 Capture the good stuff. Let it find you again.
@@ -63,12 +64,12 @@ export default function Landing() {
                 Perk Up Daily gently resurfaces your best memories, victories, and moments of faith throughout your day—right when you need them most.
               </p>
               <a href="#pricing">
-                <Button size="lg" className="text-base px-8" style={{ background: GOLD, color: '#fff' }}>
+                <Button size="lg" className="text-base px-8" style={{ background: GOLD, color: '#FFFCF2' }}>
                   Claim Founding Membership <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </a>
             </div>
-            <div className="w-full max-w-sm">
+            <div className="w-full max-w-[240px] shrink-0">
               <motion.img
                 src={IMG.hero}
                 alt="Perk Up Daily App Display"
@@ -82,7 +83,7 @@ export default function Landing() {
       </section>
 
       {/* ── 2. FOUNDER'S STORY ─────────────────────────────────────── */}
-      <section id="story" style={{ background: WHITE }}>
+      <section id="story">
         <div className="max-w-6xl mx-auto px-6 py-10 md:py-14">
           <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
             <div className="lg:w-2/3 lg:pr-8">
@@ -110,7 +111,7 @@ export default function Landing() {
       </section>
 
       {/* ── 3. RESET HUB ────────────────────────────────────────────── */}
-      <section style={{ background: CREAM }}>
+      <section>
         <div className="max-w-3xl mx-auto px-6 py-10 md:py-14 text-center">
           <p className="text-sm font-semibold mb-2" style={{ color: GOLD }}>State Regulation Center</p>
           <h2 className="font-display text-2xl md:text-3xl font-semibold mb-3" style={{ color: INK }}>
@@ -126,7 +127,7 @@ export default function Landing() {
                 href="#pricing"
                 className="px-6 py-3 rounded-full text-xs font-semibold tracking-widest transition-all hover:translate-y-[-2px]"
                 style={{ border: '1px solid rgba(44,30,15,0.15)', color: INK }}
-                onMouseEnter={e => { e.currentTarget.style.background = INK; e.currentTarget.style.color = '#fff'; }}
+                onMouseEnter={e => { e.currentTarget.style.background = INK; e.currentTarget.style.color = '#FFFCF2'; }}
                 onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = INK; }}
               >
                 {pill}
@@ -143,7 +144,7 @@ export default function Landing() {
       </section>
 
       {/* ── 4. CORE MODULES ────────────────────────────────────────── */}
-      <section style={{ background: WHITE }}>
+      <section>
         <div className="max-w-6xl mx-auto px-6 py-10 md:py-14">
 
           {/* Row A: Image left, text right */}
@@ -177,7 +178,7 @@ export default function Landing() {
       </section>
 
       {/* ── 5. MILESTONE REVEAL ─────────────────────────────────────── */}
-      <section style={{ background: CREAM }}>
+      <section>
         <div className="max-w-6xl mx-auto px-6 py-10 md:py-14">
           <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
             <div className="md:w-1/2">
@@ -198,7 +199,7 @@ export default function Landing() {
       <ScienceMatrix />
 
       {/* ── 7. PRICING ─────────────────────────────────────────────── */}
-      <section id="pricing" style={{ background: CREAM }}>
+      <section id="pricing">
         <div className="max-w-3xl mx-auto px-6 py-10 md:py-14 text-center">
           <h2 className="font-display text-2xl md:text-3xl font-semibold mb-2" style={{ color: INK }}>
             Start training your brain today.
@@ -209,7 +210,7 @@ export default function Landing() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-2xl mx-auto">
             {/* Founding Member */}
-            <div className="rounded-2xl p-6 md:p-8 flex flex-col text-left" style={{ background: WHITE, border: `2px solid ${GOLD}`, boxShadow: '0px 20px 40px rgba(230,184,0,0.05)' }}>
+            <div className="rounded-2xl p-6 md:p-8 flex flex-col text-left" style={{ background: PANEL, backdropFilter: 'blur(12px)', border: `2px solid ${GOLD}`, boxShadow: '0px 8px 30px rgba(232,168,56,0.1)' }}>
               <p className="text-sm font-semibold mb-1" style={{ color: GOLD }}>Founding Member</p>
               <div className="flex items-baseline gap-1 mb-3">
                 <span className="text-4xl font-display font-bold" style={{ color: INK }}>$4.99</span>
@@ -219,12 +220,12 @@ export default function Landing() {
                 Lock in this exact introductory pricing layer for the lifetime of your platform profile.
               </p>
               <Link to="/onboarding" className="mt-auto">
-                <Button className="w-full text-base" style={{ background: GOLD, color: '#fff' }}>Secure Founding Status</Button>
+                <Button className="w-full text-base" style={{ background: GOLD, color: '#FFFCF2' }}>Secure Founding Status</Button>
               </Link>
             </div>
 
             {/* Standard Access */}
-            <div className="rounded-2xl p-6 md:p-8 flex flex-col text-left" style={{ background: WHITE, border: '1px solid #EAE9E2' }}>
+            <div className="rounded-2xl p-6 md:p-8 flex flex-col text-left" style={{ background: PANEL, backdropFilter: 'blur(12px)', border: '1px solid rgba(44,30,15,0.08)' }}>
               <p className="text-sm font-semibold mb-1" style={{ color: MUTE }}>Standard Access</p>
               <div className="flex items-baseline gap-1 mb-3">
                 <span className="text-4xl font-display font-bold" style={{ color: INK }}>$7.99</span>
@@ -245,37 +246,33 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── 8. SIDE EFFECTS & RISK ─────────────────────────────────── */}
-      <section style={{ background: DARK }}>
-        <div className="max-w-6xl mx-auto px-6 py-10 md:py-14">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-            <div className="md:pr-8">
-              <h3 className="font-display text-xl md:text-2xl font-semibold mb-5" style={{ color: '#fde8c0' }}>
-                Possible side effects may include:
-              </h3>
-              <ul className="space-y-3">
-                {SIDE_EFFECTS.map((item, i) => (
-                  <li key={i} className="flex gap-3 text-sm" style={{ color: '#e8dcc8' }}>
-                    <span style={{ color: GOLD }} className="shrink-0 font-semibold">•</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="md:pl-8">
-              <h3 className="font-display text-xl md:text-2xl font-semibold mb-4" style={{ color: GOLD }}>
-                No risk. All rewards.
-              </h3>
-              <p className="text-sm md:text-base leading-relaxed" style={{ color: '#e8dcc8' }}>
-                Try Perk Up Daily free for 7 days. If your mind doesn't feel lighter, your focus sharper, and your heart more anchored, cancel with a single tap inside your settings. Your peace belongs entirely to you.
-              </p>
-            </div>
+      {/* ── 8. SIDE EFFECTS & RISK (contained card) ────────────────── */}
+      <section>
+        <div className="max-w-xl mx-auto px-6 py-10 md:py-14">
+          <div className="rounded-2xl p-6 md:p-8 text-center" style={{ background: PANEL, backdropFilter: 'blur(12px)', border: '1px solid rgba(44,30,15,0.08)', boxShadow: '0 4px 20px rgba(44,30,15,0.04)' }}>
+            <h3 className="font-display text-lg font-semibold mb-4" style={{ color: INK }}>
+              Possible side effects may include:
+            </h3>
+            <ul className="space-y-2.5 mb-6 text-left max-w-md mx-auto">
+              {SIDE_EFFECTS.map((item, i) => (
+                <li key={i} className="flex gap-3 text-sm" style={{ color: '#4a3520' }}>
+                  <span style={{ color: GOLD }} className="shrink-0 font-semibold">•</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+            <h3 className="font-display text-lg font-semibold mb-2" style={{ color: GOLD }}>
+              No risk. All rewards.
+            </h3>
+            <p className="text-sm leading-relaxed" style={{ color: MUTE }}>
+              Try Perk Up Daily free for 7 days. If your mind doesn't feel lighter, your focus sharper, and your heart more anchored, cancel with a single tap inside your settings. Your peace belongs entirely to you.
+            </p>
           </div>
         </div>
       </section>
 
       {/* ── FOOTER ─────────────────────────────────────────────────── */}
-      <footer className="py-8" style={{ borderTop: '1px solid rgba(44,30,15,0.08)', background: CREAM }}>
+      <footer className="py-8" style={{ borderTop: '1px solid rgba(44,30,15,0.08)' }}>
         <div className="max-w-6xl mx-auto px-6">
           <p className="text-xs italic leading-relaxed max-w-2xl mx-auto text-center mb-6" style={{ color: '#908F8A' }}>
             Disclaimer: Perk Up Daily offers educational utilities and interactive tools for cognitive pacing and neuro-somatic regulation. This software does not provide clinical diagnoses, medical therapy, or neurological treatment.

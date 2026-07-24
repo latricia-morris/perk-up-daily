@@ -47,7 +47,7 @@ const SCIENCE_CARDS = [
 
 export default function ScienceMatrix() {
   return (
-    <section style={{ background: '#ffffff' }}>
+    <section>
       <div className="max-w-5xl mx-auto px-6 py-10 md:py-14">
         <div className="text-center mb-8">
           <h3 className="font-display text-2xl md:text-3xl font-semibold mb-2" style={{ color: '#2c1e0f' }}>
@@ -84,7 +84,7 @@ function ScienceCard({ card, index }) {
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.07 }}
       className="rounded-2xl p-6 md:p-8"
-      style={{ background: '#ffffff', border: '1px solid #F0EFEA', boxShadow: '0px 4px 20px rgba(26,26,26,0.02)' }}
+      style={{ background: 'rgba(252,251,247,0.7)', backdropFilter: 'blur(12px)', border: '1px solid rgba(44,30,15,0.06)', boxShadow: '0 2px 12px rgba(44,30,15,0.04)' }}
     >
       <h4 className="font-display text-lg font-semibold mb-3" style={{ color: '#2c1e0f' }}>
         {card.num}. {card.title}
@@ -103,7 +103,7 @@ function ScienceCard({ card, index }) {
         target="_blank"
         rel="noopener noreferrer"
         className="inline-flex items-center gap-1 text-xs font-medium mb-4 transition-opacity hover:opacity-70"
-        style={{ color: '#E6B800' }}
+        style={{ color: '#E8A838' }}
       >
         {card.link.text}
         <ExternalLink className="w-3 h-3" />
