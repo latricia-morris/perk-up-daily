@@ -48,7 +48,8 @@ export default function Settings() {
    country_code: 'US',
    sms_consent: false,
    analytics_consent: false,
-   });
+  });
+  const [showTimeDropdown, setShowTimeDropdown] = useState(null);
   const [validationError, setValidationError] = useState('');
 
   useEffect(() => {
@@ -81,6 +82,33 @@ export default function Settings() {
         ? prev.selected_categories.filter(s => s !== slug)
         : [...prev.selected_categories, slug],
     }));
+  };
+
+  const formatTimeLabel = (timeStr) => {
+    if (!timeStr) return '7:00 AM';
+    const [h, m] = timeStr.split(':').map(Number);
+    const period = h >= 12 ? 'PM' : 'AM';
+    const hour12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
+    return `${hour12}:${String(m).padStart(2, '0')} ${period}`;
+  };
+
+  const generateTimeSlots = (session) => {
+    const ranges = {
+      morning: { start: 5, end: 10 },
+      midday: { start: 11, end: 15 },
+      evening: { start: 17, end: 23 },
+    };
+    const range = ranges[session] || ranges.morning;
+    const slots = [];
+    for (let h = range.start; h < range.end; h++) {
+      for (const m of [0, 15, 30, 45]) {
+        const value = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+        const period = h >= 12 ? 'PM' : 'AM';
+        const hour12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
+        slots.push({ value, label: `${hour12}:${String(m).padStart(2, '0')} ${period}` });
+      }
+    }
+    return slots;
   };
 
   const handleSave = async () => {
@@ -325,13 +353,33 @@ export default function Settings() {
                     onCheckedChange={v => setPrefs(prev => ({ ...prev, [slot.enabledKey]: v }))}
                   />
                   <Label className="text-sm font-medium text-foreground flex-1">{slot.label}</Label>
-                  <Input
-                    type="time"
-                    value={prefs[slot.timeKey]}
-                    onChange={e => setPrefs(prev => ({ ...prev, [slot.timeKey]: e.target.value }))}
+                  <button
+                    type="button"
                     disabled={!prefs[slot.enabledKey]}
-                    className="w-32"
-                  />
+                    onClick={() => setShowTimeDropdown(showTimeDropdown === slot.key ? null : slot.key)}
+                    className="w-28 h-10 px-3 rounded-md border border-input bg-card text-foreground text-sm text-left disabled:opacity-50"
+                  >
+                    {formatTimeLabel(prefs[slot.timeKey])}
+                  </button>
+                  {showTimeDropdown === slot.key && (
+                    <div className="fixed inset-0 z-50" onClick={() => setShowTimeDropdown(null)}>
+                      <div className="absolute right-0 top-full mt-1 max-h-60 overflow-y-auto w-28 rounded-md border border-input bg-popover shadow-lg" onClick={e => e.stopPropagation()}>
+                        {generateTimeSlots(slot.key).map(opt => (
+                          <button
+                            key={opt.value}
+                            type="button"
+                            onClick={() => {
+                              setPrefs(prev => ({ ...prev, [slot.timeKey]: opt.value }));
+                              setShowTimeDropdown(null);
+                            }}
+                            className={`w-full px-3 py-2 text-left text-sm hover:bg-accent ${prefs[slot.timeKey] === opt.value ? 'bg-primary/10 font-medium' : ''}`}
+                          >
+                            {opt.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

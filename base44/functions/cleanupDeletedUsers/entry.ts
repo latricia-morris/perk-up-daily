@@ -1,8 +1,8 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.34';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 
 const DELETION_THRESHOLD_DAYS = 14; // 7 days warning + 7 days buffer
 
-Deno.serve(async (req) => {
+export default async function(req: Request): Promise<Response> {
   try {
     const base44 = createClientFromRequest(req);
 
@@ -65,4 +65,4 @@ Deno.serve(async (req) => {
     console.error('Cleanup error:', error.message);
     return Response.json({ error: error.message }, { status: 500 });
   }
-});
+}

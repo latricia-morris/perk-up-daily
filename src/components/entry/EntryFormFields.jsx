@@ -59,7 +59,7 @@ function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUpload, c
           <label className="flex items-center justify-center gap-2 border-2 border-dashed border-border rounded-lg p-8 cursor-pointer hover:border-primary/40 transition-colors">
             {uploading ? <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /> : <Upload className="w-5 h-5 text-muted-foreground" />}
             <span className="text-sm text-muted-foreground">{uploading ? 'Uploading...' : 'Upload a photo'}</span>
-            <input type="file" accept="image/*" onChange={onPhotoUpload} className="hidden" />
+            <input type="file" accept="image/png,image/jpeg,image/jpg,image/heic,image/webp" onChange={onPhotoUpload} className="hidden" />
           </label>
           <p className="text-[10px] text-muted-foreground mt-1.5 text-center">Tip: Use a wide/landscape photo to minimize cropping.</p>
         </div>

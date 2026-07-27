@@ -123,7 +123,7 @@ export default function CrushedItDialog({ entry, open, onClose, onSaved }) {
               <label className="flex items-center justify-center gap-2 border-2 border-dashed border-border rounded-lg p-6 cursor-pointer hover:border-primary/40 transition-colors">
                 {uploading ? <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /> : <Upload className="w-5 h-5 text-muted-foreground" />}
                 <span className="text-sm text-muted-foreground">{uploading ? 'Uploading...' : 'Add a photo'}</span>
-                <input type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
+                <input type="file" accept="image/png,image/jpeg,image/jpg,image/heic,image/webp" onChange={handlePhotoUpload} className="hidden" />
               </label>
             )}
             <p className="text-[10px] text-muted-foreground mt-1 text-center">Tip: Use a wide/landscape photo to minimize cropping.</p>

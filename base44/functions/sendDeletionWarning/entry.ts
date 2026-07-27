@@ -1,6 +1,6 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.34';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 
-Deno.serve(async (req) => {
+export default async function(req: Request): Promise<Response> {
   try {
     const base44 = createClientFromRequest(req);
 
@@ -65,4 +65,4 @@ The Perk Up Daily Team`;
     console.error('Deletion warning error:', error.message);
     return Response.json({ error: error.message }, { status: 500 });
   }
-});
+}

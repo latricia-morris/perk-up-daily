@@ -1,13 +1,19 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.34';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 
-Deno.serve(async (req) => {
+export default async function(req: Request): Promise<Response> {
   try {
     const base44 = createClientFromRequest(req);
 
-    // Get today's date in MM-DD format
-    const today = new Date();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
+    // Get today's date in MM-DD format (using ET to match user timezone)
+    const now = new Date();
+    const etFormatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/New_York',
+      month: '2-digit',
+      day: '2-digit',
+    });
+    const etParts = etFormatter.formatToParts(now);
+    const month = etParts.find(p => p.type === 'month').value;
+    const day = etParts.find(p => p.type === 'day').value;
     const todayMMDD = `${month}-${day}`;
 
     // Fetch all users
@@ -43,4 +49,4 @@ Deno.serve(async (req) => {
     console.error('Birthday check error:', error.message);
     return Response.json({ error: error.message }, { status: 500 });
   }
-});
+}
