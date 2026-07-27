@@ -73,7 +73,7 @@ export default function ChillReset() {
     'Is there one small, good step you can take from here?',
   ];
 
-  const REDIRECT_HOLD_MS = 2800;
+  const REDIRECT_HOLD_MS = 5000;
 
   // Intro auto-advance
   useEffect(() => {

@@ -28,9 +28,9 @@ const ENERGIZE_GRADIENT = [
   { at: 1.0, rgb: [255, 213, 100] },
 ];
 
-const MOVEMENT_HOLD_MS = 3200;
-const TRANSITION_HOLD_MS = 2000;
-const THOUGHT_HOLD_MS = 5000;
+const MOVEMENT_HOLD_MS = 4500;
+const TRANSITION_HOLD_MS = 3500;
+const THOUGHT_HOLD_MS = 6000;
 
 export default function EnergizeReset() {
   const navigate = useNavigate();

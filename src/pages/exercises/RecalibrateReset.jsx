@@ -74,7 +74,7 @@ const REDIRECT_LINES = [
   'Whatever it is, you can handle it from here.',
 ];
 
-const LINE_HOLD_MS = 2800;
+const LINE_HOLD_MS = 4500;
 
 export default function RecalibrateReset() {
   const navigate = useNavigate();

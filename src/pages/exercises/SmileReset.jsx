@@ -13,7 +13,7 @@ const PALETTE = {
   page: '#fbf6ef',
 };
 
-const LINE_HOLD_MS = 3800;
+const LINE_HOLD_MS = 5000;
 
 export default function SmileReset() {
   const navigate = useNavigate();

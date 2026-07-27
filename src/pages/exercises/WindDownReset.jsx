@@ -46,7 +46,7 @@ const RELEASE_LINES = [
   'Your whole body is at rest now.',
 ];
 
-const LINE_HOLD_MS = 3000;
+const LINE_HOLD_MS = 4500;
 
 export default function WindDownReset() {
   const navigate = useNavigate();
