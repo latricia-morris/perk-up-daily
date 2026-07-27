@@ -5,6 +5,7 @@ import { Search as SearchIcon, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
 import CategoryBadge from '@/components/shared/CategoryBadge';
+import EntryDetailModal from '@/components/shared/EntryDetailModal';
 import { getEntryTypeLabel } from '@/lib/constants';
 
 function matchesQuery(item, q) {
@@ -17,6 +18,7 @@ function matchesQuery(item, q) {
 export default function Search() {
   const [query, setQuery] = useState('');
   const [user, setUser] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   useEffect(() => { base44.auth.me().then(setUser); }, []);
 
@@ -78,7 +80,8 @@ export default function Search() {
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.2, delay: i * 0.03 }}
-                  className="bg-card border border-border rounded-xl p-4"
+                  onClick={() => setSelectedItem(item)}
+                  className="bg-card border border-border rounded-xl p-4 cursor-pointer hover:shadow-md transition-shadow"
                 >
                   {item.entry_type === 'identity_swap' ? (
                     <div className="space-y-1.5">
@@ -118,6 +121,10 @@ export default function Search() {
           </div>
         )}
       </div>
+
+      <AnimatePresence>
+        {selectedItem && <EntryDetailModal item={selectedItem} onClose={() => setSelectedItem(null)} />}
+      </AnimatePresence>
     </div>
   );
 }

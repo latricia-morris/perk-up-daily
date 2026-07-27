@@ -23,6 +23,7 @@ export const CONTENT_TYPES = [
   { slug: 'power_up', label: 'Power-Up' },
   { slug: 'affirmation', label: 'Affirmation' },
   { slug: 'scripture', label: 'Scripture', requiresChristian: true },
+  { slug: 'encouragement_note', label: 'Encouragement Note' },
 ];
 
 export function getCategoryLabel(slug) {

@@ -56,7 +56,7 @@ export default function Landing() {
           </div>
           <div className="flex items-center gap-3">
             <Link to="/login"><Button variant="ghost" size="sm" style={{ color: MUTE }}>Log in</Button></Link>
-            <Link to="/onboarding"><Button size="sm" style={{ background: GOLD, color: '#FFFCF2' }}>Get Started</Button></Link>
+            <Link to="/onboarding"><Button size="sm" className="border-none" style={{ background: SUNRISE_BTN, color: '#FFFCF2' }}>Get Started</Button></Link>
           </div>
         </div>
       </header>

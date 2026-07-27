@@ -53,10 +53,10 @@ export default function Reset() {
         <AnimatePresence>
           {RESET_OPTIONS.map((option, i) => (
             <motion.button
-              key={option.id}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: i * 0.06, duration: 0.3 }}
+               key={option.id}
+               initial={{ opacity: 0, y: 8 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ delay: i * 0.06, duration: 0.4 }}
               onClick={() => handleSelect(option)}
               className="rounded-2xl p-5 text-center transition-all hover:shadow-lg active:scale-95"
               style={{
