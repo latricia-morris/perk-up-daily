@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Trash2, Archive, CheckCircle2 } from 'lucide-react';
+import { Trash2, Archive, CheckCircle2, Pencil, Save, X } from 'lucide-react';
 import { CONTENT_TYPES, CATEGORIES, getContentTypeLabel, getCategoryLabel } from '@/lib/constants';
 import CategoryBadge from '@/components/shared/CategoryBadge';
 
@@ -15,6 +17,18 @@ export default function AdminLibrary() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [christianFilter, setChristianFilter] = useState('all');
   const [selected, setSelected] = useState(new Set());
+  const [editingId, setEditingId] = useState(null);
+  const [editForm, setEditForm] = useState({ body: '', author: '' });
+
+  const startEdit = (item) => {
+    setEditingId(item.id);
+    setEditForm({ body: item.body || '', author: item.author || '' });
+  };
+
+  const saveEdit = (id) => {
+    updateMutation.mutate({ id, data: editForm });
+    setEditingId(null);
+  };
 
   const { data: items = [], isLoading } = useQuery({
     queryKey: ['admin-library'],
@@ -143,10 +157,26 @@ export default function AdminLibrary() {
                     />
                   </td>
                   <td className="p-3 max-w-xs">
-                    <p className="truncate text-foreground">{item.body}</p>
+                    {editingId === item.id ? (
+                      <Textarea
+                        value={editForm.body}
+                        onChange={e => setEditForm(prev => ({ ...prev, body: e.target.value }))}
+                        className="min-h-[60px] text-sm"
+                      />
+                    ) : (
+                      <p className="truncate text-foreground">{item.body}</p>
+                    )}
                   </td>
                   <td className="p-3 text-muted-foreground whitespace-nowrap text-xs">
-                    {item.author || '—'}
+                    {editingId === item.id ? (
+                      <Input
+                        value={editForm.author}
+                        onChange={e => setEditForm(prev => ({ ...prev, author: e.target.value }))}
+                        className="text-xs h-8 w-32"
+                      />
+                    ) : (
+                      item.author || '—'
+                    )}
                   </td>
                   <td className="p-3 text-muted-foreground whitespace-nowrap">
                     {getContentTypeLabel(item.content_type)}
@@ -172,24 +202,54 @@ export default function AdminLibrary() {
                   </td>
                   <td className="p-3">
                     <div className="flex gap-1">
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => updateMutation.mutate({
-                          id: item.id,
-                          data: { status: item.status === 'active' ? 'archived' : 'active' }
-                        })}
-                      >
-                        {item.status === 'active' ? 'Archive' : 'Activate'}
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="text-destructive hover:text-destructive"
-                        onClick={() => deleteMutation.mutate(item.id)}
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </Button>
+                      {editingId === item.id ? (
+                        <>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => saveEdit(item.id)}
+                            className="gap-1 text-secondary"
+                          >
+                            <Save className="w-3 h-3" /> Save
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setEditingId(null)}
+                          >
+                            <X className="w-3 h-3" />
+                          </Button>
+                        </>
+                      ) : (
+                        <>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => startEdit(item)}
+                            className="gap-1"
+                          >
+                            <Pencil className="w-3 h-3" /> Edit
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => updateMutation.mutate({
+                              id: item.id,
+                              data: { status: item.status === 'active' ? 'archived' : 'active' }
+                            })}
+                          >
+                            {item.status === 'active' ? 'Archive' : 'Activate'}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="text-destructive hover:text-destructive"
+                            onClick={() => deleteMutation.mutate(item.id)}
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </Button>
+                        </>
+                      )}
                     </div>
                   </td>
                 </tr>
