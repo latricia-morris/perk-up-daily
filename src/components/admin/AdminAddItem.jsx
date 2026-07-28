@@ -90,24 +90,17 @@ export default function AdminAddItem() {
         <div>
           <Label className="text-sm font-medium mb-1.5 block">
             Author / Attribution
-            {form.content_type === 'quote' && <span className="text-destructive ml-1">*</span>}
-            {form.content_type === 'power_up' && <span className="text-muted-foreground ml-1">(auto-filled with your name)</span>}
-            {form.content_type !== 'quote' && form.content_type !== 'power_up' && <span className="text-muted-foreground ml-1">(optional)</span>}
+            <span className="text-muted-foreground ml-1">(optional — leave blank if unknown)</span>
           </Label>
           <Input
             value={form.author}
             onChange={e => setForm(prev => ({ ...prev, author: e.target.value }))}
             placeholder={
-              form.content_type === 'scripture' ? 'e.g. Jeremiah 29:11 NIV' : 
-              form.content_type === 'power_up' ? user?.full_name || 'Author name' :
-              'Author name'
+              form.content_type === 'scripture' ? 'e.g. Jeremiah 29:11 NIV' : 'Author name'
             }
           />
           {form.content_type === 'scripture' && (
             <p className="text-xs text-muted-foreground mt-1">Use the Bible reference as the author (e.g. John 3:16 NIV)</p>
-          )}
-          {form.content_type === 'power_up' && (
-            <p className="text-xs text-muted-foreground mt-1">Leave blank to exclude author attribution on the card.</p>
           )}
         </div>
 

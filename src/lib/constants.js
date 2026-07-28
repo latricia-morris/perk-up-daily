@@ -23,7 +23,6 @@ export const CONTENT_TYPES = [
   { slug: 'power_up', label: 'Power-Up' },
   { slug: 'affirmation', label: 'Affirmation' },
   { slug: 'scripture', label: 'Scripture', requiresChristian: true },
-  { slug: 'encouragement_note', label: 'Encouragement Note' },
 ];
 
 export function getCategoryLabel(slug) {
@@ -42,7 +41,7 @@ export function isIdentitySwap(entry) {
 }
 
 export function getContentTypeLabel(slug) {
-  if (slug === 'quote') return 'Power-Up';
+  if (slug === 'quote' || slug === 'encouragement_note' || slug === 'personal_note') return 'Power-Up';
   return CONTENT_TYPES.find(t => t.slug === slug)?.label || slug;
 }
 

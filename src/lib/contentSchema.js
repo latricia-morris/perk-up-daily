@@ -64,19 +64,6 @@ export const CONTENT_SCHEMA = {
       category: { show: { form: true,  edit: true,  tile: false, social: false } },
     },
   },
-  quote: {
-    label: 'Quote',
-    slug: 'quote',
-    allowPhoto: false,
-    requiresChristian: false,
-    color: '#8ECAE6',
-    descriptor: 'Someone said it and you needed to hear it. Let\'s hold onto that.',
-    fields: {
-      body:     { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Quote',  placeholder: 'The quote text...' },
-      author:   { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Author', placeholder: 'Who said it?', optional: true },
-      category: { show: { form: true,  edit: true,  tile: false, social: false } },
-    },
-  },
 
   identity_swap: {
     label: 'Identity Upgrade',
@@ -92,14 +79,14 @@ export const CONTENT_SCHEMA = {
     },
   },
   reflection: {
-    label: 'Reflection',
+    label: 'Personal Insight',
     slug: 'reflection',
     allowPhoto: false,
     requiresChristian: false,
     color: '#BA1650',
     descriptor: 'Growth lives in the pause. Take a brief moment to process, then drop your straightest answer here.',
     fields: {
-      title:    { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Reflection prompt', placeholder: 'What question are you sitting with?' },
+      title:    { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Insight prompt', placeholder: 'What question are you sitting with?' },
       body:     { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Your answer',        placeholder: 'Write your honest answer...' },
       category: { show: { form: true,  edit: true,  tile: false, social: false } },
     },
@@ -125,8 +112,8 @@ export const CONTENT_SCHEMA = {
     color: '#F98426',
     descriptor: 'A curated collection of wisdom, encouragement, and insight. These are here to help you power up your day and level up your life.',
     fields: {
-      body:     { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Power-Up', placeholder: 'The insight...' },
-      author:   { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Author',   placeholder: 'Who shared this?', optional: true },
+      body:     { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Power-Up', placeholder: 'The insight, quote, or encouragement...' },
+      author:   { show: { form: true,  edit: true,  tile: true,  social: true  }, label: 'Author',   placeholder: 'Who shared this? (leave blank if unknown)', optional: true },
       category: { show: { form: true,  edit: true,  tile: false, social: false } },
     },
   },

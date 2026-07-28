@@ -156,18 +156,18 @@ export default function AdminLibrary() {
                       }}
                     />
                   </td>
-                  <td className="p-3 max-w-xs">
+                  <td className="p-3 align-top">
                     {editingId === item.id ? (
                       <Textarea
                         value={editForm.body}
                         onChange={e => setEditForm(prev => ({ ...prev, body: e.target.value }))}
-                        className="min-h-[60px] text-sm"
+                        className="min-h-[80px] text-sm w-full max-w-2xl"
                       />
                     ) : (
-                      <p className="truncate text-foreground">{item.body}</p>
+                      <p className="text-foreground text-sm whitespace-normal break-words leading-relaxed">{item.body}</p>
                     )}
                   </td>
-                  <td className="p-3 text-muted-foreground whitespace-nowrap text-xs">
+                  <td className="p-3 align-top text-muted-foreground text-xs whitespace-normal break-words">
                     {editingId === item.id ? (
                       <Input
                         value={editForm.author}

@@ -80,20 +80,20 @@ function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUpload, c
     </>
   );
 
-  if (entryType === 'quote') {
-    const authorLim = getLimit(entryType, 'author');
+  if (entryType === 'power_up' || entryType === 'quote') {
+    const authorLim = getLimit('power_up', 'author');
     return (
       <>
         <div>
-          <Label className="text-sm font-medium mb-1.5 block">Quote</Label>
-          {renderField('body', 'The quote text...', undefined, true)}
+          <Label className="text-sm font-medium mb-1.5 block">Power-Up</Label>
+          {renderField('body', 'The insight, quote, or encouragement...', undefined, true)}
         </div>
         <div>
-          <Label className="text-sm font-medium mb-1.5 block">Author <span className="text-muted-foreground">(optional)</span></Label>
+          <Label className="text-sm font-medium mb-1.5 block">Author <span className="text-muted-foreground">(optional — leave blank if unknown)</span></Label>
           <Input
-            value={f('author')}
+            value={f('author') ?? ''}
             onChange={(e) => setForm(prev => ({ ...prev, author: e.target.value.slice(0, authorLim.hard) }))}
-            placeholder="Who said it?"
+            placeholder="Who shared this?"
             maxLength={authorLim.hard}
           />
         </div>
@@ -180,8 +180,8 @@ function EntryFormFields({ entryType, form, setForm, uploading, onPhotoUpload, c
         )}
       </div>
       <div>
-        <Label className="text-sm font-medium mb-1.5 block">Your knee-jerk response</Label>
-        {renderField('body', 'Write your response...', 'min-h-[140px]', false)}
+        <Label className="text-sm font-medium mb-1.5 block">Your insight</Label>
+        {renderField('body', 'Write your honest answer...', 'min-h-[140px]', false)}
       </div>
     </>
   );
