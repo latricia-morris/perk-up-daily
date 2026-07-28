@@ -12,7 +12,7 @@ const colorMap = {
 
 export default function CategoryBadge({ category, size = 'sm' }) {
   const colors = colorMap[category] || { bg: '#E6A037', color: '#2F2C29' };
-  const sizeClasses = size === 'sm' ? 'text-[10px] px-2 py-0.5' : 'text-xs px-2.5 py-1';
+  const sizeClasses = size === 'sm' ? 'text-[10px] px-2.5 py-1' : 'text-xs px-3 py-1.5';
 
   return (
     <span

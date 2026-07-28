@@ -159,7 +159,7 @@ function ExerciseGridCard({ exercise, onClick, index }) {
       <div className="flex flex-col h-full gap-2">
         <div className="flex items-center justify-between">
           <span
-            className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full"
+            className="text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full"
             style={{ background: `${accent}1A`, color: accent }}
           >
             {exercise.rhythm}

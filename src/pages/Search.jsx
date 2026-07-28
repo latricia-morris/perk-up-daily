@@ -99,7 +99,7 @@ export default function Search() {
                     </>
                   )}
                   <div className="flex items-center gap-2 mt-3 flex-wrap">
-                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
+                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium px-1">
                       {getEntryTypeLabel(item.entry_type)}
                     </span>
                     <span className="text-[10px] text-muted-foreground">

@@ -140,7 +140,7 @@ export default function AdminLibrary() {
                 <th className="p-3 text-left font-medium text-muted-foreground">Category</th>
                 <th className="p-3 text-left font-medium text-muted-foreground">Christian</th>
                 <th className="p-3 text-left font-medium text-muted-foreground">Status</th>
-                <th className="p-3 text-left font-medium text-muted-foreground">Actions</th>
+                <th className="p-3 text-left font-medium text-muted-foreground sticky right-0 bg-muted z-10">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -186,13 +186,13 @@ export default function AdminLibrary() {
                   </td>
                   <td className="p-3">
                     {item.is_christian ? (
-                      <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">Christian</span>
+                      <span className="text-xs bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full">Christian</span>
                     ) : (
                       <span className="text-xs text-muted-foreground">General</span>
                     )}
                   </td>
                   <td className="p-3">
-                    <span className={`text-xs px-2 py-0.5 rounded-full ${
+                    <span className={`text-xs px-2.5 py-1 rounded-full ${
                       item.status === 'active'
                         ? 'bg-secondary/20 text-secondary'
                         : 'bg-muted text-muted-foreground'
@@ -200,7 +200,7 @@ export default function AdminLibrary() {
                       {item.status}
                     </span>
                   </td>
-                  <td className="p-3">
+                  <td className="p-3 sticky right-0 bg-card z-10 shadow-[-2px_0_4px_-2px_rgba(0,0,0,0.1)]">
                     <div className="flex gap-1">
                       {editingId === item.id ? (
                         <>

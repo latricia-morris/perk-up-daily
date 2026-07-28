@@ -110,6 +110,14 @@
   }
 }
 
+/* General rule: pill/badge elements with colored backgrounds need breathing room.
+   This ensures any inline rounded-full element with a background gets minimum padding. */
+@layer utilities {
+  .pill-default {
+    @apply px-2.5 py-1;
+  }
+}
+
 .card-shine {
   position: relative;
   overflow: hidden;
