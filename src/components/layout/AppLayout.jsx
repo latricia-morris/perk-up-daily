@@ -234,22 +234,21 @@ export default function AppLayout() {
         </div>
       </nav>
 
-      {/* Desktop/Tablet floating Reset button — large circular sunrise gradient */}
+      {/* Desktop/Tablet floating Reset button */}
       <Link to="/reset" aria-label="Reset" className="hidden md:flex fixed bottom-6 right-6 z-[9999] items-center justify-center rounded-full transition-all"
         style={{
-          width: 64,
-          height: 64,
+          width: 60,
+          height: 60,
           boxSizing: 'border-box',
-          borderRadius: 9999,
+          borderRadius: '50%',
           overflow: 'hidden',
           isolation: 'isolate',
           transform: 'translateZ(0)',
-          background: 'linear-gradient(45deg, #570d40 0%, #981f62 25%, #f15a2b 50%, #ffc923 75%, #fed855 100%)',
-          boxShadow: '0 6px 24px rgba(87,13,64,0.3)',
-          border: '2px solid rgba(255,255,255,0.35)',
+          background: 'linear-gradient(to right, #6e0a5d 0%, #f02936 100%)',
+          boxShadow: '0 6px 20px rgba(110,10,93,0.35)',
         }}>
         <span className="transition-transform active:scale-95 flex items-center justify-center">
-          <ResetIcon className="w-9 h-9" style={{ color: '#FFFFFF' }} />
+          <ResetIcon className="w-7 h-7" style={{ color: '#FFFFFF' }} />
         </span>
       </Link>
 

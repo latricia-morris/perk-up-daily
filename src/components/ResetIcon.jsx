@@ -10,15 +10,19 @@ export default function ResetIcon({ className = 'w-4 h-4', style, ...props }) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
+      strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
       {...props}
     >
-      <path d="M3 12a9 9 0 0 1 15.5-6.3L21 8" />
-      <path d="M21 3v5h-5" />
-      <path d="M21 12a9 9 0 0 1-15.5 6.3L3 16" />
-      <path d="M3 21v-5h5" />
+      {/* Top arrow: starts at top center, curves clockwise, arrowhead top-left */}
+      <path d="M12 3 a9 9 0 0 1 6.5 2.7" />
+      <path d="M18.5 2v5h-5" />
+      {/* Bottom arrow: starts at bottom center, curves counter-clockwise, arrowhead bottom-right */}
+      <path d="M12 21 a9 9 0 0 1 -6.5 -2.7" />
+      <path d="M5.5 22v-5h5" />
+      {/* Inner circle */}
+      <circle cx="12" cy="12" r="3.5" />
     </svg>
   );
 }
