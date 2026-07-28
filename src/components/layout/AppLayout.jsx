@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import {
   Home, PlusCircle, Sparkles, Trophy, Settings,
   ShieldCheck, Zap, BookOpen, Menu, X, LogOut,
@@ -251,14 +250,9 @@ export default function AppLayout() {
       {/* Main content */}
       <main className="md:ml-64 pt-[53px] md:pt-0 pb-24 md:pb-6 min-h-screen">
         <SubscriptionGuard>
-          <motion.div
-            key={location.pathname}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.25, ease: 'easeOut' }}
-          >
+          <div key={location.pathname} className="animate-fade-in">
             <Outlet />
-          </motion.div>
+          </div>
         </SubscriptionGuard>
       </main>
 
