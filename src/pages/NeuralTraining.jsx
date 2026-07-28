@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { Brain, Wind, Brain as BrainCircuit, Shuffle, ChevronRight, Atom } from 'lucide-react';
 import { ALL_STATIC_EXERCISES, EXERCISE_TYPES } from '@/lib/exerciseRegistry';
 import { base44 } from '@/api/base44Client';
@@ -146,10 +145,7 @@ export default function NeuralTraining() {
 function ExerciseGridCard({ exercise, onClick, index }) {
   const accent = exercise.accent || '#D4830A';
   return (
-    <motion.button
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.05, duration: 0.3 }}
+    <button
       onClick={onClick}
       className="text-left rounded-2xl p-4 transition-all hover:shadow-md active:scale-[0.98] flex flex-col h-full min-h-[120px]"
       style={{
@@ -185,6 +181,6 @@ function ExerciseGridCard({ exercise, onClick, index }) {
           </div>
         )}
       </div>
-    </motion.button>
+    </button>
   );
 }

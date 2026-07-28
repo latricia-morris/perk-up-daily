@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
 import { RESET_OPTIONS } from '@/lib/exerciseRegistry';
 import ResetIcon from '@/components/ResetIcon';
 
@@ -29,12 +28,7 @@ export default function Reset() {
         paddingBottom: 'max(env(safe-area-inset-bottom, 16px), 120px)',
       }}
     >
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="text-center mb-10 max-w-md"
-      >
+      <div className="text-center mb-10 max-w-md">
         <div
           className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4"
           style={{ background: 'linear-gradient(135deg, #E8A838 0%, #d4830a 100%)' }}
@@ -47,35 +41,30 @@ export default function Reset() {
         <p className="text-sm" style={{ color: '#c4a882' }}>
           Choose one and we'll run a curated sequence of Neural Training exercises for you.
         </p>
-      </motion.div>
+      </div>
 
       <div className="grid grid-cols-2 gap-3 w-full max-w-md">
-        <AnimatePresence>
-          {RESET_OPTIONS.map((option, i) => (
-            <motion.button
-               key={option.id}
-               initial={{ opacity: 0, y: 8 }}
-               animate={{ opacity: 1, y: 0 }}
-               transition={{ delay: i * 0.06, duration: 0.4 }}
-              onClick={() => handleSelect(option)}
-              className="rounded-2xl p-5 text-center transition-all hover:shadow-lg active:scale-95"
-              style={{
-                background: selected === option.id
-                  ? `linear-gradient(135deg, ${option.accent} 0%, ${option.accent}CC 100%)`
-                  : `linear-gradient(135deg, ${option.accent}14 0%, ${option.accent}0A 100%)`,
-                border: `1px solid ${option.accent}33`,
-                color: selected === option.id ? '#FFFCF2' : '#2c1e0f',
-              }}
-            >
-              <div className="text-lg font-display font-semibold mb-0.5">{option.label}</div>
-              <div className="text-xs" style={{
-                color: selected === option.id ? 'rgba(255,252,242,0.8)' : '#7a5c3a',
-              }}>
-                {option.description}
-              </div>
-            </motion.button>
-          ))}
-        </AnimatePresence>
+        {RESET_OPTIONS.map((option) => (
+          <button
+             key={option.id}
+            onClick={() => handleSelect(option)}
+            className="rounded-2xl p-5 text-center transition-all hover:shadow-lg active:scale-95"
+            style={{
+              background: selected === option.id
+                ? `linear-gradient(135deg, ${option.accent} 0%, ${option.accent}CC 100%)`
+                : `linear-gradient(135deg, ${option.accent}14 0%, ${option.accent}0A 100%)`,
+              border: `1px solid ${option.accent}33`,
+              color: selected === option.id ? '#FFFCF2' : '#2c1e0f',
+            }}
+          >
+            <div className="text-lg font-display font-semibold mb-0.5">{option.label}</div>
+            <div className="text-xs" style={{
+              color: selected === option.id ? 'rgba(255,252,242,0.8)' : '#7a5c3a',
+            }}>
+              {option.description}
+            </div>
+          </button>
+        ))}
       </div>
 
       <p className="text-xs mt-8" style={{ color: '#c4a882' }}>

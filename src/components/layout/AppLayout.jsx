@@ -250,9 +250,7 @@ export default function AppLayout() {
       {/* Main content */}
       <main className="md:ml-64 pt-[53px] md:pt-0 pb-24 md:pb-6 min-h-screen">
         <SubscriptionGuard>
-          <div key={location.pathname} className="animate-fade-in">
-            <Outlet />
-          </div>
+          <Outlet />
         </SubscriptionGuard>
       </main>
 
