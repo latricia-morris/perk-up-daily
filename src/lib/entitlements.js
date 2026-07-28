@@ -1,13 +1,13 @@
 /**
  * Centralized entitlement / access-decision logic.
  *
- * Single source of truth for allow / grace / deny decisions.
- * Used by SubscriptionGuard. Do not duplicate this logic elsewhere.
- *
  * Returns one of:
- *   'allow'  — user is entitled (admin, active with future renewal, valid trial, valid grace)
- *   'grace'  — entitlement uncertain or renewal date passed → allow access + background revalidation
- *   'deny'   — confirmed unpaid / expired / cancelled / trial ended without payment
+ *   'allow'  — user has access (admin, active, valid trial, within grace period)
+ *   'deny'   — confirmed unpaid / expired / cancelled / trial ended / grace period exceeded
+ *
+ * Unknown or missing data ALWAYS returns 'allow' — never block the user
+ * while data is loading or retrieval fails. The webhook is the source of
+ * truth for subscription state; we trust it rather than client-side date math.
  */
 
 const TRIAL_DAYS = 7;
@@ -22,7 +22,6 @@ function isTrialActive(user) {
     end.setDate(end.getDate() + TRIAL_DAYS);
     return new Date() < end;
   }
-  // No trial date info — assume trial is still valid (don't punish the user)
   return true;
 }
 
@@ -34,24 +33,21 @@ function isGracePeriodValid(user) {
 
 /**
  * @param {object} user — the full user record from base44.auth.me()
- * @returns {'allow' | 'grace' | 'deny'}
+ * @returns {'allow' | 'deny'}
  */
 export function resolveAccess(user) {
-  if (!user) return 'grace'; // Data not loaded yet — don't hard-block
+  // No user data yet — never block. Background retry handles this.
+  if (!user) return 'allow';
 
-  // Admin always allowed — never gate admin accounts behind billing
+  // Admin always allowed
   if (user.role === 'admin') return 'allow';
 
   const status = user.subscription_status;
 
   switch (status) {
     case 'active':
-      // If we have a renewal date, check it; otherwise trust the webhook
-      if (user.renewal_date) {
-        const renewal = new Date(user.renewal_date);
-        if (renewal > new Date()) return 'allow';
-        return 'grace'; // Renewal date passed — silent revalidation
-      }
+      // Trust the webhook. If payment failed, webhook sets grace_period or cancelled.
+      // Do NOT client-side check renewal_date — that caused false lockouts.
       return 'allow';
 
     case 'trial':
@@ -65,20 +61,18 @@ export function resolveAccess(user) {
       return 'deny';
 
     default:
-      // null, undefined, or any unknown status — don't hard-block
-      return 'grace';
+      // null, undefined, or any unknown status — never block
+      return 'allow';
   }
 }
 
 /**
  * Returns diagnostic info for debug logging.
- * Called by SubscriptionGuard when DEBUG flag is on.
  */
 export function describeUser(user) {
   if (!user) return { loaded: false };
   return {
     loaded: true,
-    status_field: 'subscription_status',
     status_value: user.subscription_status,
     role_value: user.role,
     is_admin: user.role === 'admin',
