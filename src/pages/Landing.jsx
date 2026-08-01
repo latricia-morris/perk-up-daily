@@ -63,7 +63,7 @@ export default function Landing() {
 
       {/* ── 1. HERO ────────────────────────────────────────────────── */}
       <section className="min-h-[calc(100vh-56px)] flex items-center">
-        <div className="max-w-6xl mx-auto px-6 py-10 w-full">
+        <div className="max-w-6xl mx-auto px-6 py-16 md:py-24 w-full">
           <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
             <div className="flex-1 max-w-xl text-center lg:text-left">
               <p className="text-sm font-semibold mb-3" style={{ color: ORANGE }}>Backed by Science. Powered by Positivity.</p>
@@ -84,8 +84,9 @@ export default function Landing() {
                 src={IMG.hero}
                 alt="Perk Up Daily App Display"
                 className="w-full"
-                animate={{ y: [0, -12, 0] }}
-                transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
               />
             </div>
           </div>
