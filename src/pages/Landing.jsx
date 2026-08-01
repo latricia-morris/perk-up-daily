@@ -143,11 +143,11 @@ export default function Landing() {
           </div>
 
           {/* Row B: Text left, image right */}
-          <div className="flex flex-col md:flex-row-reverse items-center gap-8 md:gap-12">
+                  <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
             <div className="md:w-1/2">
               <img src={IMG.duo} alt="Daily Rhythm Engine" className="w-full max-w-sm mx-auto" style={{ filter: 'drop-shadow(0px 30px 50px rgba(26,26,26,0.08))' }} />
             </div>
-            <div className="md:w-1/2 md:pr-8">
+                      <div className="md:w-1/2 md:pl-8">
               <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: MAGENTA }}>Custom Data Filtering</p>
               <h2 className="font-display text-2xl md:text-3xl font-semibold mb-3" style={{ color: INK }}>Set Your Own Daily Rhythm</h2>
               <p className="text-sm md:text-base leading-relaxed" style={{ color: MUTE }}>
