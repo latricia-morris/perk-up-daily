@@ -109,6 +109,55 @@ function extractCategory(text) {
   return 'clear_mind';
 }
 
+// ── TWILIO SIGNATURE VERIFICATION ───────────────────────────────
+// Validates the X-Twilio-Signature header so only genuine Twilio
+// webhook requests are processed. Without this, an attacker could
+// POST a victim's phone number in `From` and inject vault entries.
+async function computeTwilioSignature(
+  authToken: string,
+  url: string,
+  params: Record<string, string>
+): Promise<string> {
+  const sortedKeys = Object.keys(params).sort();
+  let data = url;
+  for (const key of sortedKeys) {
+    data += key + (params[key] ?? '');
+  }
+  const enc = new TextEncoder();
+  const cryptoKey = await crypto.subtle.importKey(
+    'raw',
+    enc.encode(authToken),
+    { name: 'HMAC', hash: 'SHA-1' },
+    false,
+    ['sign']
+  );
+  const sig = await crypto.subtle.sign('HMAC', cryptoKey, enc.encode(data));
+  const bytes = new Uint8Array(sig);
+  let bin = '';
+  for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin);
+}
+
+function timingSafeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let result = 0;
+  for (let i = 0; i < a.length; i++) {
+    result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  return result === 0;
+}
+
+async function verifyTwilioRequest(
+  req: Request,
+  params: Record<string, string>
+): Promise<boolean> {
+  const authToken = Deno.env.get('TWILIO_AUTH_TOKEN');
+  const signature = req.headers.get('X-Twilio-Signature');
+  if (!authToken || !signature) return false;
+  const expected = await computeTwilioSignature(authToken, req.url, params);
+  return timingSafeEqual(expected, signature);
+}
+
 // ── MAIN HANDLER ───────────────────────────────────────────────
 Deno.serve(async (req) => {
   try {
@@ -117,20 +166,35 @@ Deno.serve(async (req) => {
     // Parse Twilio webhook — handles both form-encoded (production) and JSON (testing)
     let body = '';
     let fromPhone = '';
+    let params: Record<string, string> = {};
     const contentType = req.headers.get('content-type') || '';
 
     if (contentType.includes('application/json')) {
       const jsonData = await req.json();
+      params = { ...jsonData };
       body = jsonData.Body || jsonData.body || '';
       fromPhone = jsonData.From || jsonData.from || '';
     } else {
       const formData = await req.formData();
+      const entries: Record<string, string> = {};
+      for (const [key, value] of formData.entries()) {
+        entries[key] = value.toString();
+      }
+      params = entries;
       body = (formData.get('Body') || '').toString();
       fromPhone = (formData.get('From') || '').toString();
     }
 
     if (!body || !fromPhone) {
       return Response.json({ error: 'Missing Body or From' }, { status: 400 });
+    }
+
+    // Verify the request genuinely came from Twilio before trusting
+    // the attacker-supplied `From` phone number.
+    const isAuthentic = await verifyTwilioRequest(req, params);
+    if (!isAuthentic) {
+      console.warn('Twilio signature verification failed');
+      return Response.json({ error: 'Invalid signature' }, { status: 403 });
     }
 
     const messageText = body.trim();
