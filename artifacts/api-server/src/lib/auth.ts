@@ -60,6 +60,17 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
   next();
 }
 
+// Must be used AFTER requireAuth. Rejects non-admin users.
+export function requireAdmin(req: Request, res: Response, next: NextFunction): void {
+  // @ts-ignore
+  const user = req.user;
+  if (!user?.isAdmin) {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  next();
+}
+
 export async function deleteSession(token: string): Promise<void> {
   await db.delete(sessionsTable).where(eq(sessionsTable.token, token));
 }

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { db, appLibraryTable } from "@workspace/db";
 import { eq, and, asc } from "drizzle-orm";
+import { requireAuth, requireAdmin } from "../lib/auth";
 
 const router: Router = Router();
 
@@ -26,8 +27,8 @@ router.get("/library", async (req, res): Promise<void> => {
   res.json(rows.map(r => ({ ...r, createdAt: r.createdAt.toISOString(), updatedAt: r.updatedAt.toISOString() })));
 });
 
-// POST /api/library
-router.post("/library", async (req, res): Promise<void> => {
+// POST /api/library (admin only)
+router.post("/library", requireAuth, requireAdmin, async (req, res): Promise<void> => {
   const { contentType, content, title, author, category, status, sortOrder, imageUrl, metadata } = req.body;
 
   if (!contentType || !content) {
@@ -43,8 +44,8 @@ router.post("/library", async (req, res): Promise<void> => {
   res.status(201).json({ ...item, createdAt: item.createdAt.toISOString(), updatedAt: item.updatedAt.toISOString() });
 });
 
-// POST /api/library/bulk
-router.post("/library/bulk", async (req, res): Promise<void> => {
+// POST /api/library/bulk (admin only)
+router.post("/library/bulk", requireAuth, requireAdmin, async (req, res): Promise<void> => {
   const { items } = req.body;
   if (!Array.isArray(items) || items.length === 0) {
     res.status(400).json({ error: "items array required" });
@@ -69,8 +70,8 @@ router.post("/library/bulk", async (req, res): Promise<void> => {
   res.status(201).json(rows.map(r => ({ ...r, createdAt: r.createdAt.toISOString(), updatedAt: r.updatedAt.toISOString() })));
 });
 
-// PATCH /api/library/:id
-router.patch("/library/:id", async (req, res): Promise<void> => {
+// PATCH /api/library/:id (admin only)
+router.patch("/library/:id", requireAuth, requireAdmin, async (req, res): Promise<void> => {
   const raw = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   const id = parseInt(raw, 10);
   if (isNaN(id)) { res.status(400).json({ error: "Invalid id" }); return; }
@@ -87,8 +88,8 @@ router.patch("/library/:id", async (req, res): Promise<void> => {
   res.json({ ...item, createdAt: item.createdAt.toISOString(), updatedAt: item.updatedAt.toISOString() });
 });
 
-// DELETE /api/library/:id
-router.delete("/library/:id", async (req, res): Promise<void> => {
+// DELETE /api/library/:id (admin only)
+router.delete("/library/:id", requireAuth, requireAdmin, async (req, res): Promise<void> => {
   const raw = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   const id = parseInt(raw, 10);
   if (isNaN(id)) { res.status(400).json({ error: "Invalid id" }); return; }

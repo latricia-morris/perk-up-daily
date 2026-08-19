@@ -1,12 +1,12 @@
 import { Router } from "express";
 import { db, usersTable } from "@workspace/db";
 import { eq, desc } from "drizzle-orm";
-import { formatUser } from "../lib/auth";
+import { formatUser, requireAuth, requireAdmin } from "../lib/auth";
 
 const router: Router = Router();
 
-// GET /api/users (admin)
-router.get("/users", async (req, res): Promise<void> => {
+// GET /api/users (admin only)
+router.get("/users", requireAuth, requireAdmin, async (req, res): Promise<void> => {
   const { limit } = req.query;
   const rows = await db
     .select()
@@ -17,8 +17,8 @@ router.get("/users", async (req, res): Promise<void> => {
   res.json(rows.map(formatUser));
 });
 
-// PATCH /api/users/:id (admin)
-router.patch("/users/:id", async (req, res): Promise<void> => {
+// PATCH /api/users/:id (admin only)
+router.patch("/users/:id", requireAuth, requireAdmin, async (req, res): Promise<void> => {
   const raw = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   const id = parseInt(raw, 10);
   if (isNaN(id)) { res.status(400).json({ error: "Invalid id" }); return; }

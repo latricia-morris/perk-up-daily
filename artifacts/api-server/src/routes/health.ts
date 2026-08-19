@@ -8,4 +8,9 @@ router.get("/healthz", (_req, res) => {
   res.json(data);
 });
 
+// Root of /api — used by deployment healthchecks
+router.get("/", (_req, res) => {
+  res.json({ status: "ok" });
+});
+
 export default router;

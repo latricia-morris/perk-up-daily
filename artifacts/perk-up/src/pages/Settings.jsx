@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Check, Loader2, Trash2, Download, LifeBuoy, ExternalLink } from 'lucide-react';
+import { Check, Loader2, Download, LifeBuoy, ExternalLink } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { MobileSelect } from '@/components/ui/mobile-select';
 import LegalLinks from '@/components/shared/LegalLinks';
@@ -13,26 +13,11 @@ import { CATEGORIES } from '@/lib/constants';
 import { getDialCode } from '@/lib/countryCodes';
 import { useTheme } from '@/lib/useTheme';
 import { motion } from 'framer-motion';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-
 export default function Settings() {
   const [user, setUser] = useState(null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [deleting, setDeleting] = useState(false);
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [exporting, setExporting] = useState(false);
-  const [deleteRequested, setDeleteRequested] = useState(false);
-  const [passwordLinkSent, setPasswordLinkSent] = useState(false);
-  const [sendingPasswordLink, setSendingPasswordLink] = useState(false);
   const { theme, setTheme } = useTheme();
 
   const [prefs, setPrefs] = useState({
@@ -133,34 +118,6 @@ export default function Settings() {
     setSaving(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
-  };
-
-  const handleDeleteAccount = async () => {
-    setDeleting(true);
-    try {
-      await base44.functions.invoke('requestAccountDeletion', {});
-      setDeleting(false);
-      setShowDeleteDialog(false);
-      setDeleteRequested(true);
-    } catch (error) {
-      setDeleting(false);
-      setShowDeleteDialog(false);
-    }
-  };
-
-  const handleSetPassword = async () => {
-    setSendingPasswordLink(true);
-    try {
-      await base44.auth.resetPasswordRequest(user.email);
-      setPasswordLinkSent(true);
-      setTimeout(() => setPasswordLinkSent(false), 5000);
-    } catch (error) {
-      // Still show generic success per security best practice
-      setPasswordLinkSent(true);
-      setTimeout(() => setPasswordLinkSent(false), 5000);
-    } finally {
-      setSendingPasswordLink(false);
-    }
   };
 
   const handleExportEntries = async () => {
@@ -450,10 +407,9 @@ export default function Settings() {
             <div className="bg-muted/50 border border-border rounded-xl p-4 mb-4 space-y-3">
               <p className="text-sm font-medium text-foreground">Cancel your subscription</p>
               <div className="text-xs text-muted-foreground space-y-2">
-                <p><strong>Purchased on the web:</strong> Use the "Manage" button in the Subscription section above to cancel anytime.</p>
                 <p><strong>Purchased on iOS App Store:</strong> Go to Settings → [Your Name] → Subscriptions → Perk Up Daily → Cancel Subscription.</p>
                 <p><strong>Purchased on Google Play:</strong> Open Google Play Store → Account → Subscriptions → Perk Up Daily → Cancel Subscription.</p>
-                <p className="italic">Deleting your account will not automatically cancel your subscription. Please cancel first if you don't wish to be charged.</p>
+                <p className="italic">Web subscription management is not available yet.</p>
               </div>
             </div>
 
@@ -462,21 +418,6 @@ export default function Settings() {
               <p className="text-sm"><span className="text-muted-foreground">Email:</span> {user?.email}</p>
             </div>
             <Button
-              variant="outline"
-              size="sm"
-              className="mt-3 w-full justify-center"
-              onClick={handleSetPassword}
-              disabled={sendingPasswordLink}
-            >
-              {sendingPasswordLink ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Check className="w-4 h-4 mr-2" />}
-              {passwordLinkSent ? 'Reset link sent — check your email' : 'Set a password'}
-            </Button>
-            {passwordLinkSent && (
-              <p className="text-xs text-muted-foreground mt-2">
-                We've sent a link to {user?.email}. Open it to set a password you can use to sign in directly.
-              </p>
-            )}
-            <Button
               variant="ghost"
               size="sm"
               className="mt-3 text-destructive hover:text-destructive"
@@ -484,51 +425,9 @@ export default function Settings() {
             >
               Log out
             </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="mt-2 text-destructive hover:text-destructive"
-              onClick={() => setShowDeleteDialog(true)}
-            >
-              <Trash2 className="w-4 h-4 mr-2" /> Delete account
-            </Button>
-
-            <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Delete account</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This action cannot be undone. Your account and all associated data will be permanently deleted. Make sure you've cancelled your subscription first to avoid being charged.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <div className="flex gap-3 justify-end">
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={handleDeleteAccount}
-                    disabled={deleting}
-                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                  >
-                    {deleting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                    Delete permanently
-                  </AlertDialogAction>
-                </div>
-              </AlertDialogContent>
-            </AlertDialog>
-
-            {/* "Check your email" dialog after deletion request */}
-            <AlertDialog open={deleteRequested} onOpenChange={(open) => { if (!open) setDeleteRequested(false); }}>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Check your email</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    We've sent a confirmation link to {user?.email}. Click the link in the email to permanently delete your account and all associated data. The link expires in 24 hours.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <div className="flex justify-end">
-                  <AlertDialogAction>Got it</AlertDialogAction>
-                </div>
-              </AlertDialogContent>
-            </AlertDialog>
+            <p className="text-xs text-muted-foreground mt-3">
+              Need to close your account? Contact support so we can verify your request safely.
+            </p>
           </section>
 
           {/* Support */}

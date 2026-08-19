@@ -74,5 +74,9 @@
     "vite": "catalog:",
     "wouter": "^3.3.5",
     "zod": "catalog:"
+  },
+  "dependencies": {
+    "canvas-confetti": "^1.9.4",
+    "react-router-dom": "^7.18.2"
   }
 }

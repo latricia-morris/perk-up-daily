@@ -1,4 +1,4 @@
-modules = ["nodejs-24"]
+modules = ["nodejs-24", "python-base-3.13"]
 
 [deployment]
 router = "application"
@@ -18,3 +18,20 @@ expertMode = true
 [postMerge]
 path = "scripts/post-merge.sh"
 timeoutMs = 20000
+
+[userenv]
+
+[userenv.shared]
+EXPO_PUBLIC_REVENUECAT_ANDROID_API_KEY = "goog_NYpehtAYUyTKBvrwzvLguermqSM"
+EXPO_PUBLIC_REVENUECAT_IOS_API_KEY = "appl_mQYvBIuOxlIZGDmHfJwYXmNpGyZ"
+EXPO_PUBLIC_REVENUECAT_TEST_API_KEY = "test_iBOkhXbUUGjMoVyoCKbzTYWEMeF"
+REVENUECAT_APPLE_APP_STORE_APP_ID = "app34cd8d5997"
+REVENUECAT_GOOGLE_PLAY_STORE_APP_ID = "appf8ee851c75"
+REVENUECAT_PROJECT_ID = "proja1562727"
+REVENUECAT_TEST_STORE_APP_ID = "app4e4a11013a"
+
+[objectStorage]
+defaultBucketID = "replit-objstore-a00a672a-89f0-40ac-9548-72f64a458201"
+
+[nix]
+channel = "stable-25_05"

@@ -8,6 +8,10 @@ import bugsRouter from "./bugs";
 import neurocycleRouter from "./neurocycle";
 import neuralTrainingRouter from "./neural_training";
 import usersRouter from "./users";
+import aiRouter from "./ai";
+import functionsRouter from "./functions";
+import storageRouter from "./storage";
+import revenueCatRouter from "./revenuecat";
 
 const router: IRouter = Router();
 
@@ -20,5 +24,9 @@ router.use(bugsRouter);
 router.use(neurocycleRouter);
 router.use(neuralTrainingRouter);
 router.use(usersRouter);
+router.use(aiRouter);
+router.use(functionsRouter);
+router.use(storageRouter);
+router.use(revenueCatRouter);
 
 export default router;
