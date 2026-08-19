@@ -57,29 +57,65 @@ function buildMessage(user, content) {
   return `"${preview}"${attribution}`;
 }
 
-// ── CONTENT SELECTION (weighted rotation) ──────────────────────
-// ~15% reflection prompt → naturally yields 2-3 per week
-// ~35% personal entry
-// ~50% library content
-async function selectContent(base44, user, libraryItems, reflectionPrompts) {
+// ── CONTENT SELECTION (weighted rotation w/ 60-day recency) ─────
+// ~22% reflection prompt → naturally yields ~2-3 per week
+// ~22% personal entry
+// ~56% library content
+// Excludes any item already delivered to this user within the last 60 days.
+// If exclusion empties a pool, falls back to the least-recently-delivered item.
+async function selectContent(base44, user, libraryItems, reflectionPrompts, recentLogs) {
   const roll = Math.random();
 
-  // Try reflection prompt (~15% chance, only if prompts exist)
-  if (reflectionPrompts.length > 0 && roll < 0.15) {
-    return { type: 'reflection_prompt', prompt: pick(reflectionPrompts) };
+  // Build a Set of card IDs delivered to this user in the last 60 days,
+  // plus a map of id -> most recent delivery_date (for least-recent fallback).
+  const deliveredIds = new Set();
+  const lastDeliveredDate = {}; // id -> delivery_date (string)
+  for (const log of recentLogs) {
+    const id = log.featured_item_id;
+    if (!id) continue;
+    deliveredIds.add(id);
+    const existing = lastDeliveredDate[id];
+    if (!existing || log.delivery_date > existing) {
+      lastDeliveredDate[id] = log.delivery_date;
+    }
   }
 
-  // Try personal entry (~35% chance)
-  if (roll < 0.50) {
+  // Helper: pick a random unseen item from a pool, or fall back to the
+  // least-recently-delivered item when everything's been seen recently.
+  function pickFromPool(pool, getSourceId) {
+    if (pool.length === 0) return null;
+    const unseen = pool.filter(item => !deliveredIds.has(getSourceId(item)));
+    if (unseen.length > 0) return pick(unseen);
+    // Fallback: least-recently-delivered (smallest delivery_date)
+    let least = null;
+    let leastDate = null;
+    for (const item of pool) {
+      const id = getSourceId(item);
+      const date = lastDeliveredDate[id] || '0000-00-00'; // never delivered = oldest
+      if (!leastDate || date < leastDate) {
+        leastDate = date;
+        least = item;
+      }
+    }
+    return least;
+  }
+
+  // Try reflection prompt (~22% chance, only if prompts exist)
+  if (reflectionPrompts.length > 0 && roll < 0.22) {
+    const prompt = pickFromPool(reflectionPrompts, p => p.id);
+    if (prompt) return { type: 'reflection_prompt', prompt };
+  }
+
+  // Try personal entry (~22% chance)
+  if (roll < 0.44) {
     try {
       const entries = await base44.asServiceRole.entities.UserEntry.filter({
         created_by_id: user.id,
         status: 'active',
       });
       const personal = entries.filter(e => PERSONAL_TYPES.includes(e.entry_type));
-      const withPhotos = personal.filter(e => e.photo_url);
-      if (withPhotos.length > 0) return { type: 'personal', entry: pick(withPhotos) };
-      if (personal.length > 0) return { type: 'personal', entry: pick(personal) };
+      const entry = pickFromPool(personal, e => e.id);
+      if (entry) return { type: 'personal', entry };
     } catch (err) {
       console.log(`Failed to fetch personal entries for ${user.id}: ${err.message}`);
     }
@@ -100,7 +136,8 @@ async function selectContent(base44, user, libraryItems, reflectionPrompts) {
     filtered = libraryItems.filter(item => !item.is_christian || christianEnabled);
   }
   if (filtered.length === 0) return null;
-  return { type: 'library', item: pick(filtered) };
+  const item = pickFromPool(filtered, i => i.id);
+  return item ? { type: 'library', item } : null;
 }
 
 // ── MAIN HANDLER ───────────────────────────────────────────────
@@ -144,6 +181,11 @@ export default async function(req: Request): Promise<Response> {
     const todayLogs = await base44.asServiceRole.entities.DeliveryLog.filter({ delivery_date: today });
     const deliveredKeys = new Set(todayLogs.map(l => `${l.user_id}_${l.session_type}`));
 
+    // ── Date range for 60-day recency exclusion ──
+    // Filter DeliveryLog by created_date >= 60 days ago to cover every item
+    // delivered in the window (regardless of delivery_date string format).
+    const recencySince = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString();
+
     // ── For each session, query only users whose time matches the current window ──
     const sessions = [
       { key: 'morning', timeKey: 'morning_time', enabledKey: 'morning_enabled' },
@@ -176,7 +218,18 @@ export default async function(req: Request): Promise<Response> {
         if (deliveredKeys.has(logKey)) continue;
 
         try {
-          const content = await selectContent(base44, user, libraryItems, reflectionPrompts);
+          // Fetch this user's delivery logs from the last 60 days for recency exclusion.
+          let recentLogs = [];
+          try {
+            recentLogs = await base44.asServiceRole.entities.DeliveryLog.filter({
+              user_id: user.id,
+              created_date: { $gte: recencySince },
+            });
+          } catch (err) {
+            console.log(`Failed to fetch recent logs for ${user.id}: ${err.message}`);
+          }
+
+          const content = await selectContent(base44, user, libraryItems, reflectionPrompts, recentLogs);
           if (!content) {
             console.log(`No content available for user ${user.id} (${session.key})`);
             continue;
