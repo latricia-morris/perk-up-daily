@@ -3,20 +3,34 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Perk Up Daily API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: auth
+    description: Authentication
+  - name: entries
+    description: User journal entries
+  - name: library
+    description: App content library
+  - name: prompts
+    description: Reflection prompts
+  - name: bugs
+    description: Bug reports
+  - name: neurocycle
+    description: Neurocycle check-ins
+  - name: neural-training
+    description: Neural training content
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,13 +38,950 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      summary: Get current authenticated user
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthUser"
+        "401":
+          description: Unauthorized
+
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Login with email and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: Invalid credentials
+
+  /auth/register:
+    post:
+      operationId: register
+      tags: [auth]
+      summary: Register new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterInput"
+      responses:
+        "201":
+          description: Registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          description: Invalid input
+
+  /auth/logout:
+    post:
+      operationId: logout
+      tags: [auth]
+      summary: Logout current user
+      responses:
+        "200":
+          description: Logged out
+
+  /auth/update-me:
+    patch:
+      operationId: updateMe
+      tags: [auth]
+      summary: Update current user profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdate"
+      responses:
+        "200":
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthUser"
+        "401":
+          description: Unauthorized
+
+  /auth/forgot-password:
+    post:
+      operationId: forgotPassword
+      tags: [auth]
+      summary: Request password reset email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ForgotPasswordInput"
+      responses:
+        "200":
+          description: Reset email sent
+
+  /auth/reset-password:
+    post:
+      operationId: resetPassword
+      tags: [auth]
+      summary: Reset password with token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResetPasswordInput"
+      responses:
+        "200":
+          description: Password reset successful
+
+  /entries:
+    get:
+      operationId: listEntries
+      tags: [entries]
+      summary: List user entries
+      parameters:
+        - name: entry_type
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserEntry"
+    post:
+      operationId: createEntry
+      tags: [entries]
+      summary: Create a new entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserEntryInput"
+      responses:
+        "201":
+          description: Created entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserEntry"
+
+  /entries/{id}:
+    patch:
+      operationId: updateEntry
+      tags: [entries]
+      summary: Update an entry
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserEntryUpdate"
+      responses:
+        "200":
+          description: Updated entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserEntry"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteEntry
+      tags: [entries]
+      summary: Delete an entry
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
+
+  /library:
+    get:
+      operationId: listLibrary
+      tags: [library]
+      summary: List app library items
+      parameters:
+        - name: content_type
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Library items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LibraryItem"
+    post:
+      operationId: createLibraryItem
+      tags: [library]
+      summary: Create a library item (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LibraryItemInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LibraryItem"
+
+  /library/bulk:
+    post:
+      operationId: bulkCreateLibraryItems
+      tags: [library]
+      summary: Bulk create library items (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LibraryBulkInput"
+      responses:
+        "201":
+          description: Created items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LibraryItem"
+
+  /library/{id}:
+    patch:
+      operationId: updateLibraryItem
+      tags: [library]
+      summary: Update a library item (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LibraryItemUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LibraryItem"
+    delete:
+      operationId: deleteLibraryItem
+      tags: [library]
+      summary: Delete a library item (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /prompts:
+    get:
+      operationId: listPrompts
+      tags: [prompts]
+      summary: List reflection prompts
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Prompts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ReflectionPrompt"
+    post:
+      operationId: createPrompt
+      tags: [prompts]
+      summary: Create a reflection prompt (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReflectionPromptInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReflectionPrompt"
+
+  /prompts/{id}:
+    patch:
+      operationId: updatePrompt
+      tags: [prompts]
+      summary: Update a reflection prompt (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReflectionPromptUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReflectionPrompt"
+    delete:
+      operationId: deletePrompt
+      tags: [prompts]
+      summary: Delete a reflection prompt (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /bugs:
+    get:
+      operationId: listBugReports
+      tags: [bugs]
+      summary: List bug reports (admin)
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Bug reports
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BugReport"
+    post:
+      operationId: createBugReport
+      tags: [bugs]
+      summary: Submit a bug report
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BugReportInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BugReport"
+
+  /bugs/{id}:
+    patch:
+      operationId: updateBugReport
+      tags: [bugs]
+      summary: Update bug report status (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BugReportUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BugReport"
+    delete:
+      operationId: deleteBugReport
+      tags: [bugs]
+      summary: Delete a bug report (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /neurocycle:
+    get:
+      operationId: listNeurocycleCheckIns
+      tags: [neurocycle]
+      summary: List user neurocycle check-ins
+      responses:
+        "200":
+          description: Check-ins
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NeurocycleCheckIn"
+    post:
+      operationId: createNeurocycleCheckIn
+      tags: [neurocycle]
+      summary: Create a neurocycle check-in
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NeurocycleCheckInInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NeurocycleCheckIn"
+
+  /neurocycle/{id}:
+    patch:
+      operationId: updateNeurocycleCheckIn
+      tags: [neurocycle]
+      summary: Update a neurocycle check-in
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NeurocycleCheckInUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NeurocycleCheckIn"
+
+  /neural-training:
+    get:
+      operationId: listNeuralTraining
+      tags: [neural-training]
+      summary: List neural training content
+      parameters:
+        - name: exercise_type
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Neural training items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NeuralTrainingItem"
+
+  /users:
+    get:
+      operationId: listUsers
+      tags: [auth]
+      summary: List all users (admin)
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AuthUser"
+
+  /users/{id}:
+    patch:
+      operationId: updateUser
+      tags: [auth]
+      summary: Update a user (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdate"
+      responses:
+        "200":
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthUser"
+
 components:
   schemas:
     HealthStatus:
       type: object
+      required: [status]
       properties:
         status:
           type: string
-      required:
-        - status
 
+    AuthUser:
+      type: object
+      required: [id, email]
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        firstName:
+          type: ["string", "null"]
+        lastName:
+          type: ["string", "null"]
+        fullName:
+          type: ["string", "null"]
+        profilePicture:
+          type: ["string", "null"]
+        phone:
+          type: ["string", "null"]
+        isAdmin:
+          type: boolean
+        isPremium:
+          type: boolean
+        birthday:
+          type: ["string", "null"]
+        onboardingCompleted:
+          type: boolean
+        createdAt:
+          type: string
+
+    AuthResponse:
+      type: object
+      required: [token, user]
+      properties:
+        token:
+          type: string
+        user:
+          $ref: "#/components/schemas/AuthUser"
+
+    LoginInput:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    RegisterInput:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+
+    UserUpdate:
+      type: object
+      properties:
+        firstName:
+          type: ["string", "null"]
+        lastName:
+          type: ["string", "null"]
+        fullName:
+          type: ["string", "null"]
+        profilePicture:
+          type: ["string", "null"]
+        phone:
+          type: ["string", "null"]
+        birthday:
+          type: ["string", "null"]
+        onboardingCompleted:
+          type: boolean
+        isPremium:
+          type: boolean
+        dailyCheckInEnabled:
+          type: boolean
+        notificationsEnabled:
+          type: boolean
+
+    ForgotPasswordInput:
+      type: object
+      required: [email]
+      properties:
+        email:
+          type: string
+
+    ResetPasswordInput:
+      type: object
+      required: [resetToken, newPassword]
+      properties:
+        resetToken:
+          type: string
+        newPassword:
+          type: string
+
+    UserEntry:
+      type: object
+      required: [id, userId, entryType, createdAt]
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        entryType:
+          type: string
+        title:
+          type: ["string", "null"]
+        content:
+          type: ["string", "null"]
+        metadata:
+          type: ["object", "null"]
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    UserEntryInput:
+      type: object
+      required: [entryType]
+      properties:
+        entryType:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        metadata:
+          type: object
+
+    UserEntryUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+        metadata:
+          type: object
+
+    LibraryItem:
+      type: object
+      required: [id, contentType, content, status]
+      properties:
+        id:
+          type: integer
+        contentType:
+          type: string
+        title:
+          type: ["string", "null"]
+        content:
+          type: string
+        author:
+          type: ["string", "null"]
+        category:
+          type: ["string", "null"]
+        tags:
+          type: ["array", "null"]
+          items:
+            type: string
+        status:
+          type: string
+        sortOrder:
+          type: integer
+        imageUrl:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    LibraryItemInput:
+      type: object
+      required: [contentType, content]
+      properties:
+        contentType:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        author:
+          type: string
+        category:
+          type: string
+        status:
+          type: string
+        sortOrder:
+          type: integer
+        imageUrl:
+          type: string
+
+    LibraryItemUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+        author:
+          type: string
+        category:
+          type: string
+        status:
+          type: string
+        sortOrder:
+          type: integer
+        imageUrl:
+          type: string
+
+    LibraryBulkInput:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/LibraryItemInput"
+
+    ReflectionPrompt:
+      type: object
+      required: [id, prompt, status]
+      properties:
+        id:
+          type: integer
+        prompt:
+          type: string
+        category:
+          type: ["string", "null"]
+        status:
+          type: string
+        createdAt:
+          type: string
+
+    ReflectionPromptInput:
+      type: object
+      required: [prompt]
+      properties:
+        prompt:
+          type: string
+        category:
+          type: string
+        status:
+          type: string
+
+    ReflectionPromptUpdate:
+      type: object
+      properties:
+        prompt:
+          type: string
+        category:
+          type: string
+        status:
+          type: string
+
+    BugReport:
+      type: object
+      required: [id, description, status]
+      properties:
+        id:
+          type: integer
+        userId:
+          type: ["integer", "null"]
+        description:
+          type: string
+        status:
+          type: string
+        adminNotes:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    BugReportInput:
+      type: object
+      required: [description]
+      properties:
+        description:
+          type: string
+
+    BugReportUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+        adminNotes:
+          type: string
+
+    NeurocycleCheckIn:
+      type: object
+      required: [id, userId, day]
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        day:
+          type: integer
+        stepData:
+          type: ["object", "null"]
+        completedAt:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    NeurocycleCheckInInput:
+      type: object
+      required: [day]
+      properties:
+        day:
+          type: integer
+        stepData:
+          type: object
+        completedAt:
+          type: string
+
+    NeurocycleCheckInUpdate:
+      type: object
+      properties:
+        day:
+          type: integer
+        stepData:
+          type: object
+        completedAt:
+          type: string
+
+    NeuralTrainingItem:
+      type: object
+      required: [id, title, exerciseType, status]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: ["string", "null"]
+        exerciseType:
+          type: string
+        content:
+          type: ["string", "null"]
+        videoUrl:
+          type: ["string", "null"]
+        imageUrl:
+          type: ["string", "null"]
+        durationMinutes:
+          type: ["integer", "null"]
+        status:
+          type: string
+        sortOrder:
+          type: integer
+        createdAt:
+          type: string

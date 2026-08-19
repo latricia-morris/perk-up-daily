@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Perk Up Daily"
+description = "A mental wellness and journaling web app that helps users build daily mindfulness habits through guided reflections, breathing exercises, vision goals, neurocycle training, and a personal content vault. Designed for individuals seeking structured tools to elevate their mental clarity, resilience, and daily performance."
+version = "1.0.0"
+id = "artifacts/perk-up"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 18935
+
+[services.development]
+run = "pnpm --filter @workspace/perk-up run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/perk-up", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/perk-up/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "18935"
+BASE_PATH = "/"

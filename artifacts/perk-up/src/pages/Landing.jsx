@@ -1,0 +1,317 @@
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import ScienceMatrix from '@/components/landing/ScienceMatrix';
+
+const IMG = {
+  hero: 'https://media.base44.com/images/public/6a312911bcddb0806c388af8/1ad7c1fa6_soloiphonetilt.png',
+  founder: 'https://media.base44.com/images/public/6a312911bcddb0806c388af8/8873b56bc_DSC_2093sunny.png',
+  trio: 'https://media.base44.com/images/public/6a312911bcddb0806c388af8/82c22f4e6_iphonetrio.png',
+  cascade: 'https://media.base44.com/images/public/6a312911bcddb0806c388af8/8cdac8891_iphonecascade.png',
+  duo: 'https://media.base44.com/images/public/6a312911bcddb0806c388af8/99c54dd47_iphoneduo.png',
+  visions: 'https://media.base44.com/images/public/6a312911bcddb0806c388af8/4370f9e3f_iphoneisions.png',
+  logo: 'https://media.base44.com/images/public/6a312911bcddb0806c388af8/ad5333c2c_PerkUpKingfisher.png',
+};
+
+const RESET_PILLS = [
+  { label: 'CHILL', color: '#219EBC' },
+  { label: 'FOCUS', color: '#BA1650' },
+  { label: 'SMILE', color: '#E8A838' },
+  { label: 'ENERGIZE', color: '#F95826' },
+  { label: 'RECALIBRATE', color: '#5C3B8F' },
+  { label: 'WIND DOWN', color: '#8ECAE6' },
+];
+
+const SIDE_EFFECTS = [
+  'Finding yourself smiling for no reason at all',
+  'Remembering how incredibly loved you actually are',
+  "Realizing your value isn't tied to your productivity",
+  'Waking up with a peaceful, clear mind',
+  'Breaking free from the toxic habit of comparison',
+  'Experiencing moments of deep, unshakeable gratitude',
+];
+
+const INK = '#2c1e0f';
+const MUTE = '#7a5c3a';
+const GOLD = '#E8A838';
+const ORANGE = '#F95826';
+const MAGENTA = '#BA1650';
+const PANEL = 'rgba(252,251,247,0.7)';
+const SUNRISE_BTN = 'linear-gradient(135deg, #BA1650 0%, #F95826 45%, #E8A838 100%)';
+
+export default function Landing() {
+  return (
+    <div className="min-h-screen" style={{
+      background: '#fef9f2',
+      backgroundImage: 'radial-gradient(ellipse 90% 55% at 65% 18%, rgba(255,243,210,0.92) 0%, rgba(253,232,175,0.28) 52%, transparent 78%), radial-gradient(ellipse 55% 40% at 8% 72%, rgba(255,236,170,0.38) 0%, transparent 70%)',
+    }}>
+
+      {/* ── NAV ─────────────────────────────────────────────────────── */}
+      <header className="sticky top-0 z-50 backdrop-blur-md" style={{ background: 'rgba(254,249,242,0.72)', borderBottom: '1px solid rgba(44,30,15,0.06)' }}>
+        <div className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <img src={IMG.logo} alt="Perk Up Daily" className="w-8 h-8 object-contain" />
+            <span className="text-base font-semibold uppercase tracking-[0.18rem]" style={{ color: INK, fontFamily: "'Montserrat', sans-serif" }}>Perk Up Daily</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <Link to="/login"><Button variant="ghost" size="sm" style={{ color: MUTE }}>Log in</Button></Link>
+            <Link to="/onboarding"><Button size="sm" className="border-none" style={{ background: SUNRISE_BTN, color: '#FFFCF2' }}>Get Started</Button></Link>
+          </div>
+        </div>
+      </header>
+
+      {/* ── 1. HERO ────────────────────────────────────────────────── */}
+      <section className="min-h-[calc(100vh-56px)] flex items-center">
+        <div className="max-w-6xl mx-auto px-6 py-16 md:py-24 w-full">
+          <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+            <div className="flex-1 max-w-xl text-center lg:text-left">
+              <p className="text-sm font-semibold mb-3" style={{ color: ORANGE }}>Backed by Science. Powered by Positivity.</p>
+              <h1 className="font-display text-4xl md:text-5xl font-semibold leading-tight mb-4" style={{ color: INK }}>
+                Capture the good stuff. Let it find you again.
+              </h1>
+              <p className="text-base md:text-lg leading-relaxed mb-6" style={{ color: MUTE }}>
+                Perk Up Daily gently resurfaces your best memories, victories, and moments of faith throughout your day—right when you need them most.
+              </p>
+              <a href="#pricing">
+                <Button size="lg" className="text-base px-8 border-none" style={{ background: SUNRISE_BTN, color: '#FFFCF2' }}>
+                  Claim Founding Membership <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </a>
+            </div>
+            <div className="w-full max-w-[240px] shrink-0">
+              <motion.img
+                src={IMG.hero}
+                alt="Perk Up Daily App Display"
+                className="w-full"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 2. FOUNDER'S STORY ─────────────────────────────────────── */}
+      <section id="story">
+        <div className="max-w-6xl mx-auto px-6 py-10 md:py-14">
+          <div className="flex flex-col lg:flex-row-reverse items-center gap-8 lg:gap-12">
+            <div className="lg:w-2/3 lg:pl-8">
+              <p className="text-sm font-semibold mb-2" style={{ color: MAGENTA }}>Why I Built This</p>
+              <h2 className="font-display text-2xl md:text-3xl font-semibold leading-tight mb-5" style={{ color: INK }}>
+                I spent decades in the dark. Then I learned the brain can change.
+              </h2>
+              <div className="space-y-4 text-sm md:text-base leading-relaxed" style={{ color: '#4a3520' }}>
+                <p>I spent years feeling like my mind was constantly stuck on a loop of stress and survival mode. That's when I discovered the reality of neuroplasticity—the beautiful scientific fact that our brains aren't fixed. We can actually retrain our default paths.</p>
+                <p>But knowing the science wasn't enough. I needed a practical, beautiful space to actually install the good things throughout my busy days. When I couldn't find an app that treated my victories, blessings, and moments of faith with the dignity they deserved, I decided to build it myself.</p>
+                <p>Perk Up Daily is the result of that journey. It's a space designed to help you break free from passive scrolling, step out of the dark, and actively program your mind to notice the light.</p>
+                <p className="font-semibold" style={{ color: INK }}>— LaTricia, Founder</p>
+              </div>
+            </div>
+            <div className="lg:w-1/3">
+              <img
+                src={IMG.founder}
+                alt="LaTricia, Founder of Perk Up Daily"
+                className="w-56 h-56 md:w-72 md:h-72 object-cover rounded-full mx-auto"
+                style={{ border: `3px solid ${GOLD}`, boxShadow: '0 4px 20px rgba(44,30,15,0.08)' }}
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 3. SCIENCE MATRIX (with brain) ─────────────────────────── */}
+      <ScienceMatrix />
+
+      {/* ── 4. CORE MODULES ────────────────────────────────────────── */}
+      <section>
+        <div className="max-w-6xl mx-auto px-6 py-10 md:py-14">
+
+          {/* Row A: Text left, image right */}
+          <div className="flex flex-col md:flex-row-reverse items-center gap-8 md:gap-12 mb-10 md:mb-14">
+            <div className="md:w-1/2">
+              <img src={IMG.cascade} alt="Identity Upgrades View" className="w-full max-w-sm mx-auto" style={{ filter: 'drop-shadow(0px 30px 50px rgba(26,26,26,0.08))' }} />
+            </div>
+            <div className="md:w-1/2 md:pr-8">
+              <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: GOLD }}>Elevate Your Life</p>
+              <h2 className="font-display text-2xl md:text-3xl font-semibold mb-3" style={{ color: INK }}>Upgrade Your Identity</h2>
+              <p className="text-sm md:text-base leading-relaxed" style={{ color: MUTE }}>
+                Who will you choose to be? Track your core mental shifts, tag your breakthroughs, and attach memory-jogger photos directly into your stream so your mind stays anchored to your growth path rather than default stress scripts.
+              </p>
+            </div>
+          </div>
+
+          {/* Row B: Text left, image right */}
+                  <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+            <div className="md:w-1/2">
+              <img src={IMG.duo} alt="Daily Rhythm Engine" className="w-full max-w-sm mx-auto" style={{ filter: 'drop-shadow(0px 30px 50px rgba(26,26,26,0.08))' }} />
+            </div>
+                      <div className="md:w-1/2 md:pl-8">
+              <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: MAGENTA }}>Custom Data Filtering</p>
+              <h2 className="font-display text-2xl md:text-3xl font-semibold mb-3" style={{ color: INK }}>Set Your Own Daily Rhythm</h2>
+              <p className="text-sm md:text-base leading-relaxed" style={{ color: MUTE }}>
+                Toggle faith-based content on or off completely dynamically. Build a highly curated private archive of blessings, life victories, and personalized micro-stories that belong entirely to you.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 5. MILESTONE REVEAL ─────────────────────────────────────── */}
+      <section>
+        <div className="max-w-6xl mx-auto px-6 py-10 md:py-14">
+          <div className="flex flex-col md:flex-row-reverse items-center gap-8 md:gap-12">
+            <div className="md:w-1/2">
+              <img src={IMG.visions} alt="Interactive Milestone Overlays" className="w-full max-w-sm mx-auto" style={{ filter: 'drop-shadow(0px 30px 50px rgba(26,26,26,0.08))' }} />
+            </div>
+            <div className="md:w-1/2 md:pr-8">
+              <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: ORANGE }}>From Vision to Reality</p>
+              <h2 className="font-display text-2xl md:text-3xl font-semibold mb-3" style={{ color: INK }}>Turn Stepping Stones into Milestones</h2>
+              <p className="text-sm md:text-base leading-relaxed" style={{ color: MUTE }}>
+                Your goals shouldn't sit hidden in a buried text note. Interact with your milestones via live UI tracking states, update completion stages instantly, and auto-populate your personal photos directly onto custom-branded graphics ready to share.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 6. RESET HUB ────────────────────────────────────────────── */}
+      <section>
+        <div className="max-w-3xl mx-auto px-6 py-10 md:py-14 text-center">
+          <h2 className="font-display text-2xl md:text-3xl font-semibold mb-3" style={{ color: INK }}>
+            Hit your reset button
+          </h2>
+          <p className="text-sm md:text-base leading-relaxed mb-6 max-w-lg mx-auto" style={{ color: MUTE }}>
+            When stress hits or your mind starts spinning, take immediate control. Select your target state to clear structural loops in under two minutes.
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-3 mb-8">
+            {RESET_PILLS.map(pill => (
+              <a
+                key={pill.label}
+                href="#pricing"
+                className="px-5 py-3 rounded-full text-xs font-semibold tracking-widest transition-all hover:translate-y-[-2px]"
+                style={{ border: `1px solid ${pill.color}44`, color: INK }}
+                onMouseEnter={e => { e.currentTarget.style.background = pill.color; e.currentTarget.style.color = '#FFFCF2'; e.currentTarget.style.borderColor = pill.color; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = INK; e.currentTarget.style.borderColor = `${pill.color}44`; }}
+              >
+                {pill.label}
+              </a>
+            ))}
+          </div>
+          <img
+            src={IMG.trio}
+            alt="Perk Up Daily Interactive Reset Interface"
+            className="w-full max-w-2xl mx-auto"
+            style={{ filter: 'drop-shadow(0px 25px 45px rgba(26,26,26,0.06))' }}
+          />
+        </div>
+      </section>
+
+      {/* ── 7. PRICING ─────────────────────────────────────────────── */}
+      <section id="pricing">
+        <div className="max-w-3xl mx-auto px-6 py-10 md:py-14 text-center">
+          <h2 className="font-display text-2xl md:text-3xl font-semibold mb-2" style={{ color: INK }}>
+            Start training your brain today.
+          </h2>
+          <p className="text-sm md:text-base mb-8 max-w-lg mx-auto" style={{ color: MUTE }}>
+            Simple, clean packaging. Premium access built entirely free of predatory tracking configurations.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-2xl mx-auto">
+            {/* Founding Member */}
+            <div className="rounded-2xl p-6 md:p-8 flex flex-col text-left" style={{ background: PANEL, backdropFilter: 'blur(12px)', border: `2px solid ${GOLD}`, boxShadow: '0px 8px 30px rgba(232,168,56,0.1)' }}>
+              <p className="text-sm font-semibold mb-1" style={{ color: GOLD }}>Founding Member</p>
+              <div className="flex items-baseline gap-1 mb-3">
+                <span className="text-4xl font-display font-bold" style={{ color: INK }}>$4.99</span>
+                <span className="text-sm" style={{ color: MUTE }}>/ mo</span>
+              </div>
+              <p className="text-sm mb-6 leading-relaxed" style={{ color: '#4a3520' }}>
+                Lock in this exact introductory pricing layer for the lifetime of your platform profile.
+              </p>
+              <Link to="/onboarding" className="mt-auto">
+                <Button className="w-full text-base border-none" style={{ background: SUNRISE_BTN, color: '#FFFCF2' }}>Secure Founding Status</Button>
+              </Link>
+            </div>
+
+            {/* Standard Access */}
+            <div className="rounded-2xl p-6 md:p-8 flex flex-col text-left" style={{ background: PANEL, backdropFilter: 'blur(12px)', border: '1px solid rgba(44,30,15,0.08)' }}>
+              <p className="text-sm font-semibold mb-1" style={{ color: MUTE }}>Standard Access</p>
+              <div className="flex items-baseline gap-1 mb-3">
+                <span className="text-4xl font-display font-bold" style={{ color: INK }}>$7.99</span>
+                <span className="text-sm" style={{ color: MUTE }}>/ mo</span>
+              </div>
+              <p className="text-sm mb-6 leading-relaxed" style={{ color: '#4a3520' }}>
+                Complete access across all library modules, updates, and future state tools.
+              </p>
+              <Link to="/onboarding" className="mt-auto">
+                <Button variant="outline" className="w-full text-base">Start Standard Plan</Button>
+              </Link>
+            </div>
+          </div>
+
+          <p className="text-xs mt-6" style={{ color: '#908F8A' }}>
+            All premium memberships begin with an unrestricted 7-day trial period. Cancel via a single tap inside system profiles.
+          </p>
+        </div>
+      </section>
+
+      {/* ── 8. SIDE EFFECTS & RISK (85% width, two columns) ─────────── */}
+      <section>
+        <div className="w-[85%] max-w-5xl mx-auto px-6 py-10 md:py-14">
+          <div className="rounded-2xl p-6 md:p-10" style={{ background: PANEL, backdropFilter: 'blur(12px)', border: '1px solid rgba(44,30,15,0.08)', boxShadow: '0 4px 20px rgba(44,30,15,0.04)' }}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+              {/* Left: Side Effects */}
+              <div>
+                <h3 className="font-display text-2xl md:text-3xl font-semibold mb-4" style={{ background: SUNRISE_BTN, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+                  Possible side effects may include:
+                </h3>
+                <ul className="space-y-2.5">
+                  {SIDE_EFFECTS.map((item, i) => (
+                    <li key={i} className="flex gap-3 text-sm" style={{ color: '#4a3520' }}>
+                      <span style={{ color: ORANGE }} className="shrink-0 font-semibold">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              {/* Right: No Risk */}
+              <div className="md:border-l md:pl-12" style={{ borderColor: 'rgba(44,30,15,0.08)' }}>
+                <h3 className="font-display text-2xl md:text-3xl font-semibold mb-4" style={{ background: SUNRISE_BTN, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+                  No risk. All rewards.
+                </h3>
+                <p className="text-sm leading-relaxed mb-6" style={{ color: MUTE }}>
+                  Try Perk Up Daily free for 7 days. If your mind doesn't feel lighter, your focus sharper, and your heart more anchored, cancel with a single tap inside your settings. Your peace belongs entirely to you.
+                </p>
+                <Link to="/onboarding">
+                  <Button size="lg" className="border-none" style={{ background: SUNRISE_BTN, color: '#FFFCF2' }}>
+                    Start free trial <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FOOTER ─────────────────────────────────────────────────── */}
+      <footer className="py-8" style={{ borderTop: '1px solid rgba(44,30,15,0.08)' }}>
+        <div className="max-w-6xl mx-auto px-6">
+          <p className="text-xs italic leading-relaxed max-w-2xl mx-auto text-center mb-6" style={{ color: '#908F8A' }}>
+            Disclaimer: Perk Up Daily offers educational utilities and interactive tools for cognitive pacing and neuro-somatic regulation. This software does not provide clinical diagnoses, medical therapy, or neurological treatment.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="text-sm" style={{ color: '#c4a882' }}>2026 Perk Up Daily. All rights reserved.</p>
+            <div className="flex gap-6 text-sm" style={{ color: '#c4a882' }}>
+              <Link to="/support" className="hover:text-foreground transition-colors">Support</Link>
+              <Link to="/disclaimer" className="hover:text-foreground transition-colors">Disclaimer</Link>
+              <Link to="/privacy-policy" className="hover:text-foreground transition-colors">Privacy</Link>
+              <Link to="/terms" className="hover:text-foreground transition-colors">Terms</Link>
+              <a href="mailto:perkupdaily@gmail.com" className="hover:text-foreground transition-colors">Contact</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
