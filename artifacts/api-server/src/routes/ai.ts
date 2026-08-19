@@ -61,10 +61,10 @@ router.post("/ai/invoke", requireAuth, async (req, res): Promise<void> => {
   try {
     const isJson = !!response_json_schema;
     const completion = await client.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-5.6-luna",
       messages: [{ role: "user", content: prompt }],
       ...(isJson ? { response_format: { type: "json_object" } } : {}),
-      max_tokens: 1024,
+      max_completion_tokens: 1024,
     });
 
     const content = completion.choices[0]?.message?.content ?? "";
@@ -119,10 +119,10 @@ Return a valid JSON object matching the schema. If the file is a CSV, parse each
 Return only valid JSON, no explanation.`;
 
     const completion = await client.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-5.6-luna",
       messages: [{ role: "user", content: prompt }],
       response_format: { type: "json_object" },
-      max_tokens: 4096,
+      max_completion_tokens: 4096,
     });
 
     const content = completion.choices[0]?.message?.content ?? "{}";
