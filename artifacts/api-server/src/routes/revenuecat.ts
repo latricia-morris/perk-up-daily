@@ -49,9 +49,14 @@ router.post("/webhooks/revenuecat", async (req, res): Promise<void> => {
     entitlementIds.includes("premium") &&
     (!expiresAtMs || expiresAtMs > Date.now());
 
+  const existingMetadata = (existing.metadata as Record<string, unknown> | null) ?? {};
+  const stripeIsPremium =
+    existingMetadata.stripe_subscription_status === "active" ||
+    existingMetadata.stripe_subscription_status === "trialing";
   const metadata = {
-    ...((existing.metadata as Record<string, unknown> | null) ?? {}),
-    subscription_status: hasUnexpiredPremium ? "active" : "cancelled",
+    ...existingMetadata,
+    subscription_status: hasUnexpiredPremium || stripeIsPremium ? "active" : "cancelled",
+    revenuecat_subscription_status: hasUnexpiredPremium ? "active" : "cancelled",
     revenuecat_product_id: event?.product_id ?? null,
     revenuecat_store: event?.store ?? null,
     revenuecat_event_type: event?.type ?? null,
@@ -61,7 +66,7 @@ router.post("/webhooks/revenuecat", async (req, res): Promise<void> => {
 
   await db
     .update(usersTable)
-    .set({ isPremium: hasUnexpiredPremium, metadata })
+    .set({ isPremium: hasUnexpiredPremium || stripeIsPremium, metadata })
     .where(eq(usersTable.id, userId));
 
   res.status(200).json({ received: true });

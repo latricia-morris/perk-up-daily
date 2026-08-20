@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Check, Loader2, Download, LifeBuoy, ExternalLink } from 'lucide-react';
+import { Check, Loader2, Download, LifeBuoy, ExternalLink, CreditCard } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { MobileSelect } from '@/components/ui/mobile-select';
 import LegalLinks from '@/components/shared/LegalLinks';
@@ -18,6 +18,10 @@ export default function Settings() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const [billingStatus, setBillingStatus] = useState(null);
+  const [billingLoading, setBillingLoading] = useState(true);
+  const [billingError, setBillingError] = useState('');
+  const [openingPortal, setOpeningPortal] = useState(false);
   const { theme, setTheme } = useTheme();
 
   const [prefs, setPrefs] = useState({
@@ -58,7 +62,23 @@ export default function Settings() {
        });
       if (u.theme) setTheme(u.theme);
     });
+    base44.billing.status()
+      .then(setBillingStatus)
+      .catch(error => setBillingError(error.message || 'Unable to load web subscription status.'))
+      .finally(() => setBillingLoading(false));
   }, []);
+
+  const handleBillingPortal = async () => {
+    setOpeningPortal(true);
+    setBillingError('');
+    try {
+      const session = await base44.billing.openPortal();
+      window.location.assign(session.url);
+    } catch (error) {
+      setBillingError(error.message || 'Unable to open billing management.');
+      setOpeningPortal(false);
+    }
+  };
 
   const toggleCategory = (slug) => {
     setPrefs(prev => ({
@@ -373,12 +393,40 @@ export default function Settings() {
           <section>
             <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4">Subscription</h2>
             <div className="bg-card border border-border rounded-xl p-4">
-              <div>
-                <p className="text-sm font-medium text-foreground">Mobile subscriptions</p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Premium subscriptions are planned for future mobile apps. Purchases and billing management are not available on the web preview.
-                </p>
-              </div>
+              {billingLoading ? (
+                <div className="flex justify-center py-2"><Loader2 className="w-4 h-4 animate-spin text-primary" /></div>
+              ) : billingStatus?.isPremium ? (
+                <div className="space-y-3">
+                  <div className="flex gap-3">
+                    <CreditCard className="w-5 h-5 text-primary shrink-0" />
+                    <div>
+                      <p className="text-sm font-medium text-foreground">
+                        Web subscription {billingStatus.cancelAtPeriodEnd ? 'ending' : 'active'}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {billingStatus.accessEndsAt
+                          ? `${billingStatus.cancelAtPeriodEnd ? 'Access ends' : 'Renews'} ${new Date(billingStatus.accessEndsAt).toLocaleDateString()}.`
+                          : 'Your subscription is active.'}
+                      </p>
+                    </div>
+                  </div>
+                  <Button variant="outline" size="sm" className="w-full" onClick={handleBillingPortal} disabled={openingPortal}>
+                    {openingPortal ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                    Manage web subscription
+                  </Button>
+                </div>
+              ) : (
+                <div>
+                  <p className="text-sm font-medium text-foreground">No active web subscription</p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Manage a web plan from the Premium page. Native purchases will be managed through their app stores.
+                  </p>
+                  <Button variant="outline" size="sm" className="w-full mt-3" onClick={() => { window.location.href = '/paywall'; }}>
+                    View web plans
+                  </Button>
+                </div>
+              )}
+              {billingError && <p className="text-xs text-destructive mt-3">{billingError}</p>}
             </div>
           </section>
 
@@ -406,8 +454,8 @@ export default function Settings() {
             <div className="bg-muted/50 border border-border rounded-xl p-4 mb-4 space-y-3">
               <p className="text-sm font-medium text-foreground">Cancel your subscription</p>
               <div className="text-xs text-muted-foreground space-y-2">
-                <p>When mobile subscriptions are available, iOS purchases will be managed in the App Store and Android purchases in Google Play.</p>
-                <p className="italic">Web subscription management is not available.</p>
+                <p>Web subscriptions can be updated or cancelled through the billing portal above.</p>
+                <p className="italic">Native purchases will be managed in the App Store or Google Play.</p>
               </div>
             </div>
 

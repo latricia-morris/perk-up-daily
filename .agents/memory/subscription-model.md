@@ -1,10 +1,10 @@
 ---
 name: Web and mobile subscription model
-description: Product decision governing paid-access messaging and route behavior.
+description: Product decision governing web Stripe and native RevenueCat subscription behavior.
 ---
 
-Web access must remain free for every authenticated user. Premium purchases, billing management, and cancellation belong only to a future native mobile release, not to web UI or API flows.
+Web subscriptions are enabled through Stripe with monthly and annual plans from the connected Stripe product. Native mobile purchases remain separate through RevenueCat. A subscription from either provider can grant premium access, and a cancellation from one provider must not revoke access still granted by the other.
 
-**Why:** The web artifact has no checkout or mobile billing surface, and misleading price, trial, billing, or entitlement-gate claims would block users or promise unavailable behavior.
+**Why:** The product decision changed to support direct web checkout while retaining native app-store billing.
 
-**How to apply:** Do not add web checkout, subscription gating, pricing promises, billing-management controls, or cancellation flows unless the product decision is explicitly changed. Describe premium functionality as future native mobile functionality.
+**How to apply:** Keep Stripe customer and subscription references separate from RevenueCat metadata. Surface web billing management only for Stripe subscriptions; native purchase messaging must continue to point to the relevant app store.

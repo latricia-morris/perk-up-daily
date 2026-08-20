@@ -1,1 +1,2 @@
-- [Web and mobile subscription model](subscription-model.md) — web access remains free; premium purchasing belongs only to a future native mobile release.
+- [Web and mobile subscription model](subscription-model.md) — Stripe powers web premium; RevenueCat remains the separate native purchase path.
+- [Stripe connection credentials](stripe-connection-credentials.md) — web Checkout needs a server-exposed Stripe API key, never a key pasted in chat.

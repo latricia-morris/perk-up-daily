@@ -14,6 +14,8 @@ export const usersTable = pgTable("users", {
   isAdmin: boolean("is_admin").notNull().default(false),
   isPremium: boolean("is_premium").notNull().default(false),
   premiumUntil: timestamp("premium_until", { withTimezone: true }),
+  stripeCustomerId: text("stripe_customer_id"),
+  stripeSubscriptionId: text("stripe_subscription_id"),
   birthday: text("birthday"),
   dailyCheckInEnabled: boolean("daily_check_in_enabled").notNull().default(true),
   notificationsEnabled: boolean("notifications_enabled").notNull().default(true),

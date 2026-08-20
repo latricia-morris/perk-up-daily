@@ -12,6 +12,7 @@ import aiRouter from "./ai";
 import functionsRouter from "./functions";
 import storageRouter from "./storage";
 import revenueCatRouter from "./revenuecat";
+import billingRouter from "./billing";
 
 const router: IRouter = Router();
 
@@ -28,5 +29,6 @@ router.use(aiRouter);
 router.use(functionsRouter);
 router.use(storageRouter);
 router.use(revenueCatRouter);
+router.use(billingRouter);
 
 export default router;

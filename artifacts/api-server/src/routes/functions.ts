@@ -8,6 +8,7 @@ import { appLibraryTable, db, userEntriesTable, usersTable } from "@workspace/db
 import { eq, desc } from "drizzle-orm";
 import { requireAuth } from "../lib/auth";
 import { logger } from "../lib/logger";
+import { createCheckoutSessionForUser } from "../lib/stripeBilling";
 
 const router: Router = Router();
 
@@ -156,10 +157,13 @@ router.post("/functions/:name", requireAuth, async (req, res): Promise<void> => 
       }
 
       case "createCheckoutSession": {
-        // Subscription checkout — payment not configured on this deployment
-        res.status(503).json({
-          error: "Payment provider not yet configured. RevenueCat handles mobile in-app purchases.",
-        });
+        const priceId = payload.priceId;
+        if (typeof priceId !== "string" || !priceId.startsWith("price_")) {
+          res.status(400).json({ error: "A valid subscription plan is required." });
+          return;
+        }
+        const session = await createCheckoutSessionForUser(requestUser, priceId);
+        res.json({ data: session });
         return;
       }
 

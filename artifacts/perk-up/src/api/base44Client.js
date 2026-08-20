@@ -598,6 +598,22 @@ const functions = {
   },
 };
 
+// ─── Web billing ──────────────────────────────────────────────────────────────
+const billing = {
+  async listPlans() {
+    return apiFetch("/billing/plans");
+  },
+  async status() {
+    return apiFetch("/billing/status");
+  },
+  async startCheckout(priceId) {
+    return apiFetch("/billing/checkout", { method: "POST", body: { priceId } });
+  },
+  async openPortal() {
+    return apiFetch("/billing/portal", { method: "POST" });
+  },
+};
+
 // ─── Exported shim ────────────────────────────────────────────────────────────
 export const base44 = {
   entities: {
@@ -613,4 +629,5 @@ export const base44 = {
   auth,
   integrations,
   functions,
+  billing,
 };
