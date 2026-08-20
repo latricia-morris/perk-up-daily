@@ -7,6 +7,14 @@ type StripeCredentials = {
 };
 
 async function getStripeCredentials(): Promise<StripeCredentials> {
+  const workspaceSecret = process.env.Stripe;
+  if (workspaceSecret) {
+    return {
+      secretKey: workspaceSecret,
+      webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
+    };
+  }
+
   const hostname = process.env.REPLIT_CONNECTORS_HOSTNAME;
   const identity = process.env.REPL_IDENTITY
     ? `repl ${process.env.REPL_IDENTITY}`
