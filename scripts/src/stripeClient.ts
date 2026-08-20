@@ -25,11 +25,11 @@ async function getStripeSecretKey(): Promise<string> {
 
   const payload = await response.json() as {
     items?: Array<{
-      settings?: { secret_key?: string; api_key?: string; apiKey?: string };
+      settings?: { secret_key?: string; api_key?: string; apiKey?: string; secret?: string };
     }>;
   };
   const settings = payload.items?.[0]?.settings;
-  const secretKey = settings?.secret_key ?? settings?.api_key ?? settings?.apiKey;
+  const secretKey = settings?.secret_key ?? settings?.api_key ?? settings?.apiKey ?? settings?.secret;
   if (!secretKey) {
     throw new Error("Stripe is connected but does not provide a secret key.");
   }

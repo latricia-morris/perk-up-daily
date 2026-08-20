@@ -36,14 +36,16 @@ async function getStripeCredentials(): Promise<StripeCredentials> {
         secret_key?: string;
         api_key?: string;
         apiKey?: string;
+        secret?: string;
         webhook_secret?: string;
       };
     }>;
   };
   const settings = payload.items?.[0]?.settings;
-  const secretKey = settings?.secret_key ?? settings?.api_key ?? settings?.apiKey;
+  const secretKey = settings?.secret_key ?? settings?.api_key ?? settings?.apiKey ?? settings?.secret;
   if (!secretKey) {
-    throw new Error("Stripe is connected but does not provide a secret key.");
+    const availableFields = Object.keys(settings ?? {}).sort().join(", ") || "none";
+    throw new Error(`Stripe is connected but does not provide a secret key (available fields: ${availableFields}).`);
   }
 
   return {

@@ -1,7 +1,8 @@
 import app from "./app";
 import { logger } from "./lib/logger";
 import { runMigrations } from "stripe-replit-sync";
-import { getStripeSync } from "./lib/stripeClient";
+import { STRIPE_PRODUCT_ID } from "./lib/stripeBilling";
+import { getStripeSync, getUncachableStripeClient } from "./lib/stripeClient";
 
 const rawPort = process.env["PORT"];
 
@@ -31,7 +32,16 @@ async function initializeStripe(): Promise<void> {
   } else {
     logger.warn("Stripe webhook setup skipped because REPLIT_DOMAINS is unavailable");
   }
-  await stripeSync.syncBackfill();
+
+  await stripeSync.syncSingleEntity(STRIPE_PRODUCT_ID);
+  const stripe = await getUncachableStripeClient();
+  const prices = await stripe.prices.list({
+    product: STRIPE_PRODUCT_ID,
+    active: true,
+    type: "recurring",
+    limit: 100,
+  });
+  await Promise.all(prices.data.map((price) => stripeSync.syncSingleEntity(price.id)));
 }
 
 async function start(): Promise<void> {
