@@ -1,0 +1,1 @@
+- [Web and mobile subscription model](subscription-model.md) — web access remains free; premium purchasing belongs only to a future native mobile release.

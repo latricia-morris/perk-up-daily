@@ -32,11 +32,11 @@ export default function AdminOverview({ data }) {
           tooltip="Currently active Stripe subscriptions"
         />
         <AdminKPI
-          label="Daily Active"
-          value={formatNumber(engagement.dau)}
-          sublabel={`${engagement.wau} weekly · ${engagement.mau} monthly`}
+          label="Active Contributors"
+          value={formatNumber(engagement.active_users)}
+          sublabel="created entries this period"
           icon={Activity}
-          tooltip="Unique users active in the last 24h"
+          tooltip="Unique users who created entries in the selected period"
         />
       </div>
 

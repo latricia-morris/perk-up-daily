@@ -133,8 +133,7 @@ export default function Dashboard() {
               Payment failed — your account is in a grace period.
             </p>
             <p className="text-xs text-foreground/70">
-              You have limited time to update your payment info before access is removed.{' '}
-              <Link to="/settings" className="underline font-medium text-primary">Update now</Link>
+              Manage your subscription in the same mobile store where you originally purchased it.
             </p>
           </motion.div>
         )}

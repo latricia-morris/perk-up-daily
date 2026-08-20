@@ -7,9 +7,6 @@ import {
 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import ResetIcon from '@/components/ResetIcon';
-import SubscriptionGuard from '@/components/SubscriptionGuard';
-
-const ADMIN_EMAIL = 'perkupdaily@gmail.com'; // Only show Admin nav for this account
 
 const mainNav = [
 { path: '/dashboard', icon: Home, label: 'Home' },
@@ -57,7 +54,7 @@ function NavLink({ path, icon: Icon, label, onClick }) {
 }
 
 function SidebarContent({ user, onNavClick }) {
-  const isAdmin = user?.email === ADMIN_EMAIL;
+  const isAdmin = user?.isAdmin === true;
   const christianEnabled = user?.christian_content;
 
   return (
@@ -254,9 +251,7 @@ export default function AppLayout() {
 
       {/* Main content */}
       <main className="md:ml-64 pt-[53px] md:pt-0 pb-24 md:pb-6 min-h-screen">
-        <SubscriptionGuard>
-          <Outlet />
-        </SubscriptionGuard>
+        <Outlet />
       </main>
 
       {/* Footer with marketing + support links */}

@@ -53,7 +53,7 @@ export default function Register() {
       // to the HTTPS API and are never saved in browser storage.
       await base44.auth.register({ email, password });
       await applyOnboardingPreferences();
-      window.location.href = "/paywall";
+      window.location.href = "/dashboard";
     } catch (err) {
       setError(err.message || "Registration failed");
     } finally {
@@ -61,8 +61,8 @@ export default function Register() {
     }
   };
 
-  const handleGoogle = () => base44.auth.loginWithProvider("google", "/paywall");
-  const handleApple = () => base44.auth.loginWithProvider("apple", "/paywall");
+  const handleGoogle = () => base44.auth.loginWithProvider("google", "/dashboard");
+  const handleApple = () => base44.auth.loginWithProvider("apple", "/dashboard");
 
   return (
     <AuthLayout

@@ -24,53 +24,57 @@ export default function AdminCSVUpload() {
     setErrors([]);
     setDone(false);
 
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
-
-    const result = await base44.integrations.Core.ExtractDataFromUploadedFile({
-      file_url,
-      json_schema: {
-        type: 'object',
-        properties: {
-          rows: {
-            type: 'array',
-            items: {
-              type: 'object',
-              properties: {
-                content_type: { type: 'string' },
-                author: { type: 'string' },
-                body: { type: 'string' },
-                category: { type: 'string' },
-                is_christian: { type: 'string' },
-                status: { type: 'string' },
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      const result = await base44.integrations.Core.ExtractDataFromUploadedFile({
+        file_url,
+        json_schema: {
+          type: 'object',
+          properties: {
+            rows: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  content_type: { type: 'string' },
+                  author: { type: 'string' },
+                  body: { type: 'string' },
+                  category: { type: 'string' },
+                  is_christian: { type: 'string' },
+                  status: { type: 'string' },
+                },
               },
             },
           },
         },
-      },
-    });
+      });
 
-    setUploading(false);
+      if (result.status === 'error') {
+        setErrors([result.details]);
+        return;
+      }
 
-    if (result.status === 'error') {
-      setErrors([result.details]);
-      return;
+      const rows = result.output?.rows || [];
+      const rowErrors = [];
+
+      rows.forEach((row, i) => {
+        if (!row.body) rowErrors.push(`Row ${i + 1}: Missing body text`);
+        if (!row.content_type || !VALID_TYPES.includes(row.content_type))
+          rowErrors.push(`Row ${i + 1}: Invalid content type "${row.content_type}"`);
+        if (!row.category || !VALID_CATS.includes(row.category))
+          rowErrors.push(`Row ${i + 1}: Invalid category "${row.category}"`);
+        if (row.content_type === 'quote' && !row.author)
+          rowErrors.push(`Row ${i + 1}: Quotes require an author`);
+      });
+
+      setErrors(rowErrors);
+      setPreview(rows);
+    } catch (error) {
+      setErrors([error?.message || 'Unable to process this CSV file']);
+    } finally {
+      setUploading(false);
+      e.target.value = '';
     }
-
-    const rows = result.output?.rows || [];
-    const rowErrors = [];
-
-    rows.forEach((row, i) => {
-      if (!row.body) rowErrors.push(`Row ${i + 1}: Missing body text`);
-      if (!row.content_type || !VALID_TYPES.includes(row.content_type))
-        rowErrors.push(`Row ${i + 1}: Invalid content type "${row.content_type}"`);
-      if (!row.category || !VALID_CATS.includes(row.category))
-        rowErrors.push(`Row ${i + 1}: Invalid category "${row.category}"`);
-      if (row.content_type === 'quote' && !row.author)
-        rowErrors.push(`Row ${i + 1}: Quotes require an author`);
-    });
-
-    setErrors(rowErrors);
-    setPreview(rows);
   };
 
   const handlePublish = async () => {
@@ -120,7 +124,7 @@ export default function AdminCSVUpload() {
           <span className="text-sm text-muted-foreground">
             {uploading ? 'Processing...' : 'Click to upload CSV'}
           </span>
-          <input type="file" accept=".csv,.xlsx" onChange={handleFile} className="hidden" />
+          <input type="file" accept=".csv,text/csv" onChange={handleFile} className="hidden" />
         </label>
       )}
 

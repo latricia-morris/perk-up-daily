@@ -11,8 +11,8 @@ export default function AdminSales({ data }) {
     return (
       <div className="bg-card border border-border rounded-xl p-8 text-center">
         <AlertCircle className="w-8 h-8 text-destructive mx-auto mb-3" />
-        <p className="text-sm text-muted-foreground">Unable to load Stripe data: {sales.error}</p>
-        <p className="text-xs text-muted-foreground mt-2">Check that STRIPE_SECRET_KEY is set correctly.</p>
+        <p className="text-sm text-muted-foreground">{sales.error}</p>
+        <p className="text-xs text-muted-foreground mt-2">Sales metrics will appear once native purchase data is connected.</p>
       </div>
     );
   }

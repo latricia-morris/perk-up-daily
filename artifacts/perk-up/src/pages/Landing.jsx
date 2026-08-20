@@ -75,7 +75,7 @@ export default function Landing() {
               </p>
               <a href="#pricing">
                 <Button size="lg" className="text-base px-8 border-none" style={{ background: SUNRISE_BTN, color: '#FFFCF2' }}>
-                  Claim Founding Membership <ArrowRight className="w-4 h-4 ml-2" />
+                  Get started free <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </a>
             </div>
@@ -208,50 +208,45 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── 7. PRICING ─────────────────────────────────────────────── */}
+      {/* ── 7. ACCESS ─────────────────────────────────────────────── */}
       <section id="pricing">
         <div className="max-w-3xl mx-auto px-6 py-10 md:py-14 text-center">
           <h2 className="font-display text-2xl md:text-3xl font-semibold mb-2" style={{ color: INK }}>
             Start training your brain today.
           </h2>
           <p className="text-sm md:text-base mb-8 max-w-lg mx-auto" style={{ color: MUTE }}>
-            Simple, clean packaging. Premium access built entirely free of predatory tracking configurations.
+            Create an account and explore Perk Up Daily on the web for free. Premium subscriptions are planned for future mobile apps.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-2xl mx-auto">
-            {/* Founding Member */}
+            {/* Web preview */}
             <div className="rounded-2xl p-6 md:p-8 flex flex-col text-left" style={{ background: PANEL, backdropFilter: 'blur(12px)', border: `2px solid ${GOLD}`, boxShadow: '0px 8px 30px rgba(232,168,56,0.1)' }}>
-              <p className="text-sm font-semibold mb-1" style={{ color: GOLD }}>Founding Member</p>
+              <p className="text-sm font-semibold mb-1" style={{ color: GOLD }}>Web preview</p>
               <div className="flex items-baseline gap-1 mb-3">
-                <span className="text-4xl font-display font-bold" style={{ color: INK }}>$4.99</span>
-                <span className="text-sm" style={{ color: MUTE }}>/ mo</span>
+                <span className="text-4xl font-display font-bold" style={{ color: INK }}>Free</span>
               </div>
               <p className="text-sm mb-6 leading-relaxed" style={{ color: '#4a3520' }}>
-                Lock in this exact introductory pricing layer for the lifetime of your platform profile.
+                Begin building your private archive of gratitude, growth, and encouragement without web checkout.
               </p>
               <Link to="/onboarding" className="mt-auto">
-                <Button className="w-full text-base border-none" style={{ background: SUNRISE_BTN, color: '#FFFCF2' }}>Secure Founding Status</Button>
+                <Button className="w-full text-base border-none" style={{ background: SUNRISE_BTN, color: '#FFFCF2' }}>Get started free</Button>
               </Link>
             </div>
 
-            {/* Standard Access */}
+            {/* Future mobile premium */}
             <div className="rounded-2xl p-6 md:p-8 flex flex-col text-left" style={{ background: PANEL, backdropFilter: 'blur(12px)', border: '1px solid rgba(44,30,15,0.08)' }}>
-              <p className="text-sm font-semibold mb-1" style={{ color: MUTE }}>Standard Access</p>
+              <p className="text-sm font-semibold mb-1" style={{ color: MUTE }}>Mobile premium</p>
               <div className="flex items-baseline gap-1 mb-3">
-                <span className="text-4xl font-display font-bold" style={{ color: INK }}>$7.99</span>
-                <span className="text-sm" style={{ color: MUTE }}>/ mo</span>
+                <span className="text-2xl font-display font-bold" style={{ color: INK }}>Coming to mobile</span>
               </div>
               <p className="text-sm mb-6 leading-relaxed" style={{ color: '#4a3520' }}>
-                Complete access across all library modules, updates, and future state tools.
+                When available, premium subscriptions will be purchased and managed in the Perk Up Daily mobile apps through your app store.
               </p>
-              <Link to="/onboarding" className="mt-auto">
-                <Button variant="outline" className="w-full text-base">Start Standard Plan</Button>
-              </Link>
             </div>
           </div>
 
           <p className="text-xs mt-6" style={{ color: '#908F8A' }}>
-            All premium memberships begin with an unrestricted 7-day trial period. Cancel via a single tap inside system profiles.
+            The web preview is free. No web payment method, checkout, or billing management is available.
           </p>
         </div>
       </section>
@@ -281,11 +276,11 @@ export default function Landing() {
                   No risk. All rewards.
                 </h3>
                 <p className="text-sm leading-relaxed mb-6" style={{ color: MUTE }}>
-                  Try Perk Up Daily free for 7 days. If your mind doesn't feel lighter, your focus sharper, and your heart more anchored, cancel with a single tap inside your settings. Your peace belongs entirely to you.
+                  Explore Perk Up Daily on the web for free. When mobile premium subscriptions are available, they will be managed through the Apple App Store or Google Play—not web settings.
                 </p>
                 <Link to="/onboarding">
                   <Button size="lg" className="border-none" style={{ background: SUNRISE_BTN, color: '#FFFCF2' }}>
-                    Start free trial <ArrowRight className="w-4 h-4 ml-2" />
+                    Get started free <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
                 </Link>
               </div>

@@ -27,7 +27,7 @@ export default function Paywall() {
             Perk Up Premium
           </h2>
           <p className="text-muted-foreground text-sm">
-            Premium subscriptions will be available in the Perk Up Daily mobile app.
+            Premium subscriptions are planned for future Perk Up Daily mobile apps.
           </p>
         </div>
 
@@ -44,9 +44,9 @@ export default function Paywall() {
 
         <div className="rounded-2xl bg-muted/60 border border-border p-4 text-center mb-5">
           <Smartphone className="w-5 h-5 text-primary mx-auto mb-2" />
-          <p className="text-sm font-medium text-foreground">Mobile subscriptions are coming soon</p>
+          <p className="text-sm font-medium text-foreground">Free web access is available now</p>
           <p className="text-xs text-muted-foreground mt-1">
-            Purchases are not available on this web preview, so you will never be sent to a broken checkout.
+            Purchases and billing management are not available in this web preview.
           </p>
         </div>
 

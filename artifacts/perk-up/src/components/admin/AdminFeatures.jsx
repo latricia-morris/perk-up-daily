@@ -58,7 +58,7 @@ export default function AdminFeatures({ data }) {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <AdminKPI label="Total Entries" value={formatNumber(features.total_entries)} icon={Layers} tooltip="All user-created entries across all types" />
         <AdminKPI label="Library Items" value={formatNumber(features.total_library)} icon={FolderOpen} tooltip="Curated content in the App Library" />
-        <AdminKPI label="Uplifts Shared" value={formatNumber(features.total_uplifts)} icon={ArrowUpDown} tooltip="Cards shared by users to contacts" />
+        <AdminKPI label="Shares" value="—" sublabel="not tracked" icon={ArrowUpDown} tooltip="Sharing analytics are not tracked in this app yet" />
         <AdminKPI label="Entry Types Used" value={formatNumber(entryTypeData.length)} sublabel="distinct types" icon={Layers} />
       </div>
 

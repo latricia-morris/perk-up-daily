@@ -40,7 +40,7 @@ export function resolveAccess(user) {
   if (!user) return 'allow';
 
   // Admin always allowed
-  if (user.role === 'admin') return 'allow';
+  if (user.isAdmin === true) return 'allow';
 
   const status = user.subscription_status;
 
@@ -74,8 +74,8 @@ export function describeUser(user) {
   return {
     loaded: true,
     status_value: user.subscription_status,
-    role_value: user.role,
-    is_admin: user.role === 'admin',
+    role_value: user.isAdmin === true ? 'admin' : null,
+    is_admin: user.isAdmin === true,
     is_paid: user.subscription_status === 'active',
     renewal_date: user.renewal_date || null,
     trial_start_date: user.trial_start_date || null,

@@ -536,7 +536,7 @@ const integrations = {
       // before returning it to callers, so users can only read their own files.
       const finalized = await apiFetch("/storage/uploads/finalize", {
         method: "POST",
-        body: { objectPath: meta.objectPath },
+        body: { objectPath: meta.objectPath, finalizeToken: meta.finalizeToken },
       });
 
       const fileUrl = `/api/storage${finalized.objectPath}`;

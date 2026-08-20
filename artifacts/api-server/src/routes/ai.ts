@@ -2,6 +2,8 @@ import { Router } from "express";
 import OpenAI from "openai";
 import { logger } from "../lib/logger";
 import { requireAuth } from "../lib/auth";
+import { ObjectPermission } from "../lib/objectAcl";
+import { ObjectNotFoundError, ObjectStorageService } from "../lib/objectStorage";
 
 const router: Router = Router();
 
@@ -9,6 +11,8 @@ const router: Router = Router();
 const AI_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 const AI_MAX_CALLS_PER_WINDOW = 30;
 const aiUsage = new Map<number, { windowStart: number; count: number }>();
+const MAX_CSV_BYTES = 200 * 1024;
+const objectStorageService = new ObjectStorageService();
 
 function checkAiQuota(userId: number): boolean {
   const now = Date.now();
@@ -109,13 +113,51 @@ router.post("/ai/extract", requireAuth, async (req, res): Promise<void> => {
   }
 
   try {
+    const url = new URL(file_url, "http://local");
+    const match = url.pathname.match(/^\/api\/storage\/objects\/(uploads\/[0-9a-f-]{36})$/i);
+    if (!match) {
+      res.status(400).json({ status: "error", details: "Only private CSV uploads can be imported" });
+      return;
+    }
+
+    const objectPath = `/objects/${match[1]}`;
+    const objectFile = await objectStorageService.getObjectEntityFile(objectPath);
+    // @ts-ignore — set by requireAuth
+    const userId = String(req.user.id);
+    const canRead = await objectStorageService.canAccessObjectEntity({
+      userId,
+      objectFile,
+      requestedPermission: ObjectPermission.READ,
+    });
+    if (!canRead) {
+      res.status(403).json({ status: "error", details: "You do not have access to this upload" });
+      return;
+    }
+
+    const [metadata] = await objectFile.getMetadata();
+    const contentType = String(metadata.contentType || "").toLowerCase();
+    if (!contentType.includes("csv") && !contentType.startsWith("text/")) {
+      res.status(400).json({ status: "error", details: "Only CSV files can be imported" });
+      return;
+    }
+    const size = Number(metadata.size ?? 0);
+    if (!Number.isFinite(size) || size > MAX_CSV_BYTES) {
+      res.status(400).json({ status: "error", details: "CSV files must be 200 KB or smaller" });
+      return;
+    }
+
+    const [fileBuffer] = await objectFile.download();
+    const fileContent = fileBuffer.toString("utf8");
     const schemaStr = json_schema ? JSON.stringify(json_schema) : "extract all data";
-    const prompt = `You are a data extraction assistant. The user has uploaded a file at: ${file_url}
+    const prompt = `You are a data extraction assistant. Parse the following CSV content.
 
 Extract the data according to this JSON schema:
 ${schemaStr}
 
-Return a valid JSON object matching the schema. If the file is a CSV, parse each row as an item in the "rows" array.
+CSV content:
+${fileContent}
+
+Return a valid JSON object matching the schema. Parse each CSV row as an item in the "rows" array.
 Return only valid JSON, no explanation.`;
 
     const completion = await client.chat.completions.create({
@@ -133,6 +175,10 @@ Return only valid JSON, no explanation.`;
       res.json({ status: "error", details: "Failed to parse AI response" });
     }
   } catch (err: unknown) {
+    if (err instanceof ObjectNotFoundError) {
+      res.status(404).json({ status: "error", details: "Uploaded file not found" });
+      return;
+    }
     logger.error({ err }, "AI extract failed");
     res.status(500).json({ status: "error", details: "Extraction failed" });
   }

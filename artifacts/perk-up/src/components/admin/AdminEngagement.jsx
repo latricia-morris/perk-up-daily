@@ -7,6 +7,18 @@ export default function AdminEngagement({ data }) {
   if (!data) return null;
   const { users, engagement } = data;
 
+  if (engagement?.error) {
+    return (
+      <div className="bg-card border border-border rounded-xl p-8 text-center">
+        <Activity className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
+        <p className="text-sm text-muted-foreground">{engagement.error}</p>
+        <p className="text-xs text-muted-foreground mt-2">
+          Signup and entry totals are still available in the Overview and Features tabs.
+        </p>
+      </div>
+    );
+  }
+
   const signupData = (users.signup_timeline || []).map(d => ({
     date: new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
     signups: d.count

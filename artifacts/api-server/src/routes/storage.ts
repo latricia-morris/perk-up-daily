@@ -1,4 +1,5 @@
 import { Readable } from 'stream';
+import crypto from 'crypto';
 import { z } from 'zod';
 import { Router, type IRouter, type Request, type Response } from 'express';
 
@@ -11,12 +12,14 @@ const RequestUploadUrlBody = z.object({
 const RequestUploadUrlResponse = z.object({
   uploadURL: z.string(),
   objectPath: z.string(),
+  finalizeToken: z.string(),
 });
 
 const FinalizeUploadBody = z.object({
   // Upload URLs are only generated for this random private prefix. Restricting
   // finalization to it prevents a client from claiming arbitrary private files.
   objectPath: z.string().regex(/^\/objects\/uploads\/[0-9a-f-]{36}$/i),
+  finalizeToken: z.string().min(20),
 });
 
 import { ObjectPermission } from '../lib/objectAcl';
@@ -28,6 +31,49 @@ import { requireAuth } from '../lib/auth';
 
 const router: IRouter = Router();
 const objectStorageService = new ObjectStorageService();
+const FINALIZE_TOKEN_TTL_MS = 15 * 60 * 1000;
+
+function createFinalizeToken(objectPath: string, ownerId: string): string {
+  const secret = process.env.SESSION_SECRET;
+  if (!secret) throw new Error('SESSION_SECRET is not configured');
+
+  const payload = Buffer.from(JSON.stringify({
+    objectPath,
+    ownerId,
+    expiresAt: Date.now() + FINALIZE_TOKEN_TTL_MS,
+  })).toString('base64url');
+  const signature = crypto.createHmac('sha256', secret).update(payload).digest('base64url');
+  return `${payload}.${signature}`;
+}
+
+function verifyFinalizeToken(token: string, objectPath: string, ownerId: string): boolean {
+  const secret = process.env.SESSION_SECRET;
+  if (!secret) return false;
+
+  const [payload, signature] = token.split('.');
+  if (!payload || !signature) return false;
+  const expectedSignature = crypto.createHmac('sha256', secret).update(payload).digest('base64url');
+  const actualSignature = Buffer.from(signature);
+  const expectedSignatureBuffer = Buffer.from(expectedSignature);
+  if (
+    actualSignature.length !== expectedSignatureBuffer.length ||
+    !crypto.timingSafeEqual(actualSignature, expectedSignatureBuffer)
+  ) {
+    return false;
+  }
+
+  try {
+    const decoded = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
+    return (
+      decoded.objectPath === objectPath &&
+      decoded.ownerId === ownerId &&
+      Number.isFinite(decoded.expiresAt) &&
+      decoded.expiresAt > Date.now()
+    );
+  } catch {
+    return false;
+  }
+}
 
 /**
  * POST /storage/uploads/request-url
@@ -49,15 +95,19 @@ router.post(
 
     try {
       const { name, size, contentType } = parsed.data;
+      // @ts-ignore — set by requireAuth
+      const ownerId = String(req.user.id);
 
       const uploadURL = await objectStorageService.getObjectEntityUploadURL();
       const objectPath =
         objectStorageService.normalizeObjectEntityPath(uploadURL);
+      const finalizeToken = createFinalizeToken(objectPath, ownerId);
 
       res.json(
         RequestUploadUrlResponse.parse({
           uploadURL,
           objectPath,
+          finalizeToken,
           metadata: { name, size, contentType },
         }),
       );
@@ -89,6 +139,10 @@ router.post(
     try {
       // @ts-ignore — set by requireAuth
       const owner = String(req.user.id);
+      if (!verifyFinalizeToken(parsed.data.finalizeToken, parsed.data.objectPath, owner)) {
+        res.status(403).json({ error: 'This upload does not belong to your account' });
+        return;
+      }
       const objectPath = await objectStorageService.trySetObjectEntityAclPolicy(
         parsed.data.objectPath,
         { owner, visibility: 'private' },

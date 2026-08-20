@@ -373,12 +373,11 @@ export default function Settings() {
           <section>
             <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4">Subscription</h2>
             <div className="bg-card border border-border rounded-xl p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-foreground capitalize">{user?.subscription_status || 'trial'}</p>
-                  <p className="text-xs text-muted-foreground">$4.99/month · founding member rate</p>
-                </div>
-                <Button variant="outline" size="sm">Manage</Button>
+              <div>
+                <p className="text-sm font-medium text-foreground">Mobile subscriptions</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Premium subscriptions are planned for future mobile apps. Purchases and billing management are not available on the web preview.
+                </p>
               </div>
             </div>
           </section>
@@ -407,9 +406,8 @@ export default function Settings() {
             <div className="bg-muted/50 border border-border rounded-xl p-4 mb-4 space-y-3">
               <p className="text-sm font-medium text-foreground">Cancel your subscription</p>
               <div className="text-xs text-muted-foreground space-y-2">
-                <p><strong>Purchased on iOS App Store:</strong> Go to Settings → [Your Name] → Subscriptions → Perk Up Daily → Cancel Subscription.</p>
-                <p><strong>Purchased on Google Play:</strong> Open Google Play Store → Account → Subscriptions → Perk Up Daily → Cancel Subscription.</p>
-                <p className="italic">Web subscription management is not available yet.</p>
+                <p>When mobile subscriptions are available, iOS purchases will be managed in the App Store and Android purchases in Google Play.</p>
+                <p className="italic">Web subscription management is not available.</p>
               </div>
             </div>
 
@@ -426,7 +424,11 @@ export default function Settings() {
               Log out
             </Button>
             <p className="text-xs text-muted-foreground mt-3">
-              Need to close your account? Contact support so we can verify your request safely.
+              Need to close your account?{' '}
+              <a className="underline text-primary" href="mailto:perkupdaily@gmail.com?subject=Account%20closure%20request">
+                Email support
+              </a>{' '}
+              so we can verify your request safely.
             </p>
           </section>
 

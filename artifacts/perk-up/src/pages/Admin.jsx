@@ -41,7 +41,7 @@ export default function Admin() {
   }, []);
 
   const fetchData = useCallback(() => {
-    if (user?.role !== 'admin') return;
+    if (!user?.isAdmin) return;
     setDataLoading(true);
     setError(null);
     const endDate = new Date();
@@ -50,7 +50,7 @@ export default function Admin() {
       start_date: startDate.toISOString(),
       end_date: endDate.toISOString()
     }).then(res => {
-      setData(res.data);
+      setData(res.data?.data ?? res.data);
       setDataLoading(false);
     }).catch(err => {
       setError(err?.response?.data?.error || err?.message || 'Failed to load dashboard data');
@@ -68,7 +68,7 @@ export default function Admin() {
     );
   }
 
-  if (user?.role !== 'admin') {
+  if (!user?.isAdmin) {
     return <Navigate to="/dashboard" replace />;
   }
 
