@@ -1,8 +1,8 @@
 import Stripe from "stripe";
 
 async function getStripeSecretKey(): Promise<string> {
-  if (process.env.Stripe) {
-    return process.env.Stripe;
+  if (process.env.STRIPE_LIVE_SECRET_KEY ?? process.env.Stripe) {
+    return process.env.STRIPE_LIVE_SECRET_KEY ?? process.env.Stripe!;
   }
 
   const hostname = process.env.REPLIT_CONNECTORS_HOSTNAME;

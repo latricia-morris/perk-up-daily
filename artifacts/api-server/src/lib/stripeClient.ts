@@ -7,7 +7,7 @@ type StripeCredentials = {
 };
 
 async function getStripeCredentials(): Promise<StripeCredentials> {
-  const workspaceSecret = process.env.Stripe;
+  const workspaceSecret = process.env.STRIPE_LIVE_SECRET_KEY ?? process.env.Stripe;
   if (workspaceSecret) {
     return {
       secretKey: workspaceSecret,
