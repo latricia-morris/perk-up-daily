@@ -2,6 +2,7 @@ import { Router } from "express";
 import { db, usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { logger } from "../lib/logger";
+import { reconcileUserEntitlements } from "../lib/stripeBilling";
 
 const router: Router = Router();
 
@@ -50,12 +51,8 @@ router.post("/webhooks/revenuecat", async (req, res): Promise<void> => {
     (!expiresAtMs || expiresAtMs > Date.now());
 
   const existingMetadata = (existing.metadata as Record<string, unknown> | null) ?? {};
-  const stripeIsPremium =
-    existingMetadata.stripe_subscription_status === "active" ||
-    existingMetadata.stripe_subscription_status === "trialing";
   const metadata = {
     ...existingMetadata,
-    subscription_status: hasUnexpiredPremium || stripeIsPremium ? "active" : "cancelled",
     revenuecat_subscription_status: hasUnexpiredPremium ? "active" : "cancelled",
     revenuecat_product_id: event?.product_id ?? null,
     revenuecat_store: event?.store ?? null,
@@ -64,10 +61,9 @@ router.post("/webhooks/revenuecat", async (req, res): Promise<void> => {
     revenuecat_updated_at: new Date().toISOString(),
   };
 
-  await db
-    .update(usersTable)
-    .set({ isPremium: hasUnexpiredPremium || stripeIsPremium, metadata })
-    .where(eq(usersTable.id, userId));
+  await db.update(usersTable).set({ metadata }).where(eq(usersTable.id, userId));
+
+  await reconcileUserEntitlements(userId);
 
   res.status(200).json({ received: true });
 });

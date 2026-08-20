@@ -1,4 +1,6 @@
 import app from "./app";
+import { db } from "@workspace/db";
+import { sql } from "drizzle-orm";
 import { logger } from "./lib/logger";
 import { runMigrations } from "stripe-replit-sync";
 import { STRIPE_PRODUCT_ID } from "./lib/stripeBilling";
@@ -24,6 +26,12 @@ async function initializeStripe(): Promise<void> {
     throw new Error("DATABASE_URL is required for Stripe initialization.");
   }
 
+  await db.execute(sql`ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "stripe_customer_id" text`);
+  await db.execute(sql`ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "stripe_subscription_id" text`);
+  await db.execute(sql`ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "stripe_checkout_session_id" text`);
+  await db.execute(sql`ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "stripe_checkout_price_id" text`);
+  await db.execute(sql`ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "stripe_checkout_idempotency_key" text`);
+  await db.execute(sql`ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "stripe_checkout_created_at" timestamp with time zone`);
   await runMigrations({ databaseUrl });
   const stripeSync = await getStripeSync();
   const domain = process.env.REPLIT_DOMAINS?.split(",")[0];
